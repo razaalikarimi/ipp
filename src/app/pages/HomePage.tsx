@@ -70,7 +70,7 @@ export function HomePage() {
               </Button>
             </Link>
             <Link to="/archives">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+              <Button size="lg" className="bg-white text-blue-900 hover:bg-gray-100">
                 View Archives
               </Button>
             </Link>

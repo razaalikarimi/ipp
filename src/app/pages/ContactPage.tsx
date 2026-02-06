@@ -77,15 +77,18 @@ export function ContactPage() {
                 <CardTitle>Our Location</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="bg-gray-200 h-80 rounded-lg flex items-center justify-center">
-                  <div className="text-center text-gray-600">
-                    <MapPin className="size-12 mx-auto mb-2" />
-                    <p>Al-Zarqa University</p>
-                    <p>Zarqa, Jordan</p>
-                  </div>
+                <div className="h-80 w-full rounded-lg overflow-hidden">
+                  <iframe
+                    title="Al-Zarqa University Location"
+                    src="https://www.google.com/maps?q=Al-Zarqa%20University%20Jordan&output=embed"
+                    className="w-full h-full border-0"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
                 </div>
               </CardContent>
             </Card>
+
           </div>
 
           {/* Contact Information Sidebar */}
