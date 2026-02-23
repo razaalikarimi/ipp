@@ -1,81 +1,123 @@
-import { Link } from 'react-router-dom';
-import { BookOpen, Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { Search, Menu } from 'lucide-react';
+import { Button } from './ui/button';
 
-export function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+interface HeaderProps {
+  onLoginClick: () => void;
+  onRegisterClick: () => void;
+  onSearchChange: (query: string) => void;
+  activeTab: string;
+  onTabChange: (tab: string) => void;
+}
 
-  const navItems = [
-    { label: 'Home', path: '/' },
-    { label: 'About', path: '/about' },
-    { label: 'Editorial Board', path: '/editorial-board' },
-    { label: 'Submit Manuscript', path: '/submit' },
-    { label: 'Archives', path: '/archives' },
-    { label: 'Contact', path: '/contact' },
-  ];
-
+export function Header({ onLoginClick, onRegisterClick, onSearchChange, activeTab, onTabChange }: HeaderProps) {
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-      <div className="bg-blue-900 text-white py-2">
-        <div className="container mx-auto px-4 flex justify-between items-center text-sm">
-          <div>ISSN: 2091-2609 (Online)</div>
-          <div>International Journal of Applied Sciences & Computer Applications</div>
-        </div>
-      </div>
-      
+    <header className="border-b bg-white">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between py-4">
-          <Link to="/" className="flex items-center gap-3">
-            <div className="bg-blue-900 p-2 rounded-lg">
-              <BookOpen className="size-8 text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-gray-900">IJASCA</h1>
-              <p className="text-sm text-gray-600">International Journal of Applied Sciences</p>
-            </div>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6">
-            {navItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className="text-gray-700 hover:text-blue-900 transition-colors"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? (
-              <X className="size-6 text-gray-700" />
-            ) : (
-              <Menu className="size-6 text-gray-700" />
-            )}
-          </button>
+        {/* Top Bar */}
+        <div className="flex items-center justify-between py-3 border-b">
+          <div className="flex items-center gap-6">
+            <span className="text-sm text-gray-600">ISSN: 2456-7890</span>
+            <span className="text-sm text-gray-600">|</span>
+            <span className="text-sm text-gray-600">Volume 28, Issue 1, 2026</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="sm" onClick={onLoginClick}>
+              Login
+            </Button>
+            <Button variant="ghost" size="sm" onClick={onRegisterClick}>
+              Register
+            </Button>
+          </div>
         </div>
 
-        {/* Mobile Navigation */}
-        {mobileMenuOpen && (
-          <nav className="md:hidden pb-4 flex flex-col gap-2">
-            {navItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className="text-gray-700 hover:text-blue-900 transition-colors py-2"
-                onClick={() => setMobileMenuOpen(false)}
+        {/* Main Header */}
+        <div className="py-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-1">
+                Journal of Contemporary Scientific Research & Analysis
+              </h1>
+              <p className="text-sm text-gray-600">An International Peer-Reviewed Research Journal</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search articles..."
+                  className="pl-10 pr-4 py-2 border rounded-md w-64 text-sm"
+                  onChange={(e) => onSearchChange(e.target.value)}
+                />
+                <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Navigation */}
+        <nav className="border-t">
+          <ul className="flex items-center gap-1">
+            <li>
+              <button
+                onClick={() => onTabChange('home')}
+                className={`px-4 py-3 inline-block text-sm font-medium ${
+                  activeTab === 'home' ? 'bg-blue-600 text-white' : 'hover:bg-gray-50'
+                }`}
               >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-        )}
+                Home
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => onTabChange('current')}
+                className={`px-4 py-3 inline-block text-sm font-medium ${
+                  activeTab === 'current' ? 'bg-blue-600 text-white' : 'hover:bg-gray-50'
+                }`}
+              >
+                Current Issues
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => onTabChange('archive')}
+                className={`px-4 py-3 inline-block text-sm font-medium ${
+                  activeTab === 'archive' ? 'bg-blue-600 text-white' : 'hover:bg-gray-50'
+                }`}
+              >
+                Archive
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => onTabChange('editorial')}
+                className={`px-4 py-3 inline-block text-sm font-medium ${
+                  activeTab === 'editorial' ? 'bg-blue-600 text-white' : 'hover:bg-gray-50'
+                }`}
+              >
+                Editorial Board
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => onTabChange('submission')}
+                className={`px-4 py-3 inline-block text-sm font-medium ${
+                  activeTab === 'submission' ? 'bg-blue-600 text-white' : 'hover:bg-gray-50'
+                }`}
+              >
+                Submission Guidelines
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => onTabChange('contact')}
+                className={`px-4 py-3 inline-block text-sm font-medium ${
+                  activeTab === 'contact' ? 'bg-blue-600 text-white' : 'hover:bg-gray-50'
+                }`}
+              >
+                Contact
+              </button>
+            </li>
+          </ul>
+        </nav>
       </div>
     </header>
   );
