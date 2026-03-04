@@ -12,3 +12,8 @@ services:
     environment:
       - NODE_ENV=production
       - NEXT_TELEMETRY_DISABLED=1
+    networks:
+      - cloudflare-net
+networks:
+  cloudflare-net:
+    external: true
