@@ -1,19 +1,37 @@
-# ---------- Build Stage ----------
-FROM node:18-alpine AS build
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install
+# Install dependencies
+COPY package.json package-lock.json* ./
+RUN npm ci
 
+# Copy full source and build
 COPY . .
 RUN npm run build
 
-# ---------- Nginx Stage ----------
-FROM nginx:alpine
+# Production runner
+FROM node:20-alpine AS runner
+WORKDIR /app
 
-COPY --from=build /app/dist /usr/share/nginx/html
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
 
-EXPOSE 80
+# Create unprivileged user for security
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
-CMD ["nginx", "-g", "daemon off;"]
+# Copy static assets and standalone build files
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+
+EXPOSE 3000
+
+ENV PORT 3000
+ENV HOSTNAME "0.0.0.0"
+
+# server.js is created by Next.js standalone output
+CMD ["node", "server.js"]
