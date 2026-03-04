@@ -3,8 +3,45 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { User, Lock, Mail, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
+  const router = useRouter();
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Login failed');
+      }
+
+      // Normally you would store the JWT token here (e.g., localStorage or cookies)
+      localStorage.setItem('eisr_token', data.token);
+
+      alert('Login successful!');
+      router.push('/'); // Redirecting to home after login
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-[#FAFBFC] font-sans selection:bg-[#4BA6B9]/10">
       <Header />
@@ -21,16 +58,17 @@ export default function Login() {
           <div className="max-w-md mx-auto">
             {/* Minimal Header */}
             <div className="border-l-4 border-[#4BA6B9] pl-6 mb-12">
-              <h1 className="text-4xl font-serif font-black text-[#1A1A1A] italic leading-tight">
+              <h1 className="text-4xl font-serif font-black text-[#1A1A1A]  leading-tight">
                 Researcher <br />Authentication
               </h1>
               <p className="text-sm font-medium text-[#555555] mt-3">Access your EISR dashboard and submissions</p>
             </div>
 
             {/* Production Grade Form */}
+            {error && <div className="bg-red-50 text-red-500 p-4 rounded-xl mb-6 text-sm font-bold border border-red-100">{error}</div>}
             <div className="bg-white border border-[#E2E8F0] shadow-sm rounded-xl overflow-hidden">
               <div className="p-10 lg:p-12 space-y-8">
-                <form className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Field 1 */}
                   <div className="space-y-2">
                     <label className="text-[10px] font-black uppercase tracking-widest text-[#555555] flex items-center">
@@ -39,6 +77,9 @@ export default function Login() {
                     </label>
                     <input 
                       type="text" 
+                      required
+                      value={formData.email}
+                      onChange={(e) => setFormData({...formData, email: e.target.value})}
                       className="w-full border-b-2 border-[#F1F5F9] focus:border-[#4BA6B9] py-3 text-sm font-semibold text-[#1A1A1A] outline-none transition-all placeholder:text-[#BBBBBB] bg-transparent"
                       placeholder="e.g. m.amin@eisr.org"
                     />
@@ -54,6 +95,9 @@ export default function Login() {
                     </div>
                     <input 
                       type="password" 
+                      required
+                      value={formData.password}
+                      onChange={(e) => setFormData({...formData, password: e.target.value})}
                       className="w-full border-b-2 border-[#F1F5F9] focus:border-[#4BA6B9] py-3 text-sm font-semibold text-[#1A1A1A] outline-none transition-all placeholder:text-[#BBBBBB] bg-transparent"
                       placeholder="••••••••"
                     />
@@ -71,8 +115,8 @@ export default function Login() {
                   </div>
 
                   {/* Action */}
-                  <button className="w-full bg-[#1A1A1A] hover:bg-[#4BA6B9] text-white py-4 font-black text-[11px] uppercase tracking-[0.3em] transition-all shadow-lg hover:shadow-[#4BA6B9]/20 group">
-                    Sign In
+                  <button type="submit" disabled={loading} className="w-full bg-[#1A1A1A] hover:bg-[#4BA6B9] text-white py-4 font-black text-[11px] uppercase tracking-[0.3em] transition-all shadow-lg hover:shadow-[#4BA6B9]/20 group disabled:opacity-50">
+                    {loading ? 'Authenticating...' : 'Sign In'}
                   </button>
                 </form>
 
@@ -97,7 +141,7 @@ export default function Login() {
             </div>
 
             {/* Support Info */}
-            <p className="mt-12 text-center text-[10px] font-bold text-[#BBBBBB] px-10 italic">
+            <p className="mt-12 text-center text-[10px] font-bold text-[#BBBBBB] px-10 ">
                If you are experiencing issues logging in, please contact our global editorial office at <span className="text-[#4BA6B9]">support@thestap.com</span>
             </p>
           </div>

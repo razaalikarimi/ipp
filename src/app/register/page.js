@@ -3,8 +3,42 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { User, Mail, Lock, Globe, Building2, ShieldCheck, ArrowRight, CheckCircle2, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Register() {
+  const router = useRouter();
+  const [formData, setFormData] = useState({ fullName: '', username: '', email: '', password: '' });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Registration failed');
+      }
+
+      alert('Registration successful! Please login.');
+      router.push('/login');
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-[#FAFBFC] font-sans selection:bg-[#4BA6B9]/10">
       <Header />
@@ -23,14 +57,15 @@ export default function Register() {
           <div className="max-w-4xl mx-auto">
             {/* Minimal Header */}
             <div className="border-l-4 border-[#4BA6B9] pl-6 mb-16">
-              <h1 className="text-5xl font-serif font-black text-[#1A1A1A] italic leading-tight">
+              <h1 className="text-5xl font-serif font-black text-[#1A1A1A]  leading-tight">
                 Scholar <br />Registration
               </h1>
               <p className="text-sm font-medium text-[#555555] mt-3 max-w-lg">Join the EISR global research ecosystem to submit manuscripts and participate in professional peer reviews.</p>
             </div>
 
             {/* Production Grade Form Structure */}
-            <form className="space-y-16">
+            {error && <div className="bg-red-50 text-red-500 p-4 rounded-xl mb-6 text-sm font-bold border border-red-100">{error}</div>}
+            <form onSubmit={handleSubmit} className="space-y-16">
               
               {/* Section 1: Professional Profile */}
               <div className="bg-white border border-[#E2E8F0] shadow-sm rounded-xl overflow-hidden">
@@ -46,7 +81,13 @@ export default function Register() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div className="space-y-2">
                        <label className="text-[10px] font-black uppercase tracking-widest text-[#555555]">Given Name</label>
-                       <input type="text" placeholder="First Name" className="w-full border-b-2 border-[#F1F5F9] focus:border-[#4BA6B9] py-3 text-sm font-semibold text-[#1A1A1A] outline-none transition-all placeholder:text-[#BBBBBB] bg-transparent" />
+                       <input 
+                          type="text" 
+                          placeholder="First Name" 
+                          required
+                          value={formData.fullName}
+                          onChange={(e) => setFormData({...formData, fullName: e.target.value})}
+                          className="w-full border-b-2 border-[#F1F5F9] focus:border-[#4BA6B9] py-3 text-sm font-semibold text-[#1A1A1A] outline-none transition-all placeholder:text-[#BBBBBB] bg-transparent" />
                     </div>
                     <div className="space-y-2">
                        <label className="text-[10px] font-black uppercase tracking-widest text-[#555555]">Family Name</label>
@@ -93,18 +134,36 @@ export default function Register() {
                          <Mail size={12} className="mr-2 text-[#4BA6B9]" />
                          Official Email
                        </label>
-                       <input type="email" placeholder="researcher@university.edu" className="w-full border-b-2 border-[#F1F5F9] focus:border-[#4BA6B9] py-3 text-sm font-semibold text-[#1A1A1A] outline-none transition-all placeholder:text-[#BBBBBB] bg-transparent" />
+                       <input 
+                         type="email" 
+                         placeholder="researcher@university.edu" 
+                         required
+                         value={formData.email}
+                         onChange={(e) => setFormData({...formData, email: e.target.value})}
+                         className="w-full border-b-2 border-[#F1F5F9] focus:border-[#4BA6B9] py-3 text-sm font-semibold text-[#1A1A1A] outline-none transition-all placeholder:text-[#BBBBBB] bg-transparent" />
                     </div>
                     <div className="space-y-2">
                        <label className="text-[10px] font-black uppercase tracking-widest text-[#555555]">Scholar ID (Username)</label>
-                       <input type="text" placeholder="unique_login_id" className="w-full border-b-2 border-[#F1F5F9] focus:border-[#4BA6B9] py-3 text-sm font-semibold text-[#1A1A1A] outline-none transition-all placeholder:text-[#BBBBBB] bg-transparent" />
-                    </div>
+                       <input 
+                          type="text" 
+                          placeholder="unique_login_id" 
+                          required
+                          value={formData.username}
+                          onChange={(e) => setFormData({...formData, username: e.target.value})}
+                          className="w-full border-b-2 border-[#F1F5F9] focus:border-[#4BA6B9] py-3 text-sm font-semibold text-[#1A1A1A] outline-none transition-all placeholder:text-[#BBBBBB] bg-transparent" />
+                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div className="space-y-2">
                        <label className="text-[10px] font-black uppercase tracking-widest text-[#555555]">Secure Password</label>
-                       <input type="password" placeholder="••••••••" className="w-full border-b-2 border-[#F1F5F9] focus:border-[#4BA6B9] py-3 text-sm font-semibold text-[#1A1A1A] outline-none transition-all placeholder:text-[#BBBBBB] bg-transparent" />
+                       <input 
+                         type="password" 
+                         placeholder="••••••••" 
+                         required
+                         value={formData.password}
+                         onChange={(e) => setFormData({...formData, password: e.target.value})}
+                         className="w-full border-b-2 border-[#F1F5F9] focus:border-[#4BA6B9] py-3 text-sm font-semibold text-[#1A1A1A] outline-none transition-all placeholder:text-[#BBBBBB] bg-transparent" />
                     </div>
                     <div className="space-y-2">
                        <label className="text-[10px] font-black uppercase tracking-widest text-[#555555]">Verify Password</label>
@@ -148,8 +207,8 @@ export default function Register() {
 
               {/* Footer Actions */}
               <div className="flex flex-col md:flex-row items-center justify-between gap-10 pt-10 border-t border-[#F1F5F9]">
-                <button className="w-full md:w-auto bg-[#1A1A1A] hover:bg-[#4BA6B9] text-white px-16 py-5 font-black text-[11px] uppercase tracking-[0.3em] transition-all shadow-xl hover:shadow-[#4BA6B9]/20 group">
-                  Finalize Registration
+                <button type="submit" disabled={loading} className="w-full md:w-auto bg-[#1A1A1A] hover:bg-[#4BA6B9] text-white px-16 py-5 font-black text-[11px] uppercase tracking-[0.3em] transition-all shadow-xl hover:shadow-[#4BA6B9]/20 group disabled:opacity-50">
+                  {loading ? 'Registering...' : 'Finalize Registration'}
                 </button>
                 <Link 
                   href="/login" 
@@ -161,7 +220,7 @@ export default function Register() {
 
             </form>
 
-            <p className="mt-20 text-center text-[10px] font-bold text-[#BBBBBB] italic">
+            <p className="mt-20 text-center text-[10px] font-bold text-[#BBBBBB] ">
                EISR ensures all submitted research and user data is protected by global institutional security standards.
             </p>
           </div>

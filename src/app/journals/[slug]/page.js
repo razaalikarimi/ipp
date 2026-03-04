@@ -99,7 +99,7 @@ export default function JournalPage() {
         return (
           <div className="space-y-12">
             <div className="border-l-4 border-[#4BA6B9] pl-6 py-2">
-              <h2 className="text-3xl font-serif font-black text-[#1A1A1A] italic">Home</h2>
+              <h2 className="text-3xl font-serif font-black text-[#1A1A1A] ">Home</h2>
               <p className="text-sm font-bold text-[#555555] uppercase mt-2 tracking-widest">{journal.title}</p>
             </div>
             
@@ -149,7 +149,7 @@ export default function JournalPage() {
               </div>
             </div>
 
-            <div className="space-y-6 text-[#555555] leading-relaxed text-[15px] font-medium italic">
+            <div className="space-y-6 text-[#555555] leading-relaxed text-[15px] font-medium ">
               <p>{journal.about}</p>
             </div>
           </div>
@@ -157,7 +157,7 @@ export default function JournalPage() {
       case 'archives':
         return (
           <div className="space-y-12">
-            <h2 className="text-3xl font-serif font-black text-[#1A1A1A] italic">Archives</h2>
+            <h2 className="text-3xl font-serif font-black text-[#1A1A1A] ">Archives</h2>
             <div className="py-20 flex flex-col items-center justify-center border-2 border-dashed border-[#E2E8F0] rounded-3xl bg-[#F8FAFC]">
                <BookOpen size={48} className="text-[#CBD5E1] mb-4" />
                <p className="text-sm font-bold text-[#94A3B8] uppercase tracking-widest">No archived issues found</p>
@@ -167,7 +167,7 @@ export default function JournalPage() {
       case 'current':
         return (
           <div className="space-y-12">
-            <h2 className="text-3xl font-serif font-black text-[#1A1A1A] italic">Current Issues</h2>
+            <h2 className="text-3xl font-serif font-black text-[#1A1A1A] ">Current Issues</h2>
             <div className="py-20 flex flex-col items-center justify-center border-2 border-dashed border-[#E2E8F0] rounded-3xl bg-[#F8FAFC]">
                <Activity size={48} className="text-[#CBD5E1] mb-4" />
                <p className="text-sm font-bold text-[#94A3B8] uppercase tracking-widest">No published issues in repository</p>
@@ -197,7 +197,7 @@ export default function JournalPage() {
             <div className="md:col-span-3 bg-white p-10 border border-[#E2E8F0] rounded-2xl shadow-sm min-h-[500px]">
                {activeMenuSection === 'aims' && (
                  <div className="space-y-8">
-                    <h3 className="text-xl font-serif font-black italic border-b border-[#F1F5F9] pb-4">Aims & Scope</h3>
+                    <h3 className="text-xl font-serif font-black  border-b border-[#F1F5F9] pb-4">Aims & Scope</h3>
                     <p className="text-sm font-medium text-[#555555] leading-loose">{journal.aims}</p>
                     <div className="space-y-4">
                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#4BA6B9]">Scope Includes:</h4>
@@ -214,7 +214,7 @@ export default function JournalPage() {
                )}
                {activeMenuSection === 'guidelines' && (
                  <div className="space-y-8">
-                    <h3 className="text-xl font-serif font-black italic border-b border-[#F1F5F9] pb-4">Author Guidelines</h3>
+                    <h3 className="text-xl font-serif font-black  border-b border-[#F1F5F9] pb-4">Author Guidelines</h3>
                     <div className="text-sm font-medium text-[#555555] leading-loose whitespace-pre-line">
                        {journal.guidelines}
                     </div>
@@ -222,7 +222,7 @@ export default function JournalPage() {
                )}
                {activeMenuSection === 'editorial' && (
                  <div className="space-y-8">
-                    <h3 className="text-xl font-serif font-black italic border-b border-[#F1F5F9] pb-4">Editorial Team</h3>
+                    <h3 className="text-xl font-serif font-black  border-b border-[#F1F5F9] pb-4">Editorial Team</h3>
                     <div className="grid grid-cols-1 gap-8">
                        {journal.editorialTeam.map((ed, i) => (
                          <div key={i} className="flex space-x-4 border-b border-[#F1F5F9] pb-6 last:border-0">
@@ -231,7 +231,7 @@ export default function JournalPage() {
                             </div>
                             <div className="space-y-2">
                                <h4 className="text-sm font-black uppercase text-[#1A1A1A]">{i+1}. {ed.name}</h4>
-                               <p className="text-[11px] font-bold text-[#555555] italic">{ed.affiliation}</p>
+                               <p className="text-[11px] font-bold text-[#555555] ">{ed.affiliation}</p>
                                {ed.email && <p className="text-[10px] font-bold text-[#4BA6B9]">{ed.email}</p>}
                             </div>
                          </div>
@@ -241,15 +241,15 @@ export default function JournalPage() {
                )}
                {activeMenuSection === 'indexing' && (
                  <div className="space-y-8">
-                    <h3 className="text-xl font-serif font-black italic border-b border-[#F1F5F9] pb-4">Abstracting & Indexing</h3>
+                    <h3 className="text-xl font-serif font-black  border-b border-[#F1F5F9] pb-4">Abstracting & Indexing</h3>
                     <p className="text-sm font-medium text-[#555555] leading-loose">{journal.indexing}</p>
                  </div>
                )}
                {activeMenuSection === 'apc' && (
                  <div className="space-y-8">
-                    <h3 className="text-xl font-serif font-black italic border-b border-[#F1F5F9] pb-4">Article Publishing Charges</h3>
+                    <h3 className="text-xl font-serif font-black  border-b border-[#F1F5F9] pb-4">Article Publishing Charges</h3>
                     <div className="p-8 bg-[#F0FBFC] border border-[#4BA6B9]/20 rounded-xl">
-                      <p className="text-lg font-black text-[#1A1A1A] tracking-tight italic">{journal.apc}</p>
+                      <p className="text-lg font-black text-[#1A1A1A] tracking-tight ">{journal.apc}</p>
                     </div>
                  </div>
                )}
@@ -259,7 +259,7 @@ export default function JournalPage() {
       case 'policies':
         return (
           <div className="space-y-12">
-            <h2 className="text-3xl font-serif font-black text-[#1A1A1A] italic">Journal Policies</h2>
+            <h2 className="text-3xl font-serif font-black text-[#1A1A1A] ">Journal Policies</h2>
             <div className="grid grid-cols-1 gap-12">
                {Object.entries(journal.policies).map(([key, val]) => (
                  <div key={key} className="space-y-4">
@@ -276,14 +276,14 @@ export default function JournalPage() {
         return (
            <div className="space-y-16">
             <div className="space-y-6">
-              <h2 className="text-3xl font-serif font-black text-[#1A1A1A] italic">About The Journal</h2>
-              <p className="text-sm font-medium text-[#555555] leading-loose max-w-4xl italic">
+              <h2 className="text-3xl font-serif font-black text-[#1A1A1A] ">About The Journal</h2>
+              <p className="text-sm font-medium text-[#555555] leading-loose max-w-4xl ">
                 {journal.about}
               </p>
             </div>
             <div className="space-y-6">
-              <h3 className="text-xl font-serif font-black italic">Privacy Statement</h3>
-              <p className="text-sm font-medium text-[#555555] leading-loose max-w-4xl italic">
+              <h3 className="text-xl font-serif font-black ">Privacy Statement</h3>
+              <p className="text-sm font-medium text-[#555555] leading-loose max-w-4xl ">
                 {journal.privacy}
               </p>
             </div>
@@ -304,7 +304,7 @@ export default function JournalPage() {
         <div className="max-w-[1240px] mx-auto relative z-10 space-y-12">
            <div className="space-y-4 max-w-2xl">
               <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[#4BA6B9]">Scientific Journal Gateway</span>
-              <h1 className="text-4xl md:text-5xl font-serif font-black italic leading-tight scale-y-105">{journal.title}</h1>
+              <h1 className="text-4xl md:text-5xl font-serif font-black  leading-tight scale-y-105">{journal.title}</h1>
            </div>
            
            {/* Tab Navigation - OJS Style */}
@@ -353,7 +353,7 @@ export default function JournalPage() {
                    ) : (
                      <div className="p-10 text-center z-10 border border-white/20 space-y-4">
                         <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#4BA6B9]">EISR Scientific</p>
-                        <h4 className="text-xl font-serif font-black italic text-white leading-tight">{journal.title}</h4>
+                        <h4 className="text-xl font-serif font-black  text-white leading-tight">{journal.title}</h4>
                      </div>
                    )}
                    <div className="absolute bottom-0 inset-x-0 bg-black/40 backdrop-blur py-4 text-[9px] font-black tracking-[0.3em] uppercase text-white/60 text-center z-10">Repository Visual</div>
@@ -368,7 +368,7 @@ export default function JournalPage() {
                     <h4 className="text-[9px] font-black uppercase tracking-[0.3em] text-[#BBBBBB]">Fast Track</h4>
                     <div className="flex items-center space-x-2 text-[#4BA6B9]">
                        <Clock size={14} />
-                       <span className="text-xs font-black italic">60 Day Review</span>
+                       <span className="text-xs font-black ">60 Day Review</span>
                     </div>
                   </div>
                   <button className="w-full bg-[#1A1A1A] text-white py-4 text-[10px] font-black uppercase tracking-[0.3em] flex items-center justify-center space-x-3 hover:bg-[#4BA6B9] transition-all">
@@ -385,7 +385,7 @@ export default function JournalPage() {
                   </div>
                   <div>
                     <p className="text-[9px] font-black uppercase tracking-widest text-[#555555]">Peer Reviewed</p>
-                    <p className="text-[10px] font-bold text-[#1A1A1A] italic">Verified Academic Quality</p>
+                    <p className="text-[10px] font-bold text-[#1A1A1A] ">Verified Academic Quality</p>
                   </div>
                </div>
            </div>

@@ -24,7 +24,7 @@ export default function Footer() {
                  />
               </div>
             </div>
-            <p className="text-[#8F9CAE] text-sm leading-relaxed italic pr-4 max-w-sm">
+            <p className="text-[#8F9CAE] text-sm leading-relaxed  pr-4 max-w-sm">
               Eye-Innovations Scientific Research (EISR) is an international scholarly publisher dedicated to the rapid dissemination of impactful research in multidisciplinary sciences.
             </p>
             <div className="flex items-center space-x-4 pt-2">
@@ -57,7 +57,7 @@ export default function Footer() {
              </div>
              <div className="space-y-3">
                 <h4 className="text-[#C38452] text-[10px] font-black uppercase tracking-[0.2em]">Inquiries</h4>
-                <a href="mailto:info@eisr.org" className="block text-sm font-medium text-[#8F9CAE] hover:text-white transition-colors">info@eisr.org</a>
+                <a href="mailto:info@EyeISR.com" className="block text-sm font-medium text-[#8F9CAE] hover:text-white transition-colors">info@eisr.org</a>
              </div>
              <div className="flex space-x-4 pt-2">
                 <a 

@@ -20,7 +20,7 @@ const leaders = [
 
 export default function Leadership() {
   return (
-    <div className="min-h-screen flex flex-col font-sans bg-white italic lowercase">
+    <div className="min-h-screen flex flex-col font-sans bg-white  lowercase">
       <Header />
       
       <main className="flex-grow pb-40">
@@ -39,12 +39,12 @@ export default function Leadership() {
                     <div key={idx} className="bg-white rounded-3xl p-10 border border-[#F1F1F1] shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden group flex items-center justify-between space-x-8">
                        <div className="flex items-center space-x-8">
                           {/* Image placeholder */}
-                          <div className="w-24 h-24 bg-[#F1F1F1] rounded-2xl flex items-center justify-center text-[#BBBBBB] shrink-0 italic text-[10px] uppercase font-bold text-center p-2 leading-tight">
+                          <div className="w-24 h-24 bg-[#F1F1F1] rounded-2xl flex items-center justify-center text-[#BBBBBB] shrink-0  text-[10px] uppercase font-bold text-center p-2 leading-tight">
                              Image <br />Placeholder
                           </div>
                           <div className="space-y-1">
                              <h3 className="text-xl font-bold text-[#1A1A1A] group-hover:text-[#4BA6B9] transition-colors uppercase tracking-tight">{leader.name}</h3>
-                             <p className="text-xs text-[#555555] font-bold italic opacity-60 uppercase tracking-widest leading-loose">{leader.title}</p>
+                             <p className="text-xs text-[#555555] font-bold  opacity-60 uppercase tracking-widest leading-loose">{leader.title}</p>
                           </div>
                        </div>
                        <div className="p-2 border border-[#F1F1F1] rounded-lg hover:bg-[#4BA6B9] hover:text-white transition-all transform group-hover:scale-110">

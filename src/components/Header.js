@@ -61,7 +61,7 @@ export default function Header() {
               <Link 
                 key={item.name} 
                 href={href} 
-                className="text-[13px] font-bold text-[#555555] hover:text-[#4BA6B9] transition-all uppercase tracking-widest relative group italic"
+                className="text-[13px] font-bold text-[#555555] hover:text-[#4BA6B9] transition-all uppercase tracking-widest relative group "
               >
                 {item.name}
                 <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-[#4BA6B9] transition-all group-hover:w-full"></span>
@@ -102,7 +102,7 @@ export default function Header() {
                 href={href}
                 onClick={() => setIsMobileMenuOpen(false)}
                 className={cn(
-                  "text-lg font-bold italic uppercase tracking-widest",
+                  "text-lg font-bold  uppercase tracking-widest",
                   pathname === item.path ? "text-[#4BA6B9]" : "text-[#555555]"
                 )}
               >

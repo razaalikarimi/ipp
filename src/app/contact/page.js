@@ -16,7 +16,7 @@ const journalContacts = [
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen flex flex-col font-sans bg-white italic lowercase">
+    <div className="min-h-screen flex flex-col font-sans bg-white  lowercase">
       <Header />
       
       <main className="flex-grow pb-40">
@@ -24,7 +24,7 @@ export default function ContactPage() {
            <div className="max-w-[1240px] mx-auto px-6">
               <div className="text-[10px] font-black uppercase tracking-[0.25em] text-[#555555]">Contact • Eye-Innovations Scientific Research</div>
               <h1 className="text-5xl font-bold text-[#1A1A1A] tracking-tight uppercase underline-offset-[16px]">Contact Directory</h1>
-              <p className="text-sm font-bold text-[#6B7280] italic max-w-xl mx-auto opacity-70 mt-6 leading-relaxed">Reach the publisher team or contact a specific journal directly.</p>
+              <p className="text-sm font-bold text-[#6B7280]  max-w-xl mx-auto opacity-70 mt-6 leading-relaxed">Reach the publisher team or contact a specific journal directly.</p>
            </div>
         </section>
 
@@ -45,11 +45,11 @@ export default function ContactPage() {
         {/* Journals Grid */}
         <section className="mt-32 max-w-[1240px] mx-auto px-6">
            <div className="flex flex-col md:row items-center justify-between gap-10 mb-20 border-b border-[#F1F1F1] pb-10">
-              <h2 className="text-xl font-bold text-[#1A1A1A] italic uppercase tracking-tighter decoration-4 decoration-[#4BA6B9] underline underline-offset-8">Journal contacts</h2>
+              <h2 className="text-xl font-bold text-[#1A1A1A]  uppercase tracking-tighter decoration-4 decoration-[#4BA6B9] underline underline-offset-8">Journal contacts</h2>
               
               {/* Search placeholder */}
               <div className="relative group w-full md:w-96">
-                 <input type="text" placeholder="Search journal or email..." className="w-full bg-[#F4F6F9] border-none rounded-2xl p-4 pl-6 text-sm italic font-bold placeholder:text-[#BBBBBB]/40 outline-none transition-all focus:ring-2 focus:ring-[#4BA6B9]" />
+                 <input type="text" placeholder="Search journal or email..." className="w-full bg-[#F4F6F9] border-none rounded-2xl p-4 pl-6 text-sm  font-bold placeholder:text-[#BBBBBB]/40 outline-none transition-all focus:ring-2 focus:ring-[#4BA6B9]" />
                  <Search className="absolute right-6 top-1/2 -translate-y-1/2 text-[#BBBBBB]/40 group-hover:text-[#4BA6B9] transition-colors" size={18} />
               </div>
            </div>
@@ -59,8 +59,8 @@ export default function ContactPage() {
                  <div key={idx} className="bg-white rounded-2xl p-10 border border-[#F1F1F1] shadow-sm hover:shadow-2xl transition-all duration-500 space-y-10 group overflow-hidden relative">
                     <div className="flex items-center justify-between">
                        <div className="space-y-3">
-                          <h4 className="text-[13px] font-bold text-[#1A1A1A] italic uppercase tracking-tight group-hover:text-[#4BA6B9] transition-colors">{jc.name}</h4>
-                          <p className="text-[12px] text-[#BBBBBB] italic font-medium">{jc.email}</p>
+                          <h4 className="text-[13px] font-bold text-[#1A1A1A]  uppercase tracking-tight group-hover:text-[#4BA6B9] transition-colors">{jc.name}</h4>
+                          <p className="text-[12px] text-[#BBBBBB]  font-medium">{jc.email}</p>
                        </div>
                        <button className="p-3 border border-[#F1F1F1] rounded hover:bg-[#F1F1F1] transition-all shadow-sm">
                           <span className="text-[10px] uppercase font-black text-[#555555]">Copy</span>

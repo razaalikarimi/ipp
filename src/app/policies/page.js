@@ -82,13 +82,13 @@ export default function PoliciesPage() {
                        <span className="w-12 h-px bg-[#4BA6B9]" />
                        <span>Institutional Governance Hub</span>
                     </div>
-                    <h1 className="text-4xl md:text-5xl font-serif font-black italic text-[#1A1A1A] tracking-tight scale-y-105">Publication Ethics &<br />Institutional Standards</h1>
-                    <p className="text-sm text-[#555555] leading-relaxed font-sans italic max-w-xl">Upholding the highest standards of integrity, transparency, and scientific quality across our entire multidisciplinary ecosystem.</p>
+                    <h1 className="text-4xl md:text-5xl font-serif font-black  text-[#1A1A1A] tracking-tight scale-y-105">Publication Ethics &<br />Institutional Standards</h1>
+                    <p className="text-sm text-[#555555] leading-relaxed font-sans  max-w-xl">Upholding the highest standards of integrity, transparency, and scientific quality across our entire multidisciplinary ecosystem.</p>
                  </div>
                  <div className="bg-[#0B1F3A] p-10 rounded-xl text-white space-y-6 w-full md:w-80 shadow-2xl relative group overflow-hidden border border-white/5">
                     <ShieldCheck className="w-12 h-12 text-[#4BA6B9] group-hover:scale-110 transition-transform duration-700" />
                     <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#4BA6B9]">COPE Ethics Hub</h4>
-                    <p className="text-xs font-bold italic leading-relaxed opacity-60 uppercase tracking-widest leading-loose">Verified Academic Standards</p>
+                    <p className="text-xs font-bold  leading-relaxed opacity-60 uppercase tracking-widest leading-loose">Verified Academic Standards</p>
                     <div className="absolute -bottom-6 -right-6 text-white/5 font-serif font-black text-9xl pointer-events-none select-none">EISR</div>
                  </div>
               </div>
@@ -102,9 +102,9 @@ export default function PoliciesPage() {
                  {/* Sidebar Info */}
                  <div className="lg:col-span-4 space-y-10">
                     <div className="bg-white p-10 rounded-2xl shadow-sm space-y-8 border border-[#E2E8F0]">
-                       <h3 className="text-xl font-serif font-black italic text-[#1A1A1A]">Academic Integrity</h3>
+                       <h3 className="text-xl font-serif font-black  text-[#1A1A1A]">Academic Integrity</h3>
                        <div className="h-1 w-16 bg-[#4BA6B9]" />
-                       <p className="text-sm font-medium leading-loose text-[#555555] italic">
+                       <p className="text-sm font-medium leading-loose text-[#555555] ">
                           All authors, editors, reviewers, and publishers involved in EISR publications must strictly adhere to the ethical principles outlined in these documents.
                        </p>
                        <button className="w-full bg-[#1A1A1A] text-white py-4 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-[#4BA6B9] transition-all shadow-lg hover:shadow-[#4BA6B9]/20">
@@ -117,7 +117,7 @@ export default function PoliciesPage() {
                           <Info size={16} />
                           <span className="text-[10px] font-black uppercase tracking-[0.2em]">Note for Authors</span>
                        </div>
-                       <p className="text-xs text-[#555555] leading-relaxed font-bold italic opacity-70">Compliance with these policies is a prerequisite for submission consideration across all EISR portfolio journals.</p>
+                       <p className="text-xs text-[#555555] leading-relaxed font-bold  opacity-70">Compliance with these policies is a prerequisite for submission consideration across all EISR portfolio journals.</p>
                     </div>
                  </div>
 

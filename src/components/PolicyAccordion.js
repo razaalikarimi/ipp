@@ -55,7 +55,7 @@ export default function PolicyAccordion({ items }) {
               >
                 <div className="px-8 pb-10 pt-2 ml-[64px] mr-8">
                    <div className="h-px w-20 bg-[#1E4FA3] mb-8" />
-                   <div className="prose prose-slate max-w-none text-[#1A1A1A]/70 text-base leading-relaxed  italic italic">
+                   <div className="prose prose-slate max-w-none text-[#1A1A1A]/70 text-base leading-relaxed   ">
                       {item.content}
                    </div>
                 </div>

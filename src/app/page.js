@@ -1,7 +1,7 @@
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
-import { FileText, Calendar, User, Search, Globe, ChevronRight } from 'lucide-react';
+import { FileText, Calendar, User, Search, Globe, ChevronRight, BookOpen, Target, Microscope, ArrowRight } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -12,7 +12,7 @@ export default function Home() {
         {/* Exact EISR Hero Section */}
         <section 
           id="home"
-          className="relative h-[420px] bg-[#050B14] bg-cover bg-center flex items-center px-6 antialiased z-40"
+          className="relative h-[500px] bg-[#050B14] bg-cover bg-[center_top] flex items-center px-6 antialiased z-40"
           style={{ 
             backgroundImage: "url('/eisr_hero_exact.jpg')",
             backgroundRepeat: "no-repeat",
@@ -59,22 +59,89 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Long Mission Section */}
-        <section className="pt-48 pb-20 px-6 bg-white relative z-0">
-           <div className="max-w-[1240px] mx-auto text-center md:text-left">
-              <p className="text-lg text-[#555555] leading-8 max-w-5xl mx-auto italic font-medium">
-                Eye-Innovations Scientific Research (EISR) is an academic platform dedicated to promoting and disseminating innovative research in the realm of sustainable technologies and scientific excellence. Our mission is to empower researchers, academics, and industry professionals to exchange knowledge and contribute to advancing sustainable solutions for global challenges. By fostering a collaborative environment, EISR serves as a bridge connecting technology and sustainability. Our journal publications encompass a wide array of topics, including AI, health care, renewable energy, and the intersection of technology with environmental responsibility. EISR is committed to rigorous peer-reviewed research and strives to uphold academic excellence. We aim to amplify impactful ideas and research contributions that align with the global vision of sustainable development, making it accessible to a diverse audience of readers and practitioners.
-              </p>
+        {/* Foundations Section */}
+        <section id="about" className="pt-48 pb-20 px-6 bg-white relative z-0">
+           <div className="max-w-[1240px] mx-auto space-y-16">
+              
+              {/* 1. Introductory Paragraph */}
+              <div className="max-w-4xl mx-auto">
+                 <p className="text-lg md:text-xl text-[#333333] leading-relaxed text-justify font-medium">
+                    Eye-Innovations Scientific Research (EISR) stands as a premier global multidisciplinary scientific publishing and innovation ecosystem. Dedicated to advancing the frontiers of future-driven research,EISR serves as a foundational pillar for scholars, industry leaders, and policymakers. By facilitating the translation of rigorous academic inquiry into tangible societal progress, the organization forms a vital nexus connecting scientific discovery with technological and sustainable advancement on a global scale.
+                 </p>
+              </div>
+
+              {/* 3-Column Grid for About, Mission, Scope */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8">
+                 {/* 1. About */}
+                 <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-[#F1F1F1] p-10 flex flex-col h-full hover:shadow-xl transition-shadow">
+                    <div className="flex flex-col items-center mb-6">
+                       <BookOpen className="text-[#1D4ED8] w-12 h-12 mb-4" strokeWidth={1.5} />
+                       <h2 className="text-lg font-bold text-[#1A1A1A] uppercase tracking-wider">About</h2>
+                    </div>
+                    <div className="w-full h-px bg-[#F1F1F1] mb-6"></div>
+                    <div className="flex flex-col flex-grow">
+                       <h3 className="text-sm font-bold text-[#1A1A1A] uppercase tracking-wider text-center mb-6">About</h3>
+                       <p className="text-sm text-[#555555] leading-relaxed mb-4 flex-grow">
+                          Eye-Innovations Scientific Research (EISR) is a global multidisciplinary research publishing ecosystem dedicated to advancing scientific knowledge and innovation. The platform connects researchers, academic institutions, and industry leaders to transform research into real-world impact.
+                       </p>
+                    </div>
+                 </div>
+
+                 {/* 2. Our Mission */}
+                 <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-[#F1F1F1] p-10 flex flex-col h-full hover:shadow-xl transition-shadow">
+                    <div className="flex flex-col items-center mb-6">
+                       <Target className="text-[#1D4ED8] w-12 h-12 mb-4" strokeWidth={1.5} />
+                       <h2 className="text-lg font-bold text-[#1A1A1A] uppercase tracking-wider">Our Mission</h2>
+                    </div>
+                    <div className="w-full h-px bg-[#F1F1F1] mb-6"></div>
+                    <div className="flex flex-col flex-grow">
+                       <h3 className="text-sm font-bold text-[#1A1A1A] uppercase tracking-wider text-center mb-6">Driving Knowledge<br/>& Innovation</h3>
+                       <p className="text-sm text-[#555555] leading-relaxed mb-4 flex-grow">
+                          Our mission is to publish high-quality peer-reviewed research that promotes technological innovation, supports evidence-based policy development, and fosters collaboration between academia and industry worldwide.
+                       </p>
+                    </div>
+                 </div>
+
+                 {/* 3. Our Scope */}
+                 <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-[#F1F1F1] p-10 flex flex-col h-full hover:shadow-xl transition-shadow">
+                    <div className="flex flex-col items-center mb-6">
+                       <Microscope className="text-[#1D4ED8] w-12 h-12 mb-4" strokeWidth={1.5} />
+                       <h2 className="text-lg font-bold text-[#1A1A1A] uppercase tracking-wider">Our Scope</h2>
+                    </div>
+                    <div className="w-full h-px bg-[#F1F1F1] mb-6"></div>
+                    <div className="flex flex-col flex-grow">
+                       <h3 className="text-sm font-bold text-[#1A1A1A] uppercase tracking-wider text-center mb-6">Research Domains</h3>
+                       <ul className="text-sm text-[#555555] space-y-3 mb-8 flex-grow ml-2">
+                          {[
+                             'Artificial Intelligence',
+                             'Engineering & Technology',
+                             'Digital Transformation',
+                             'Data Science & Analytics',
+                             'Environmental Sustainability',
+                             'Biomedical Sciences',
+                             'Innovation & Policy Research'
+                          ].map((domain, i) => (
+                             <li key={i} className="flex items-start">
+                                <div className="w-1.5 h-1.5 rounded-full bg-[#1D4ED8] mt-1.5 mr-3 shrink-0"></div>
+                                <span>{domain}</span>
+                             </li>
+                          ))}
+                       </ul>
+                    </div>
+                 </div>
+              </div>
            </div>
         </section>
 
-        {/* Indexed & Abstracted Section - True Edge-to-Edge Full Width */}
-        <section className="w-full bg-white border-t border-[#F1F1F1] overflow-hidden">
-           <img 
-             src="/indexing.png" 
-             alt="Indexed & Abstracted In" 
-             className="w-full h-auto block object-cover"
-           />
+        {/* Indexed & Abstracted Section */}
+        <section className="bg-white py-24 border-t border-[#F1F1F1]">
+           <div className="max-w-[1240px] mx-auto px-6 text-center">
+              <h2 className="text-3xl font-bold text-[#1A1A1A]  tracking-tight uppercase">Indexed & Abstracted In</h2>
+              {/* Logos will be added here in the future when available */}
+              <div className="mt-12 text-[#555555]  text-sm">
+                 Indexing updates coming soon.
+              </div>
+           </div>
         </section>
 
         {/* Journals Grid Section */}
@@ -85,48 +152,44 @@ export default function Home() {
                    {
                      title: 'Journal of Eye-Innovation in Machine Learning (JEIML)',
                      issn: 'ISSN 3079-5354 (Online)',
-                     chief: 'Dr. Mohammed Amin Almaayah',
+                     chief: 'Prof. Dr. M. Irfan Uddin',
+                     image: '/jeiml_cover.jpg',
                      index: 'Indexed by Scopus'
                    },
                    {
-                     title: 'EISR Jordanian Journal of Informatics and Computing',
-                     issn: 'ISSN 3080-6828 (Online)',
-                     chief: 'Dr. Shahed Almobydleen',
-                     index: null
-                   },
-                   {
-                     title: 'EISR Journal of Security Risk Management',
+                     title: 'Journal of Eye Innovation in Security Analysis (JEISA)',
                      issn: 'ISSN 3080-9444 (Online)',
-                     chief: 'Dr. Mohammed Amin',
-                     index: null
-                   },
-                   {
-                     title: 'EISR International Journal of Accounting and Business Intelligence',
-                     issn: 'ISSN 3105-3726 (Online)',
-                     chief: 'Prof. Zalailah Salleh',
+                     chief: 'Prof. Ali Kashif Bashir',
+                     image: '/jeisa_cover.jpg',
                      index: null
                    }
                  ].map((j, i) => (
                     <div key={i} className="bg-white rounded-xl shadow-lg border border-[#F1F1F1] overflow-hidden flex h-[280px] group hover:shadow-2xl transition-all duration-500">
                        <div className="w-48 bg-[#0B1F3A] p-2 flex flex-col justify-center items-center relative overflow-hidden shrink-0">
-                          <div className="absolute inset-0 opacity-20 pointer-events-none">
-                             <div className="h-full w-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-400 to-transparent scale-150" />
-                          </div>
-                          <div className="z-10 text-white text-center italic font-bold text-[10px] uppercase p-4 border border-white/20">
-                             EISR Scientific <br />Journal
-                          </div>
+                          {j.image ? (
+                             <img src={j.image} alt={j.title} className="w-full h-full object-cover rounded-md border border-white/10" />
+                          ) : (
+                             <>
+                                <div className="absolute inset-0 opacity-20 pointer-events-none">
+                                   <div className="h-full w-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-400 to-transparent scale-150" />
+                                </div>
+                                <div className="z-10 text-white text-center  font-bold text-[10px] uppercase p-4 border border-white/20">
+                                   EISR Scientific <br />Journal
+                                </div>
+                             </>
+                          )}
                        </div>
                        <div className="flex-grow p-8 flex flex-col justify-between">
                           <div className="space-y-4">
-                             <h3 className="text-xl font-bold text-[#4BA6B9] leading-tight group-hover:underline italic uppercase">{j.title}</h3>
-                             <p className="text-xs font-bold text-[#555555] italic">{j.issn}</p>
+                             <h3 className="text-xl font-bold text-[#4BA6B9] leading-tight group-hover:underline  uppercase">{j.title}</h3>
+                             <p className="text-xs font-bold text-[#555555] ">{j.issn}</p>
                           </div>
                           <div className="space-y-4">
                              <div className="space-y-2">
-                                <p className="text-sm font-bold text-[#555555] italic">{j.chief}</p>
+                                <p className="text-sm font-bold text-[#555555] ">{j.chief}</p>
                              </div>
                              {j.index && (
-                                <div className="flex items-center space-x-3 text-[#4BA6B9] font-bold text-xs italic tracking-wider">
+                                <div className="flex items-center space-x-3 text-[#4BA6B9] font-bold text-xs  tracking-wider">
                                    <span>{j.index}</span>
                                    <div className="w-10 h-6 bg-[#F1F1F1] grayscale group-hover:grayscale-0 transition-all rounded text-[8px] flex items-center justify-center font-black opacity-40">SCOPUS</div>
                                 </div>
@@ -142,7 +205,7 @@ export default function Home() {
         {/* Recent Articles Section */}
         <section id="articles" className="bg-white py-24 border-t border-[#F1F1F1]">
            <div className="max-w-[1240px] mx-auto px-6 space-y-12">
-              <h2 className="text-3xl font-bold text-[#1A1A1A] italic tracking-tight uppercase underline decoration-4 decoration-[#F1F1F1]">Recent Articles</h2>
+              <h2 className="text-3xl font-bold text-[#1A1A1A]  tracking-tight uppercase underline decoration-4 decoration-[#F1F1F1]">Recent Articles</h2>
               
               <div className="space-y-10">
                  {[
@@ -162,8 +225,8 @@ export default function Home() {
                    }
                  ].map((art, idx) => (
                     <div key={idx} className="bg-white rounded-2xl p-10 lg:p-12 border border-[#F1F1F1] shadow-sm hover:shadow-2xl transition-all duration-500 space-y-4 group">
-                       <h3 className="text-xl font-bold text-[#4BA6B9] group-hover:underline italic uppercase">{art.title}</h3>
-                       <div className="space-y-2 text-sm text-[#555555] font-bold italic">
+                       <h3 className="text-xl font-bold text-[#4BA6B9] group-hover:underline  uppercase">{art.title}</h3>
+                       <div className="space-y-2 text-sm text-[#555555] font-bold ">
                           <p>Authors: {art.authors}</p>
                           <p>Journal: {art.journal}</p>
                           <p>Published: {art.published}</p>
@@ -178,26 +241,24 @@ export default function Home() {
         {/* Journals APC Section - Redesigned to exact table style */}
         <section id="apc" className="bg-white py-32 border-t border-[#F1F1F1]">
            <div className="max-w-[1240px] mx-auto px-6 space-y-12">
-              <h2 className="text-3xl font-bold text-[#1A1A1A] italic tracking-tight text-center uppercase">Article Publishing Charges (APCs) for EISR Journals</h2>
+              <h2 className="text-3xl font-bold text-[#1A1A1A]  tracking-tight text-center uppercase">Article Publishing Charges (APCs) for EISR Journals</h2>
               
               <div className="max-w-[1000px] mx-auto bg-[#F8F9FB] rounded-2xl border border-[#EEEEEE] overflow-hidden shadow-sm">
-                 <table className="w-full text-left font-sans italic">
-                    <thead>
-                       <tr className="bg-[#F1F1F1]/50 border-b border-[#EEEEEE]">
-                          <th className="p-8 text-sm font-bold text-[#1A1A1A]">Journal Name</th>
-                          <th className="p-8 text-sm font-bold text-[#1A1A1A] text-right">Article Publishing Charges (APCs)</th>
+                 <table className="w-full text-left font-sans text-sm">
+                    <thead className="bg-[#F8F9FB]">
+                       <tr className="border-b border-[#EEEEEE]">
+                          <th className="py-5 px-8 font-bold text-[#1A1A1A]">Journal Name</th>
+                          <th className="py-5 px-8 font-bold text-[#1A1A1A]">Article Publishing Charges (APCs)</th>
                        </tr>
                     </thead>
                     <tbody className="divide-y divide-[#EEEEEE]">
                        {[
-                         { name: 'Journal of Eye-Innovation in Machine Learning (JEIML)', fee: 'No PC (No Publishing Charges)' },
-                         { name: 'EISR Journal of Security Risk Management', fee: 'No APC Until March 2026' },
-                         { name: 'EISR Jordanian Journal of Informatics and Computing', fee: 'No APC Until March 2026' },
-                         { name: 'EISR International Journal of Accounting and Business Intelligence', fee: 'No APC Until March 2026' }
+                         { name: 'Journal of Eye-Innovation in Machine Learning', fee: 'No APC' },
+                         { name: 'Journal of Eye Innovation in Security Analysis', fee: 'No APC' }
                        ].map((item, idx) => (
                           <tr key={idx} className="hover:bg-white transition-colors">
-                             <td className="p-8 text-sm font-bold text-[#4BA6B9] group-hover:underline cursor-pointer">{item.name}</td>
-                             <td className="p-8 text-sm font-bold text-[#1A1A1A] text-right">{item.fee}</td>
+                             <td className="py-5 px-8 font-medium text-[#3B82F6]">{item.name}</td>
+                             <td className="py-5 px-8 font-bold text-[#1A1A1A]">{item.fee}</td>
                           </tr>
                        ))}
                     </tbody>
@@ -209,7 +270,7 @@ export default function Home() {
         {/* Leadership Team Section */}
         <section id="leadership" className="bg-white py-32">
            <div className="max-w-[1240px] mx-auto px-6 space-y-16">
-              <h2 className="text-3xl font-bold text-[#1A1A1A] italic tracking-tight uppercase underline decoration-4 decoration-[#F1F1F1]">Leadership Team</h2>
+              <h2 className="text-3xl font-bold text-[#1A1A1A]  tracking-tight uppercase underline decoration-4 decoration-[#F1F1F1]">Leadership Team</h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                  {[
@@ -221,7 +282,7 @@ export default function Home() {
                           <User size={30} className="text-[#BBBBBB]" />
                        </div>
                        <div className="space-y-1">
-                          <h4 className="text-xl font-bold text-[#1A1A1A] group-hover:text-[#4BA6B9] transition-colors italic uppercase">{leader.name}</h4>
+                          <h4 className="text-xl font-bold text-[#1A1A1A] group-hover:text-[#4BA6B9] transition-colors  uppercase">{leader.name}</h4>
                           <p className="text-xs font-bold text-[#555555] opacity-60 uppercase tracking-widest">{leader.title}</p>
                        </div>
                     </div>
@@ -235,8 +296,8 @@ export default function Home() {
            <div className="max-w-[1240px] mx-auto px-6">
               <div className="grid lg:grid-cols-2 gap-20">
                  <div className="space-y-8">
-                    <h2 className="text-3xl font-bold text-[#1A1A1A] italic tracking-tight uppercase">Get in Touch</h2>
-                    <p className="text-[#555555] italic leading-relaxed">
+                    <h2 className="text-3xl font-bold text-[#1A1A1A]  tracking-tight uppercase">Get in Touch</h2>
+                    <p className="text-[#555555]  leading-relaxed">
                        Have questions about submissions, peer review, or specific journals? Our editorial team is here to assist you with global academic inquiries.
                     </p>
                     <div className="space-y-6 pt-6">

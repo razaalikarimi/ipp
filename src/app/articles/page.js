@@ -54,7 +54,7 @@ export default function ArticlesPage() {
       <main className="flex-grow pb-40">
         <section className="bg-white py-24 border-b border-[#F1F1F1]">
            <div className="max-w-[1240px] mx-auto px-6">
-              <h1 className="text-4xl font-bold text-[#1A1A1A] italic uppercase tracking-tight">Published Articles</h1>
+              <h1 className="text-4xl font-bold text-[#1A1A1A]  uppercase tracking-tight">Published Articles</h1>
            </div>
         </section>
 
@@ -63,8 +63,8 @@ export default function ArticlesPage() {
               <div className="space-y-12">
                  {articles.map((art, idx) => (
                     <div key={idx} className="bg-white rounded-2xl p-10 lg:p-12 border border-[#F1F1F1] shadow-sm hover:shadow-2xl transition-all duration-500 space-y-4 group">
-                       <h3 className="text-xl font-bold text-[#4BA6B9] group-hover:underline italic uppercase">{art.title}</h3>
-                       <div className="space-y-2 text-sm text-[#555555] font-bold italic">
+                       <h3 className="text-xl font-bold text-[#4BA6B9] group-hover:underline  uppercase">{art.title}</h3>
+                       <div className="space-y-2 text-sm text-[#555555] font-bold ">
                           <p>Authors: {art.authors}</p>
                           <p>Journal: {art.journal}</p>
                           <p>Published: {art.published}</p>
