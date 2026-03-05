@@ -1,92 +1,103 @@
 'use client';
 import Link from 'next/link';
-import { Linkedin, Globe } from 'lucide-react';
+import { Linkedin, Mail, MapPin, ChevronRight, ShieldCheck } from 'lucide-react';
 import Logo from './Logo';
+import { journals } from '@/lib/data';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full bg-[#0B1521] text-white pt-24 pb-12 font-sans overflow-hidden">
+    <footer className="w-full bg-[#050B14] text-white pt-24 pb-12 font-sans selection:bg-[#4BA6B9]/20 border-t border-white/5">
       <div className="max-w-[1240px] mx-auto px-6">
         
-        {/* Main Footer - 4 Column Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 pb-16">
+        {/* 3-Column Professional Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16 pb-20 border-b border-white/5">
           
-          {/* Column 1: Branding (Spans 5 cols on lg) */}
-          <div className="lg:col-span-5 space-y-8">
-            <div className="inline-block bg-white p-5 rounded-xl shadow-lg w-[260px]">
-              <div className="relative w-full h-auto flex items-center justify-center">
-                 <img 
-                   src="/eisr_logo.png" 
-                   alt="EISR Eye-Innovations Scientific Research" 
-                   className="w-full h-auto object-contain"
-                 />
+          {/* Column 1: Our Journals */}
+          <div className="space-y-8">
+            <h4 className="text-[14px] font-black text-white tracking-wide">Our Journals</h4>
+            <div className="flex flex-col space-y-5">
+              {journals.map(j => (
+                <Link key={j.slug} href={`/journals/${j.slug}`} className="group flex items-start gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-white/20 mt-1.5 group-hover:bg-[#4BA6B9] transition-all" />
+                  <span className="text-[13px] font-bold text-[#D1D5DB] group-hover:text-white transition-colors leading-tight">
+                    {j.title}
+                  </span>
+                </Link>
+              ))}
+              <Link href="/journals" className="text-[11px] font-bold text-[#4BA6B9] pt-2 hover:underline">
+                View All Repositories
+              </Link>
+            </div>
+          </div>
+
+          {/* Column 2: Support Hub */}
+          <div className="space-y-8">
+            <h4 className="text-[14px] font-black text-white tracking-wide">Support Hub</h4>
+            <div className="flex flex-col space-y-4">
+               {[
+                 { name: 'Author Guidelines', path: '/journals/jeiml/author-guidelines' },
+                 { name: 'Publication Ethics', path: '/policies/publication-ethics' },
+                 { name: 'Peer Review Policy', path: '/policies/peer-review' },
+                 { name: 'Generative AI Policy', path: '/policies/generative-ai' },
+                 { name: 'Plagiarism Policy', path: '/policies/plagiarism' }
+               ].map(link => (
+                 <Link key={link.name} href={link.path} className="text-[13px] font-bold text-[#D1D5DB] hover:text-white transition-colors flex items-center gap-2 group">
+                   <ChevronRight size={14} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-[#4BA6B9]" />
+                   {link.name}
+                 </Link>
+               ))}
+            </div>
+          </div>
+
+          {/* Column 3: Address & Contact */}
+          <div className="space-y-8">
+            <h4 className="text-[14px] font-black text-white tracking-wide">Address & Contact</h4>
+            <div className="space-y-6">
+              <div className="flex items-start space-x-4 text-[#D1D5DB]">
+                <MapPin size={18} className="mt-0.5 shrink-0 text-[#4BA6B9]" />
+                <div className="space-y-1">
+                  <p className="text-[13px] font-bold text-white">Amman-Jordan</p>
+                  <p className="text-[11px] leading-relaxed">Global Headquarters</p>
+                </div>
+              </div>
+              <div className="space-y-4">
+                <a href="mailto:info@eisr.com" className="flex items-center space-x-4 text-[#D1D5DB] group">
+                  <Mail size={16} className="shrink-0 text-[#4BA6B9]" />
+                  <span className="text-[13px] font-bold group-hover:text-white transition-colors">info@eisr.com</span>
+                </a>
+
               </div>
             </div>
-            <p className="text-[#8F9CAE] text-sm leading-relaxed  pr-4 max-w-sm">
-              Eye-Innovations Scientific Research (EISR) is an international scholarly publisher dedicated to the rapid dissemination of impactful research in multidisciplinary sciences.
-            </p>
-            <div className="flex items-center space-x-4 pt-2">
-              <div className="h-px w-8 bg-[#C38452]/60"></div>
-              <p className="text-[#C38452] text-[10px] font-black uppercase tracking-[0.2em]">Verified Academic Publisher</p>
-            </div>
-          </div>
-
-          {/* Column 2: Links 1 (Spans 2 cols on lg) */}
-          <div className="lg:col-span-2 space-y-5 pt-4">
-             <Link href="/journals" className="block text-sm font-medium text-[#8F9CAE] hover:text-white transition-colors">Journals Portfolio</Link>
-             <Link href="/articles" className="block text-sm font-medium text-[#8F9CAE] hover:text-white transition-colors">Latest Articles</Link>
-             <Link href="/apc" className="block text-sm font-medium text-[#8F9CAE] hover:text-white transition-colors">APC Policies</Link>
-             <Link href="/policies" className="block text-sm font-medium text-[#8F9CAE] hover:text-white transition-colors">Publishing Ethics</Link>
-          </div>
-
-          {/* Column 3: Links 2 (Spans 2 cols on lg) */}
-          <div className="lg:col-span-2 space-y-5 pt-4">
-             <Link href="/leadership" className="block text-sm font-medium text-[#8F9CAE] hover:text-white transition-colors">Leadership Team</Link>
-             <Link href="/contact" className="block text-sm font-medium text-[#8F9CAE] hover:text-white transition-colors">Contact Office</Link>
-             <Link href="/login" className="block text-sm font-medium text-[#8F9CAE] hover:text-white transition-colors">Login Gateway</Link>
-             <Link href="/register" className="block text-sm font-medium text-[#8F9CAE] hover:text-white transition-colors">Member Register</Link>
-          </div>
-
-          {/* Column 4: Contact & Social (Spans 3 cols on lg) */}
-          <div className="lg:col-span-3 space-y-8 pt-4">
-             <div className="space-y-3">
-                <h4 className="text-[#C38452] text-[10px] font-black uppercase tracking-[0.2em]">Global HQ</h4>
-                <p className="text-sm font-medium text-[#8F9CAE]">Amman, Jordan • Dubai, UAE</p>
-             </div>
-             <div className="space-y-3">
-                <h4 className="text-[#C38452] text-[10px] font-black uppercase tracking-[0.2em]">Inquiries</h4>
-                <a href="mailto:info@EyeISR.com" className="block text-sm font-medium text-[#8F9CAE] hover:text-white transition-colors">info@eisr.org</a>
-             </div>
-             <div className="flex space-x-4 pt-2">
-                <a 
-                  href="https://linkedin.com" 
-                  className="w-9 h-9 rounded border border-[#2A3544] flex items-center justify-center text-[#8F9CAE] hover:text-white hover:border-[#4BA6B9] hover:bg-[#2A3544]/50 transition-all"
-                >
-                   <Linkedin size={15} />
-                </a>
-                <a 
-                  href="#" 
-                  className="w-9 h-9 rounded border border-[#2A3544] flex items-center justify-center text-[#8F9CAE] hover:text-white hover:border-[#4BA6B9] hover:bg-[#2A3544]/50 transition-all"
-                >
-                   <Globe size={15} />
-                </a>
-             </div>
           </div>
 
         </div>
 
-        {/* Bottom Bar Container */}
-        <div className="pt-10 border-t border-[#1C2634] flex flex-col items-center space-y-8">
-           <p className="text-[10px] font-bold text-[#566579] tracking-[0.2em] uppercase text-center">
-             {currentYear}© Eye-Innovations Scientific Research. All Rights Reserved.
-           </p>
-           
-           <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-[10px] font-bold text-[#566579] tracking-[0.2em] uppercase">
-              <Link href="/policies" className="hover:text-[#8F9CAE] transition-colors">Publication Ethics</Link>
-              <Link href="/policies" className="hover:text-[#8F9CAE] transition-colors">Privacy Policy</Link>
-              <Link href="/policies" className="hover:text-[#8F9CAE] transition-colors">Terms of Use</Link>
+        {/* Branding & Attribution */}
+        <div className="pt-16">
+           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+              <div className="space-y-6">
+                 <div className="flex items-center gap-6">
+                    <Link href="/" className="hover:scale-105 transition-transform duration-500">
+                      <Logo variant="full" scrolled={true} className="scale-100" />
+                    </Link>
+                    <div className="h-10 w-px bg-white/10 hidden md:block" />
+                    <div className="flex flex-col">
+                       <p className="text-[13px] font-bold text-white/90">Eye-Innovations Scientific Research</p>
+                       <p className="text-[11px] font-bold text-[#4BA6B9] tracking-widest mt-0.5">Eye-ISR.com</p>
+                    </div>
+                 </div>
+                 <p className="text-[11px] font-bold text-[#556579]">{currentYear}© Eye-ISR.com Global Services. All rights reserved.</p>
+              </div>
+
+              <div className="flex items-center space-x-6">
+                 <Link href="/privacy" className="text-[12px] font-bold text-[#D1D5DB] hover:text-[#4BA6B9] transition-colors">Privacy Statement</Link>
+                 <Link href="/terms" className="text-[12px] font-bold text-[#D1D5DB] hover:text-[#4BA6B9] transition-colors">Publication Terms</Link>
+                 <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-[#D1D5DB] hover:bg-[#1e78ff] hover:text-white transition-all">
+                    <Linkedin size={18} />
+                 </a>
+              </div>
            </div>
         </div>
 

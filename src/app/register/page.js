@@ -43,187 +43,181 @@ export default function Register() {
     <div className="min-h-screen flex flex-col bg-[#FAFBFC] font-sans selection:bg-[#4BA6B9]/10">
       <Header />
       
-      <main className="flex-grow pt-40 pb-24 px-6">
-        <div className="max-w-[1240px] mx-auto">
-          {/* Breadcrumb - Clean & Subtle */}
-          <nav className="flex items-center space-x-2 text-[10px] font-black uppercase tracking-widest text-[#999999] mb-12">
-            <Link href="/" className="hover:text-[#4BA6B9]">Main Page</Link>
-            <ChevronRight size={10} />
-            <Link href="/login" className="hover:text-[#4BA6B9]">Login Gateway</Link>
-            <ChevronRight size={10} />
-            <span className="text-[#1A1A1A]">Scholar Registration</span>
-          </nav>
+      <main className="flex-grow pt-24 pb-32 px-6">
+        <div className="max-w-[800px] mx-auto">
+          
+          <div className="mb-16 border-l-4 border-[#4BA6B9] pl-8">
+            <h1 className="text-5xl font-bold text-[#1A1A1A] tracking-tight leading-tight mb-4">
+               Register
+            </h1>
+            <p className="text-[14px] font-black text-[#1A1A1A] max-w-md">
+               Create your account to start submitting and reviewing articles.
+            </p>
+          </div>
 
-          <div className="max-w-4xl mx-auto">
-            {/* Minimal Header */}
-            <div className="border-l-4 border-[#4BA6B9] pl-6 mb-16">
-              <h1 className="text-5xl font-serif font-black text-[#1A1A1A]  leading-tight">
-                Scholar <br />Registration
-              </h1>
-              <p className="text-sm font-medium text-[#555555] mt-3 max-w-lg">Join the EISR global research ecosystem to submit manuscripts and participate in professional peer reviews.</p>
+          {error && (
+            <div className="bg-red-50 border border-red-100 text-red-600 px-6 py-4 rounded-xl mb-10 text-[13px] font-bold flex items-center gap-3">
+               <div className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse"></div>
+               {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-12">
+            {/* Section 1: Identity */}
+            <div className="bg-white border border-[#E2E8F0] shadow-sm rounded-2xl overflow-hidden">
+               <div className="bg-[#F8F9FA] px-10 py-5 border-b border-[#F1F5F9] flex items-center justify-between">
+                  <div className="flex items-center space-x-3 text-[#4BA6B9]">
+                     <User size={18} />
+                     <h2 className="text-[12px] font-bold text-[#1A1A1A]">Your Information</h2>
+                  </div>
+               </div>
+               
+               <div className="p-10 lg:p-12 space-y-10">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                     <div className="space-y-3">
+                        <label className="text-[12px] font-bold text-[#1A1A1A] ml-1">First Name</label>
+                        <input 
+                           type="text" 
+                           placeholder="Enter first name" 
+                           required
+                           value={formData.fullName}
+                           onChange={(e) => setFormData({...formData, fullName: e.target.value})}
+                           className="w-full bg-[#F8F9FA] border border-[#EEEEEE] focus:border-[#4BA6B9] focus:bg-white px-5 py-4 rounded-xl text-sm font-bold text-[#1A1A1A] outline-none transition-all placeholder:text-[#888888]" 
+                        />
+                     </div>
+                     <div className="space-y-3">
+                        <label className="text-[12px] font-bold text-[#1A1A1A] ml-1">Last Name</label>
+                        <input 
+                           type="text" 
+                           placeholder="Enter last name" 
+                           className="w-full bg-[#F8F9FA] border border-[#EEEEEE] focus:border-[#4BA6B9] focus:bg-white px-5 py-4 rounded-xl text-sm font-bold text-[#1A1A1A] outline-none transition-all placeholder:text-[#888888]" 
+                        />
+                     </div>
+                  </div>
+
+                  <div className="space-y-3">
+                     <label className="text-[12px] font-bold text-[#1A1A1A] ml-1 flex items-center gap-2">
+                        <Building2 size={12} className="text-[#4BA6B9]" />
+                        University or Institution
+                     </label>
+                     <input 
+                        type="text" 
+                        placeholder="Your university or organization name" 
+                        className="w-full bg-[#F8F9FA] border border-[#EEEEEE] focus:border-[#4BA6B9] focus:bg-white px-5 py-4 rounded-xl text-sm font-bold text-[#1A1A1A] outline-none transition-all placeholder:text-[#888888]" 
+                     />
+                  </div>
+               </div>
             </div>
 
-            {/* Production Grade Form Structure */}
-            {error && <div className="bg-red-50 text-red-500 p-4 rounded-xl mb-6 text-sm font-bold border border-red-100">{error}</div>}
-            <form onSubmit={handleSubmit} className="space-y-16">
-              
-              {/* Section 1: Professional Profile */}
-              <div className="bg-white border border-[#E2E8F0] shadow-sm rounded-xl overflow-hidden">
-                <div className="bg-[#FAFBFC] px-10 py-6 border-b border-[#F1F5F9] flex items-center justify-between">
-                  <div className="flex items-center space-x-3 text-[#4BA6B9]">
-                    <User size={18} />
-                    <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-[#1A1A1A]">Scholar Profile</h2>
-                  </div>
-                  <span className="text-[9px] font-bold text-[#BBBBBB] uppercase">Required Section</span>
-                </div>
-
-                <div className="p-10 lg:p-12 space-y-10">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <div className="space-y-2">
-                       <label className="text-[10px] font-black uppercase tracking-widest text-[#555555]">Given Name</label>
-                       <input 
-                          type="text" 
-                          placeholder="First Name" 
-                          required
-                          value={formData.fullName}
-                          onChange={(e) => setFormData({...formData, fullName: e.target.value})}
-                          className="w-full border-b-2 border-[#F1F5F9] focus:border-[#4BA6B9] py-3 text-sm font-semibold text-[#1A1A1A] outline-none transition-all placeholder:text-[#BBBBBB] bg-transparent" />
-                    </div>
-                    <div className="space-y-2">
-                       <label className="text-[10px] font-black uppercase tracking-widest text-[#555555]">Family Name</label>
-                       <input type="text" placeholder="Middle & Last Names" className="w-full border-b-2 border-[#F1F5F9] focus:border-[#4BA6B9] py-3 text-sm font-semibold text-[#1A1A1A] outline-none transition-all placeholder:text-[#BBBBBB] bg-transparent" />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-[#555555] flex items-center">
-                      <Building2 size={12} className="mr-2 text-[#4BA6B9]" />
-                      Institutional Affiliation
-                    </label>
-                    <input type="text" placeholder="University, Department, or Research Institute" className="w-full border-b-2 border-[#F1F5F9] focus:border-[#4BA6B9] py-3 text-sm font-semibold text-[#1A1A1A] outline-none transition-all placeholder:text-[#BBBBBB] bg-transparent" />
-                  </div>
-
-                  <div className="space-y-2 max-w-sm">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-[#555555] flex items-center">
-                      <Globe size={12} className="mr-2 text-[#4BA6B9]" />
-                      Resident Country
-                    </label>
-                    <select className="w-full border-b-2 border-[#F1F5F9] focus:border-[#4BA6B9] py-3 text-sm font-semibold text-[#1A1A1A] outline-none transition-all bg-transparent appearance-none bg-[url('https://www.svgrepo.com/show/511311/chevron-down.svg')] bg-[length:12px_12px] bg-[right_0rem_center] bg-no-repeat">
-                       <option value="">Select Region</option>
-                       <option>Jordan</option>
-                       <option>United Arab Emirates</option>
-                       <option>United Kingdom</option>
-                       <option>United States</option>
-                       <option>Other</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              {/* Section 2: Account Access */}
-              <div className="bg-white border border-[#E2E8F0] shadow-sm rounded-xl overflow-hidden">
-                <div className="bg-[#FAFBFC] px-10 py-6 border-b border-[#F1F5F9] flex items-center space-x-3 text-[#4BA6B9]">
+            {/* Section 2: Access & Credentials */}
+            <div className="bg-white border border-[#E2E8F0] shadow-sm rounded-2xl overflow-hidden">
+               <div className="bg-[#F8F9FA] px-10 py-5 border-b border-[#F1F5F9] flex items-center space-x-3 text-[#4BA6B9]">
                   <Lock size={18} />
-                  <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-[#1A1A1A]">Account Credentials</h2>
-                </div>
+                  <h2 className="text-[12px] font-bold text-[#1A1A1A]">Account Details</h2>
+               </div>
 
-                <div className="p-10 lg:p-12 space-y-10">
+               <div className="p-10 lg:p-12 space-y-10">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <div className="space-y-2">
-                       <label className="text-[10px] font-black uppercase tracking-widest text-[#555555] flex items-center">
-                         <Mail size={12} className="mr-2 text-[#4BA6B9]" />
-                         Official Email
-                       </label>
-                       <input 
-                         type="email" 
-                         placeholder="researcher@university.edu" 
-                         required
-                         value={formData.email}
-                         onChange={(e) => setFormData({...formData, email: e.target.value})}
-                         className="w-full border-b-2 border-[#F1F5F9] focus:border-[#4BA6B9] py-3 text-sm font-semibold text-[#1A1A1A] outline-none transition-all placeholder:text-[#BBBBBB] bg-transparent" />
-                    </div>
-                    <div className="space-y-2">
-                       <label className="text-[10px] font-black uppercase tracking-widest text-[#555555]">Scholar ID (Username)</label>
-                       <input 
-                          type="text" 
-                          placeholder="unique_login_id" 
-                          required
-                          value={formData.username}
-                          onChange={(e) => setFormData({...formData, username: e.target.value})}
-                          className="w-full border-b-2 border-[#F1F5F9] focus:border-[#4BA6B9] py-3 text-sm font-semibold text-[#1A1A1A] outline-none transition-all placeholder:text-[#BBBBBB] bg-transparent" />
+                     <div className="space-y-3">
+                        <label className="text-[12px] font-bold text-[#555555] ml-1 flex items-center gap-2">
+                           <Mail size={12} className="text-[#4BA6B9]" />
+                           Email Address
+                        </label>
+                        <input 
+                           type="email" 
+                           required
+                           placeholder="research@institute.com"
+                           value={formData.email}
+                           onChange={(e) => setFormData({...formData, email: e.target.value})}
+                           className="w-full bg-[#F8F9FA] border border-[#EEEEEE] focus:border-[#4BA6B9] focus:bg-white px-5 py-4 rounded-xl text-sm font-semibold text-[#1A1A1A] outline-none transition-all placeholder:text-[#BBBBBB]" 
+                        />
+                     </div>
+                     <div className="space-y-3">
+                        <label className="text-[12px] font-bold text-[#1A1A1A] ml-1">Username</label>
+                        <input 
+                           type="text" 
+                           required
+                           placeholder="Choose a username"
+                           value={formData.username}
+                           onChange={(e) => setFormData({...formData, username: e.target.value})}
+                           className="w-full bg-[#F8F9FA] border border-[#EEEEEE] focus:border-[#4BA6B9] focus:bg-white px-5 py-4 rounded-xl text-sm font-bold text-[#1A1A1A] outline-none transition-all placeholder:text-[#888888]" 
+                        />
                      </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <div className="space-y-2">
-                       <label className="text-[10px] font-black uppercase tracking-widest text-[#555555]">Secure Password</label>
-                       <input 
-                         type="password" 
-                         placeholder="••••••••" 
-                         required
-                         value={formData.password}
-                         onChange={(e) => setFormData({...formData, password: e.target.value})}
-                         className="w-full border-b-2 border-[#F1F5F9] focus:border-[#4BA6B9] py-3 text-sm font-semibold text-[#1A1A1A] outline-none transition-all placeholder:text-[#BBBBBB] bg-transparent" />
-                    </div>
-                    <div className="space-y-2">
-                       <label className="text-[10px] font-black uppercase tracking-widest text-[#555555]">Verify Password</label>
-                       <input type="password" placeholder="••••••••" className="w-full border-b-2 border-[#F1F5F9] focus:border-[#4BA6B9] py-3 text-sm font-semibold text-[#1A1A1A] outline-none transition-all placeholder:text-[#BBBBBB] bg-transparent" />
-                    </div>
+                     <div className="space-y-3">
+                        <label className="text-[12px] font-bold text-[#1A1A1A] ml-1">Password</label>
+                        <input 
+                           type="password" 
+                           required
+                           placeholder="••••••••"
+                           value={formData.password}
+                           onChange={(e) => setFormData({...formData, password: e.target.value})}
+                           className="w-full bg-[#F8F9FA] border border-[#EEEEEE] focus:border-[#4BA6B9] focus:bg-white px-5 py-4 rounded-xl text-sm font-bold text-[#1A1A1A] outline-none transition-all placeholder:text-[#888888]" 
+                        />
+                     </div>
+                     <div className="space-y-3">
+                        <label className="text-[12px] font-bold text-[#555555] ml-1">Verify Password</label>
+                         <input 
+                           type="password" 
+                           required
+                           placeholder="••••••••"
+                           className="w-full bg-[#F8F9FA] border border-[#EEEEEE] focus:border-[#4BA6B9] focus:bg-white px-5 py-4 rounded-xl text-sm font-semibold text-[#1A1A1A] outline-none transition-all placeholder:text-[#BBBBBB]" 
+                        />
+                     </div>
                   </div>
-                </div>
-              </div>
+               </div>
+            </div>
 
-              {/* Section 3: Institutional Consent */}
-              <div className="bg-[#0B1F3A] p-10 lg:p-12 rounded-xl text-white space-y-10 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-[#4BA6B9]/10 rounded-full blur-3xl -mr-32 -mt-32" />
-                <div className="flex items-center space-x-3 text-[#4BA6B9]">
+            {/* Section 3: Authorization */}
+            <div className="bg-[#0B1F3A] p-10 lg:p-12 rounded-3xl text-white space-y-8 relative overflow-hidden group shadow-2xl">
+               <div className="absolute top-0 right-0 w-64 h-64 bg-[#4BA6B9]/10 rounded-full blur-3xl -mr-32 -mt-32" />
+               <div className="flex items-center space-x-3 text-[#4BA6B9]">
                   <ShieldCheck size={18} />
-                  <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-white">Institutional Consent</h2>
-                </div>
+                  <h2 className="text-[12px] font-bold text-white">Terms & Consent</h2>
+               </div>
 
-                <div className="space-y-6 relative z-10">
+               <div className="space-y-5 relative z-10">
                   <label className="flex items-start space-x-4 cursor-pointer group/check">
-                    <input type="checkbox" className="mt-1 w-4 h-4 border-2 border-white/20 rounded-sm text-[#4BA6B9] focus:ring-0 bg-transparent" />
-                    <span className="text-[13px] font-medium text-white/70 leading-relaxed group-hover/check:text-white transition-colors">
-                      I agree to the <Link href="/policies" className="text-[#4BA6B9] font-bold hover:underline">EISR Privacy Policy</Link> and data collection standards. 
-                    </span>
+                     <input type="checkbox" required className="mt-1 w-5 h-5 border-2 border-white/20 rounded text-[#4BA6B9] focus:ring-0 bg-transparent cursor-pointer" />
+                     <span className="text-[13px] font-bold text-white leading-relaxed group-hover/check:text-[#4BA6B9] transition-colors">
+                        I agree to the EISR <span className="underline">Privacy Policy</span> and data standards.
+                     </span>
                   </label>
-
                   <label className="flex items-start space-x-4 cursor-pointer group/check">
-                    <input type="checkbox" className="mt-1 w-4 h-4 border-2 border-white/20 rounded-sm text-[#4BA6B9] focus:ring-0 bg-transparent" />
-                    <span className="text-[13px] font-medium text-white/70 leading-relaxed group-hover/check:text-white transition-colors">
-                      Notify me of new journal publications and scientific research calls.
-                    </span>
+                     <input type="checkbox" className="mt-1 w-5 h-5 border-2 border-white/20 rounded text-[#4BA6B9] focus:ring-0 bg-transparent cursor-pointer" />
+                     <span className="text-[13px] font-bold text-white leading-relaxed group-hover/check:text-[#4BA6B9] transition-colors">
+                        I want to be a peer reviewer for my area of expertise.
+                     </span>
                   </label>
+               </div>
+            </div>
 
-                  <label className="flex items-start space-x-4 cursor-pointer group/check">
-                    <input type="checkbox" className="mt-1 w-4 h-4 border-2 border-white/20 rounded-sm text-[#4BA6B9] focus:ring-0 bg-transparent" />
-                    <span className="text-[13px] font-medium text-white/70 leading-relaxed group-hover/check:text-white transition-colors">
-                      I am willing to act as a peer reviewer in my specialized domain of expertise.
-                    </span>
-                  </label>
-                </div>
-              </div>
-
-              {/* Footer Actions */}
-              <div className="flex flex-col md:flex-row items-center justify-between gap-10 pt-10 border-t border-[#F1F5F9]">
-                <button type="submit" disabled={loading} className="w-full md:w-auto bg-[#1A1A1A] hover:bg-[#4BA6B9] text-white px-16 py-5 font-black text-[11px] uppercase tracking-[0.3em] transition-all shadow-xl hover:shadow-[#4BA6B9]/20 group disabled:opacity-50">
-                  {loading ? 'Registering...' : 'Finalize Registration'}
-                </button>
+            {/* Final Submission */}
+            <div className="flex flex-col md:flex-row items-center justify-between gap-10 pt-10 border-t border-[#F1F5F9]">
+               <button 
+                  type="submit" 
+                  disabled={loading} 
+                  className="w-full md:w-auto bg-[#1A1A1A] hover:bg-[#4BA6B9] text-white px-16 py-5 rounded-2xl font-bold text-[12px] transition-all shadow-xl hover:shadow-[#4BA6B9]/20 group disabled:opacity-50"
+               >
+                  {loading ? 'Processing...' : 'Create Account'}
+               </button>
                 <Link 
-                  href="/login" 
-                  className="text-xs font-black text-[#1A1A1A] uppercase tracking-[0.2em] border-b-2 border-transparent hover:border-[#4BA6B9] transition-all"
+                   href="/login" 
+                   className="inline-flex items-center text-[12px] font-bold text-[#4BA6B9] group gap-2"
                 >
-                  Return to Login
+                   Already have an account? Sign In
+                   <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                 </Link>
-              </div>
+            </div>
+          </form>
 
-            </form>
-
-            <p className="mt-20 text-center text-[10px] font-bold text-[#BBBBBB] ">
-               EISR ensures all submitted research and user data is protected by global institutional security standards.
-            </p>
-          </div>
+          <footer className="mt-24 text-center">
+             <p className="text-[11px] font-bold text-[#1A1A1A]">
+                Verified Secure Researcher Enrollment Portal
+             </p>
+          </footer>
         </div>
       </main>
 

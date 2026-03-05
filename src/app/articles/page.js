@@ -1,86 +1,63 @@
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
-import { FileText } from 'lucide-react';
+import { articles, journals } from '@/lib/data';
 
 export const metadata = {
   title: "Published Articles | Eye-Innovations Scientific Research",
   description: "Browse the repository of peer-reviewed scientific articles published by EISR.",
 };
 
-const articles = [
-  {
-    title: "Cybersecurity threats, countermeasures and mitigation techniques on the IoT: Future research directions",
-    authors: "Almaha Adel Almuqren",
-    journal: "Journal of Eye-Innovation in Machine Learning (JEIML)",
-    published: "1/22/2025",
-    doi: "#"
-  },
-  {
-     title: "Applying risk analysis for determining threats and countermeasures in workstation domain",
-     authors: "Rama Soliman Mousa, Rami Shehab",
-     journal: "Journal of Eye-Innovation in Machine Learning (JEIML)",
-     published: "1/25/2025",
-     doi: "#"
-  },
-  {
-     title: "Risk auditing for Digital Twins in cyber physical systems: A systematic review",
-     authors: "Shahed Otoom",
-     journal: "JEIML",
-     published: "1/29/2025",
-     doi: "#"
-  },
-  {
-     title: "A Comprehensive Review of Security and Privacy Challenges and Solutions in Autonomous Driving Systems",
-     authors: "Mohammed Amin, Youakim Badr, Qais Al-Na'amneh, Mahmoud Aljawarneh, Rahaf Hazaymih, Shahid Munir Shah",
-     journal: "EISR Journal of Security Risk Management",
-     published: "11/16/2024",
-     doi: "#"
-  },
-  {
-     title: "Adaptive and Context-Aware Authentication Framework Using Edge AI and Blockchain in Future Vehicular Networks",
-     authors: "Mohammed Almaayah, Rejwan Bin Sulaiman",
-     journal: "EISR Journal of Security Risk Management",
-     published: "10/6/2024",
-     doi: "#"
-  }
-];
-
 export default function ArticlesPage() {
   return (
-    <div className="min-h-screen flex flex-col font-sans bg-white">
+    <div className="min-h-screen flex flex-col font-sans bg-white selection:bg-[#4BA6B9]/10">
       <Header />
       
-      <main className="flex-grow pb-40">
-        <section className="bg-white py-24 border-b border-[#F1F1F1]">
-           <div className="max-w-[1240px] mx-auto px-6">
-              <h1 className="text-4xl font-bold text-[#1A1A1A]  uppercase tracking-tight">Published Articles</h1>
+      <main className="flex-grow pb-40 px-6 mt-12">
+        <section className="bg-white pb-20 text-center space-y-4">
+           <div className="max-w-[1240px] mx-auto space-y-4">
+              <span className="text-[11px] font-bold text-[#4BA6B9]">Scientific Repositories</span>
+              <h1 className="text-4xl md:text-5xl font-sans font-bold text-[#1A1A1A] tracking-tight">Published Articles</h1>
+              <p className="text-[13px] font-bold text-[#6B7280] max-w-xl mx-auto opacity-70 mt-6 leading-relaxed">Repository of peer-reviewed international scientific research publications.</p>
            </div>
         </section>
 
-        <section className="mt-16">
-           <div className="max-w-[1240px] mx-auto px-6">
+        <section className="mt-20">
+           <div className="max-w-[1240px] mx-auto lg:px-6">
               <div className="space-y-12">
-                 {articles.map((art, idx) => (
-                    <div key={idx} className="bg-white rounded-2xl p-10 lg:p-12 border border-[#F1F1F1] shadow-sm hover:shadow-2xl transition-all duration-500 space-y-4 group">
-                       <h3 className="text-xl font-bold text-[#4BA6B9] group-hover:underline  uppercase">{art.title}</h3>
-                       <div className="space-y-2 text-sm text-[#555555] font-bold ">
-                          <p>Authors: {art.authors}</p>
-                          <p>Journal: {art.journal}</p>
-                          <p>Published: {art.published}</p>
-                       </div>
-                    </div>
-                 ))}
-                 
-                 {/* Simple Pagination */}
-                 <div className="mt-20 pt-10 border-t border-[#F1F1F1] flex justify-center">
-                    <div className="flex items-center space-x-2">
-                       <button className="px-4 py-2 bg-[#F1F1F1] rounded text-sm font-bold text-[#555555]">Prev</button>
-                       <button className="px-4 py-2 bg-[#4BA6B9] rounded text-sm font-bold text-white shadow-xl">1</button>
-                       <button className="px-4 py-2 bg-white border border-[#F1F1F1] rounded text-sm font-bold text-[#555555]">2</button>
-                       <button className="px-4 py-2 bg-[#F1F1F1] rounded text-sm font-bold text-[#555555]">Next</button>
-                    </div>
-                 </div>
+                   {articles.map((art) => {
+                     const journal = journals.find(j => j.id.toLowerCase() === art.journal.toLowerCase());
+                     return (
+                        <Link key={art.slug} href={`/articles/${art.slug}`} className="bg-white rounded-3xl p-10 lg:p-14 border border-[#E2E8F0] shadow-sm hover:shadow-2xl transition-all duration-500 group block relative overflow-hidden">
+                           <div className="absolute top-0 right-0 w-4 h-full bg-[#4BA6B9] opacity-0 group-hover:opacity-100 transition-opacity" />
+                           <div className="space-y-8">
+                             <div className="space-y-4">
+                               <div className="flex items-center gap-6">
+                                 <div className="px-3 py-1 bg-[#F1F5F9] rounded text-[10px] font-bold text-[#4BA6B9]">{art.type || 'Research Article'}</div>
+                                 <div className="h-px bg-gray-100 flex-grow" />
+                                 <div className="text-[10px] font-bold text-[#999999]">{art.published}</div>
+                               </div>
+                               <h3 className="text-2xl font-sans font-bold text-[#1A1A1A] group-hover:text-[#4BA6B9] leading-tight tracking-tight">{art.title}</h3>
+                             </div>
+
+                             <div className="grid md:grid-cols-2 gap-10 pt-4">
+                               <div className="space-y-4">
+                                  <h4 className="text-[11px] font-bold text-[#BBBBBB]">Contributing Authors</h4>
+                                  <div className="text-[13px] font-bold text-[#555555] flex flex-wrap gap-2">
+                                     {Array.isArray(art.authors) ? art.authors.join(' | ') : art.authors}
+                                  </div>
+                               </div>
+                               <div className="space-y-4">
+                                  <h4 className="text-[11px] font-bold text-[#BBBBBB]">Source Repository</h4>
+                                  <div className="text-[13px] font-bold text-[#4BA6B9]">
+                                     {journal ? journal.title : art.journal}
+                                  </div>
+                               </div>
+                             </div>
+                           </div>
+                        </Link>
+                     );
+                   })}
               </div>
            </div>
         </section>

@@ -53,18 +53,21 @@ export default function Header() {
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center space-x-10">
           {navItems.map((item) => {
-            const isHomePage = pathname === '/';
-            // If on home page, use anchors. If on other page, use full path.
-            const href = isHomePage ? `/#${item.id}` : item.path;
-            
+            const active = pathname === item.path || (item.path !== '/' && pathname.startsWith(item.path));
             return (
               <Link 
                 key={item.name} 
-                href={href} 
-                className="text-[13px] font-bold text-[#555555] hover:text-[#4BA6B9] transition-all uppercase tracking-widest relative group "
+                href={item.path} 
+                className={cn(
+                  "text-[15px] font-bold transition-all tracking-tight relative group",
+                  active ? "text-[#1A1A1A]" : "text-[#555555] hover:text-[#1A1A1A]"
+                )}
               >
                 {item.name}
-                <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-[#4BA6B9] transition-all group-hover:w-full"></span>
+                <span className={cn(
+                  "absolute -bottom-2 left-0 h-0.5 bg-[#4BA6B9] transition-all",
+                  active ? "w-full" : "w-0 group-hover:w-full"
+                )}></span>
               </Link>
             );
           })}
@@ -72,7 +75,12 @@ export default function Header() {
           {/* Login Button */}
           <Link 
             href="/login" 
-            className="px-6 py-2 border-2 border-[#4BA6B9] text-[#4BA6B9] text-[12px] font-black uppercase tracking-[0.2em] rounded-full hover:bg-[#4BA6B9] hover:text-white transition-all shadow-lg hover:shadow-[#4BA6B9]/20"
+            className={cn(
+               "px-8 py-2.5 border-2 transition-all rounded-full font-black text-[14px] shadow-lg",
+               pathname === '/login' 
+                ? "bg-[#4BA6B9] border-[#4BA6B9] text-white" 
+                : "border-[#1A1A1A] text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white"
+            )}
           >
             Login
           </Link>
@@ -102,7 +110,7 @@ export default function Header() {
                 href={href}
                 onClick={() => setIsMobileMenuOpen(false)}
                 className={cn(
-                  "text-lg font-bold  uppercase tracking-widest",
+                  "text-lg font-bold tracking-tight",
                   pathname === item.path ? "text-[#4BA6B9]" : "text-[#555555]"
                 )}
               >

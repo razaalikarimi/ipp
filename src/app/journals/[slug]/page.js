@@ -3,401 +3,237 @@ import { useParams } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
-import { Search, Globe, ChevronRight, FileText, Info, Users, ShieldCheck, Mail, BookOpen, Clock, Activity, Fingerprint } from 'lucide-react';
-import { useState } from 'react';
-
-const journalData = {
-  jeiml: {
-    id: 'jeiml',
-    title: 'Journal of Eye-Innovation in Machine Learning',
-    issn: '3079-5354 (Online)',
-    publishingModel: 'Open access',
-    frequency: 'Bi-annual',
-    reviewType: 'Double Blind Review',
-    doiPrefix: '10.58913',
-    publisher: 'Eye-Innovations Scientific Research (EISR)',
-    reviewSpeed: '60 days',
-    aims: 'JEIML aims to promote scientific excellence, foster interdisciplinary collaboration, and support the rapid dissemination of impactful research. All submitted manuscripts undergo a rigorous double-blind peer-review process to ensure originality, technical quality, clarity, and relevance.',
-    scope: [
-      'Machine Learning Algorithms and Models',
-      'Deep Learning and Neural Networks',
-      'Computer Vision and Image Processing',
-      'Natural Language Processing (NLP)',
-      'Explainable Artificial Intelligence (XAI)',
-      'Data Mining and Big Data Analytics',
-      'Reinforcement Learning',
-      'AI in Healthcare and Medical Imaging',
-      'Intelligent Systems and Robotics',
-      'Smart Cities and IoT Applications'
-    ],
-    guidelines: `Journal of Eye-Innovation in Machine Learning is an international, peer-reviewed, open-access academic journal dedicated to publishing high-quality research in machine learning, artificial intelligence, deep learning, computer vision, data science, and related emerging technologies. The journal engages both established and emerging researchers from around the world and upholds the highest standards of academic integrity and scholarly excellence.\n\nAuthors are required to prepare their manuscripts using the JEIML Word Template and submit them through the online submission system. Only manuscripts that strictly follow the journal’s formatting and submission guidelines will be considered for peer review.\n\nSubmitted manuscripts must be original, unpublished, and not under consideration by any other journal or conference.\n\nAll submissions undergo a rigorous peer-review process conducted by experts in the relevant fields. Manuscripts are evaluated based on originality, technical quality, clarity of presentation, methodological soundness, and scientific contribution.\n\nIn line with our commitment to timely dissemination of research, the journal aims to complete the peer-review process within four weeks. If authors do not receive any updates within this period, they are encouraged to contact the editorial office via email.\n\nJournal of Eye-Innovation in Machine Learning (JEIML) is an open-access international journal, ensuring free and unrestricted access to published research for the global academic and professional community.`,
-    editorialTeam: [
-      { name: 'Rajit Nair', affiliation: 'VIT Bhopal University, Bhopal, India' },
-      { name: 'Sultan Ahmed', affiliation: 'Prince Sattam Bin Abdulaziz University, Al-Kharj, Saudi Arabia' },
-      { name: 'Nadhem Ebrahim', affiliation: 'University of Akron, Akron, United States' },
-      { name: 'Dr. Rizwan Ali NAQVI', affiliation: 'Sejong University South Korea' },
-      { name: 'Osamah Ibrahim Khalaf', affiliation: 'Al-Nahrain University, Al-Nahrain Nanorenewable Energy Research Center', email: 'Usama81818@nahrainuniv.edu.iq' },
-      { name: 'Nesren S. Farhan', affiliation: 'Department of Health Informatics, College of Health Science, Saudi Electronic University, Riyadh, Saudi Arabia' }
-    ],
-    indexing: 'Journal of Eye-Innovation in Machine Learning (JEIML) is indexed and archived in leading scholarly platforms, ensuring global visibility and long-term accessibility of published research.',
-    apc: 'No Article Publishing Charges (No PC)',
-    policies: {
-      ethics: `Journal of Eye-Innovation in Machine Learning (JEIML) is committed to upholding the highest standards of publication ethics and academic integrity. The journal follows internationally accepted ethical guidelines to ensure transparency, fairness, and quality in scholarly publishing.
-
-1. Duties of Authors:
-• The submitted work is original, unpublished, and not under consideration elsewhere.
-• All sources are properly cited, and plagiarism in any form is strictly prohibited.
-• Data presented in the manuscript is accurate, honest, and not fabricated or manipulated.
-• All listed authors have made significant contributions to the research.
-• Any conflicts of interest are clearly disclosed.
-
-2. Duties of Editors:
-• Making fair, unbiased, and timely publication decisions based solely on academic merit.
-• Maintaining the confidentiality of submitted manuscripts.
-• Ensuring a rigorous and transparent peer-review process.
-• Taking appropriate actions in cases of suspected misconduct.
-
-3. Duties of Reviewers:
-• Conduct reviews objectively, fairly, and confidentially.
-• Provide constructive feedback to improve the quality of manuscripts.
-• Report any suspected plagiarism, duplication, or ethical issues.`,
-      openAccess: 'JEIML is a fully open-access journal, providing immediate, free, and permanent access to all published content. Readers may read, download, copy, distribute, print, search, and link to full texts without restriction, ensuring global knowledge dissemination and increased research visibility.',
-      peerReview: 'JEIML adopts a double-blind peer review process. Each submission is reviewed by at least two independent expert reviewers. Editors make publication decisions based on originality, quality, clarity, relevance, and technical soundness. Reviewers remain anonymous, and manuscripts are treated confidentially.',
-      archiving: 'JEIML ensures long-term digital preservation of all published content using secure electronic archiving systems. Published articles are permanently stored on journal servers and third-party repositories to ensure content availability, accessibility, and integrity.',
-      ai: 'Authors may use generative AI tools strictly for language editing, grammar checking, and formatting improvements. Authors must fully disclose the use of AI tools in manuscript preparation. AI tools must not be listed as authors, and responsibility for the accuracy, originality, and ethics of the content remains solely with human authors.',
-      copyright: 'All articles published in JEIML are licensed under the Creative Commons Attribution (CC BY 4.0) license. Authors retain full copyright of their work, allowing readers to copy, distribute, and adapt the content with proper attribution.',
-      plagiarism: 'All manuscripts submitted to JEIML are screened using professional plagiarism detection software. Manuscripts exceeding 15–20% similarity index (excluding references) will be rejected or returned for revision. Zero tolerance is applied to intentional plagiarism.',
-      misconduct: 'Scientific misconduct includes: Plagiarism, Fabrication or falsification of data, Duplicate submission, Authorship manipulation, Citation manipulation. Confirmed misconduct results in rejection, retraction, notification of institutions, and banning from future submissions.',
-      retractions: 'JEIML publishes retractions when major errors, ethical breaches, or scientific misconduct are confirmed. Retracted articles remain online but are clearly marked as Retracted, preserving the scholarly record.',
-      misbehavior: 'Unethical actions such as submission manipulation, peer-review interference, citation gaming, and identity falsification are treated as serious violations and lead to strict disciplinary action.',
-      corrections: 'JEIML allows Corrections (Errata) for minor errors not affecting conclusions, and Withdrawals for early-stage submissions before peer review. Post-publication withdrawals are permitted only in exceptional circumstances.'
-    },
-    about: 'Journal of Eye-Innovation in Machine Learning (JEIML) is an international, peer-reviewed, open-access scholarly journal dedicated to advancing research and innovation in the fields of machine learning, artificial intelligence, deep learning, computer vision, data science, pattern recognition, and intelligent systems. The journal aims to provide a global platform for researchers, academicians, industry professionals, and practitioners to disseminate high-quality original research, review articles, and technical contributions that present novel theoretical insights, practical methodologies, and real-world applications.',
-    privacy: 'The names and email addresses entered in this journal site will be used exclusively for the stated purposes of this journal and will not be made available for any other purpose or to any other party.',
-    cover: '/jeiml_cover.jpg'
-  },
-  security: {
-    id: 'security',
-    title: 'EISR Journal of Security Risk Management',
-    issn: '3080-9444 (Online)',
-    cover: '/jeisa_cover.jpg',
-    about: 'The EISR Journal of Security Risk Management focuses on the strategic, tactical, and operational aspects of identifying, assessing, and mitigating risks in the global security landscape.',
-    policies: {},
-    editorialTeam: [],
-  }
-};
+import { journals, articles, journalMenuItems } from '@/lib/data';
+import { 
+  Globe, ChevronRight, FileText, Info, Users, ShieldCheck, Mail, 
+  ChevronDown, LayoutGrid, Plus, Calendar, Linkedin, Instagram, Facebook 
+} from 'lucide-react';
+import JournalHero from '@/components/JournalHero';
 
 export default function JournalPage() {
   const { slug } = useParams();
-  const journal = journalData[slug] || journalData['jeiml']; 
-  const [activeMainTab, setActiveMainTab] = useState('home');
-  const [activeMenuSection, setActiveMenuSection] = useState('aims');
-
-  const renderContent = () => {
-    switch (activeMainTab) {
-      case 'home':
-        return (
-          <div className="space-y-12">
-            <div className="border-l-4 border-[#4BA6B9] pl-6 py-2">
-              <h2 className="text-3xl font-serif font-black text-[#1A1A1A] ">Home</h2>
-              <p className="text-sm font-bold text-[#555555] uppercase mt-2 tracking-widest">{journal.title}</p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="bg-[#F8FAFC] p-8 rounded-2xl border border-[#E2E8F0] space-y-6">
-                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#4BA6B9]">Journal Statistics</h3>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center border-b border-[#E2E8F0] pb-3">
-                    <span className="text-xs font-bold text-[#555555]">Frequency</span>
-                    <span className="text-xs font-black text-[#1A1A1A]">{journal.frequency}</span>
-                  </div>
-                  <div className="flex justify-between items-center border-b border-[#E2E8F0] pb-3">
-                    <span className="text-xs font-bold text-[#555555]">Review Type</span>
-                    <span className="text-xs font-black text-[#1A1A1A]">{journal.reviewType}</span>
-                  </div>
-                  <div className="flex justify-between items-center border-b border-[#E2E8F0] pb-3">
-                    <span className="text-xs font-bold text-[#555555]">Review Speed</span>
-                    <span className="text-xs font-black text-[#1A1A1A]">{journal.reviewSpeed}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs font-bold text-[#555555]">DOI Prefix</span>
-                    <span className="text-xs font-black text-[#1A1A1A]">{journal.doiPrefix}</span>
-                  </div>
-                </div>
-              </div>
-
-               <div className="bg-[#F8FAFC] p-8 rounded-2xl border border-[#E2E8F0] space-y-6">
-                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#4BA6B9]">Publication Info</h3>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center border-b border-[#E2E8F0] pb-3">
-                    <span className="text-xs font-bold text-[#555555]">Publisher</span>
-                    <span className="text-xs font-black text-[#1A1A1A]">{journal.publisher}</span>
-                  </div>
-                  <div className="flex justify-between items-center border-b border-[#E2E8F0] pb-3">
-                    <span className="text-xs font-bold text-[#555555]">Model</span>
-                    <span className="text-xs font-black text-[#1A1A1A]">{journal.publishingModel}</span>
-                  </div>
-                  <div className="flex justify-between items-center border-b border-[#E2E8F0] pb-3">
-                    <span className="text-xs font-bold text-[#555555]">APC Status</span>
-                    <span className="text-xs font-black text-[#1A1A1A]">{journal.apc}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs font-bold text-[#555555]">Indexing</span>
-                    <span className="text-xs font-black text-[#4BA6B9]">Verified Agency</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-6 text-[#555555] leading-relaxed text-[15px] font-medium ">
-              <p>{journal.about}</p>
-            </div>
-          </div>
-        );
-      case 'archives':
-        return (
-          <div className="space-y-12">
-            <h2 className="text-3xl font-serif font-black text-[#1A1A1A] ">Archives</h2>
-            <div className="py-20 flex flex-col items-center justify-center border-2 border-dashed border-[#E2E8F0] rounded-3xl bg-[#F8FAFC]">
-               <BookOpen size={48} className="text-[#CBD5E1] mb-4" />
-               <p className="text-sm font-bold text-[#94A3B8] uppercase tracking-widest">No archived issues found</p>
-            </div>
-          </div>
-        );
-      case 'current':
-        return (
-          <div className="space-y-12">
-            <h2 className="text-3xl font-serif font-black text-[#1A1A1A] ">Current Issues</h2>
-            <div className="py-20 flex flex-col items-center justify-center border-2 border-dashed border-[#E2E8F0] rounded-3xl bg-[#F8FAFC]">
-               <Activity size={48} className="text-[#CBD5E1] mb-4" />
-               <p className="text-sm font-bold text-[#94A3B8] uppercase tracking-widest">No published issues in repository</p>
-            </div>
-          </div>
-        );
-      case 'menu':
-        return (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-            <div className="md:col-span-1 space-y-2">
-               {[
-                 { id: 'aims', name: 'Aims and Scope' },
-                 { id: 'guidelines', name: 'Author Guidelines' },
-                 { id: 'editorial', name: 'Editorial Team' },
-                 { id: 'indexing', name: 'Indexing' },
-                 { id: 'apc', name: 'Publishing Charges' }
-               ].map(sec => (
-                 <button 
-                  key={sec.id}
-                  onClick={() => setActiveMenuSection(sec.id)}
-                  className={`w-full text-left px-6 py-4 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all ${activeMenuSection === sec.id ? 'bg-[#1A1A1A] text-white shadow-lg' : 'bg-[#F8FAFC] text-[#555555] hover:bg-[#F1F5F9]'}`}
-                 >
-                   {sec.name}
-                 </button>
-               ))}
-            </div>
-            <div className="md:col-span-3 bg-white p-10 border border-[#E2E8F0] rounded-2xl shadow-sm min-h-[500px]">
-               {activeMenuSection === 'aims' && (
-                 <div className="space-y-8">
-                    <h3 className="text-xl font-serif font-black  border-b border-[#F1F5F9] pb-4">Aims & Scope</h3>
-                    <p className="text-sm font-medium text-[#555555] leading-loose">{journal.aims}</p>
-                    <div className="space-y-4">
-                       <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#4BA6B9]">Scope Includes:</h4>
-                       <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          {journal.scope.map(s => (
-                            <li key={s} className="flex items-center text-xs font-bold text-[#1A1A1A]">
-                               <div className="w-1.5 h-1.5 bg-[#4BA6B9] rounded-full mr-3 shrink-0" />
-                               {s}
-                            </li>
-                          ))}
-                       </ul>
-                    </div>
-                 </div>
-               )}
-               {activeMenuSection === 'guidelines' && (
-                 <div className="space-y-8">
-                    <h3 className="text-xl font-serif font-black  border-b border-[#F1F5F9] pb-4">Author Guidelines</h3>
-                    <div className="text-sm font-medium text-[#555555] leading-loose whitespace-pre-line">
-                       {journal.guidelines}
-                    </div>
-                 </div>
-               )}
-               {activeMenuSection === 'editorial' && (
-                 <div className="space-y-8">
-                    <h3 className="text-xl font-serif font-black  border-b border-[#F1F5F9] pb-4">Editorial Team</h3>
-                    <div className="grid grid-cols-1 gap-8">
-                       {journal.editorialTeam.map((ed, i) => (
-                         <div key={i} className="flex space-x-4 border-b border-[#F1F5F9] pb-6 last:border-0">
-                            <div className="w-12 h-12 rounded-full bg-[#F4F6F9] flex items-center justify-center shrink-0">
-                               <Users size={20} className="text-[#4BA6B9]" />
-                            </div>
-                            <div className="space-y-2">
-                               <h4 className="text-sm font-black uppercase text-[#1A1A1A]">{i+1}. {ed.name}</h4>
-                               <p className="text-[11px] font-bold text-[#555555] ">{ed.affiliation}</p>
-                               {ed.email && <p className="text-[10px] font-bold text-[#4BA6B9]">{ed.email}</p>}
-                            </div>
-                         </div>
-                       ))}
-                    </div>
-                 </div>
-               )}
-               {activeMenuSection === 'indexing' && (
-                 <div className="space-y-8">
-                    <h3 className="text-xl font-serif font-black  border-b border-[#F1F5F9] pb-4">Abstracting & Indexing</h3>
-                    <p className="text-sm font-medium text-[#555555] leading-loose">{journal.indexing}</p>
-                 </div>
-               )}
-               {activeMenuSection === 'apc' && (
-                 <div className="space-y-8">
-                    <h3 className="text-xl font-serif font-black  border-b border-[#F1F5F9] pb-4">Article Publishing Charges</h3>
-                    <div className="p-8 bg-[#F0FBFC] border border-[#4BA6B9]/20 rounded-xl">
-                      <p className="text-lg font-black text-[#1A1A1A] tracking-tight ">{journal.apc}</p>
-                    </div>
-                 </div>
-               )}
-            </div>
-          </div>
-        );
-      case 'policies':
-        return (
-          <div className="space-y-12">
-            <h2 className="text-3xl font-serif font-black text-[#1A1A1A] ">Journal Policies</h2>
-            <div className="grid grid-cols-1 gap-12">
-               {Object.entries(journal.policies).map(([key, val]) => (
-                 <div key={key} className="space-y-4">
-                    <h3 className="text-[11px] font-black uppercase tracking-[0.3em] text-[#4BA6B9]">{key.replace(/([A-Z])/g, ' $1')}</h3>
-                    <p className="text-sm font-medium text-[#555555] leading-loose max-w-4xl border-l-2 border-[#F1F5F9] pl-6 pb-2">
-                       {val}
-                    </p>
-                 </div>
-               ))}
-            </div>
-          </div>
-        );
-      case 'about':
-        return (
-           <div className="space-y-16">
-            <div className="space-y-6">
-              <h2 className="text-3xl font-serif font-black text-[#1A1A1A] ">About The Journal</h2>
-              <p className="text-sm font-medium text-[#555555] leading-loose max-w-4xl ">
-                {journal.about}
-              </p>
-            </div>
-            <div className="space-y-6">
-              <h3 className="text-xl font-serif font-black ">Privacy Statement</h3>
-              <p className="text-sm font-medium text-[#555555] leading-loose max-w-4xl ">
-                {journal.privacy}
-              </p>
-            </div>
-          </div>
-        );
-      default:
-        return null;
-    }
-  };
+  const journal = journals.find(j => j.slug === slug) || journals[0]; 
+  const journalArticles = articles.filter(a => a.journal.toLowerCase() === journal.id.toLowerCase());
 
   return (
     <div className="min-h-screen flex flex-col font-sans bg-white selection:bg-[#4BA6B9]/10">
       <Header />
       
-      {/* Journal Brand Header - Production Grade */}
-      <section className="bg-[#0B1F3A] text-white pt-48 pb-20 px-6 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#4BA6B9]/10 rounded-full blur-[100px] -mr-48 -mt-48" />
-        <div className="max-w-[1240px] mx-auto relative z-10 space-y-12">
-           <div className="space-y-4 max-w-2xl">
-              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[#4BA6B9]">Scientific Journal Gateway</span>
-              <h1 className="text-4xl md:text-5xl font-serif font-black  leading-tight scale-y-105">{journal.title}</h1>
-           </div>
-           
-           {/* Tab Navigation - OJS Style */}
-           <div className="flex flex-wrap gap-x-8 gap-y-4 border-b border-white/10 pb-6">
-              {[
-                { id: 'home', name: 'Home' },
-                { id: 'archives', name: 'Archives' },
-                { id: 'current', name: 'Current Issue' },
-                { id: 'menu', name: 'Journal Menu' },
-                { id: 'policies', name: 'Journal Policies' },
-                { id: 'about', name: 'About' }
-              ].map(tab => (
-                <button 
-                  key={tab.id}
-                  onClick={() => setActiveMainTab(tab.id)}
-                  className={`text-[11px] font-black uppercase tracking-[0.3em] transition-all relative pb-2 group ${activeMainTab === tab.id ? 'text-[#4BA6B9]' : 'text-white/60 hover:text-white'}`}
-                >
-                  {tab.name}
-                  <span className={`absolute bottom-0 left-0 h-0.5 bg-[#4BA6B9] transition-all ${activeMainTab === tab.id ? 'w-full' : 'w-0 group-hover:w-full'}`} />
-                </button>
-              ))}
-           </div>
-        </div>
-      </section>
+      <JournalHero journal={journal} activeTab="home" />
 
       {/* Breadcrumb Band */}
-      <div className="w-full bg-[#FAFBFC] py-4 px-6 border-b border-[#F1F5F9] text-[10px] font-black uppercase tracking-widest text-[#999999]">
+      <div className="w-full bg-[#FAFBFC] py-4 px-6 border-b border-[#F1F5F9] text-[11px] font-bold text-[#999999]">
          <div className="max-w-[1240px] mx-auto space-x-3 flex items-center">
-            <Link href="/" className="hover:text-[#4BA6B9]">Main</Link>
-            <ChevronRight size={10} />
-            <Link href="/journals" className="hover:text-[#4BA6B9]">Library</Link>
-            <ChevronRight size={10} />
-            <span className="text-[#1A1A1A]">{journal.id}</span>
+            <Link href="/" className="hover:text-[#4BA6B9] transition-colors">Home</Link>
+            <ChevronRight size={10} className="text-[#BBBBBB]" />
+            <Link href="/journals" className="hover:text-[#4BA6B9] transition-colors">Journals</Link>
+            <ChevronRight size={10} className="text-[#BBBBBB]" />
+            <span className="text-[#1A1A1A] font-black">{journal.id.toUpperCase()}</span>
          </div>
       </div>
 
       <main className="flex-grow pb-40 px-6">
-        <div className="max-w-[1240px] mx-auto mt-20 grid lg:grid-cols-12 gap-20 items-start">
+        <div className="max-w-[1240px] mx-auto mt-16 grid lg:grid-cols-12 gap-12 items-start">
            
-           {/* Sidebar Info Card */}
-           <div className="lg:col-span-3 space-y-10">
-              <div className="bg-white border border-[#E2E8F0] shadow-sm rounded-2xl overflow-hidden group">
-                <div className="w-full aspect-[3/4] bg-[#0B1F3A] flex flex-col items-center justify-center relative overflow-hidden">
-                   {journal.cover ? (
-                     <img src={journal.cover} alt={journal.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                   ) : (
-                     <div className="p-10 text-center z-10 border border-white/20 space-y-4">
-                        <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#4BA6B9]">EISR Scientific</p>
-                        <h4 className="text-xl font-serif font-black  text-white leading-tight">{journal.title}</h4>
-                     </div>
-                   )}
-                   <div className="absolute bottom-0 inset-x-0 bg-black/40 backdrop-blur py-4 text-[9px] font-black tracking-[0.3em] uppercase text-white/60 text-center z-10">Repository Visual</div>
-                </div>
-                
-                <div className="p-8 space-y-8">
-                  <div className="space-y-4">
-                    <h4 className="text-[9px] font-black uppercase tracking-[0.3em] text-[#BBBBBB]">Journal ISSN</h4>
-                    <p className="text-xs font-black text-[#1A1A1A]">{journal.issn}</p>
-                  </div>
-                  <div className="space-y-4">
-                    <h4 className="text-[9px] font-black uppercase tracking-[0.3em] text-[#BBBBBB]">Fast Track</h4>
-                    <div className="flex items-center space-x-2 text-[#4BA6B9]">
-                       <Clock size={14} />
-                       <span className="text-xs font-black ">60 Day Review</span>
-                    </div>
-                  </div>
-                  <button className="w-full bg-[#1A1A1A] text-white py-4 text-[10px] font-black uppercase tracking-[0.3em] flex items-center justify-center space-x-3 hover:bg-[#4BA6B9] transition-all">
-                    <span>Submit Manuscript</span>
-                    <ChevronRight size={14} />
-                  </button>
+           {/* Primary Content */}
+           <div className="lg:col-span-8 space-y-16">
+              
+              {/* Journal Information Box */}
+              <div className="space-y-8">
+                <h2 className="text-xl font-bold text-[#1A1A1A]">Journal Information</h2>
+                <div className="bg-white border-2 border-[#E2E8F0] rounded-2xl p-10 shadow-sm">
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-8">
+                      <div className="space-y-6">
+                        <InfoRow label="Title" value={journal.title} />
+                        <InfoRow label="ISSN" value={journal.issn} />
+                        <InfoRow label="Doi Prefix" value={journal.doiPrefix} />
+                        <InfoRow label="Publisher" value={journal.publisher} />
+                        <InfoRow label="Organizer" value={journal.organizer} />
+                        <div className="pt-2">
+                           <p className="text-[11px] font-black text-[#1A1A1A] mb-4">Channel Hub</p>
+                           <div className="flex gap-4">
+                              <SocialIcon icon={Mail} color="text-sky-500" />
+                              <SocialIcon icon={Linkedin} color="text-blue-700" />
+                              <SocialIcon icon={Instagram} color="text-pink-600" />
+                              <SocialIcon icon={Facebook} color="text-blue-600" />
+                           </div>
+                        </div>
+                      </div>
+                      <div className="space-y-6">
+                        <InfoRow label="Frequency" value={journal.frequency} color="text-[#1A1A1A]" />
+                        <InfoRow label="Review Type" value={journal.reviewType} color="text-[#1A1A1A]" />
+                        <InfoRow label="Indexing" value={journal.indexing} color="text-[#1A1A1A]" />
+                        <InfoRow label="Archiving" value={journal.archiving || 'Portico'} color="text-[#1A1A1A]" />
+                        <InfoRow label="Process Speed" value={journal.reviewSpeed} />
+                        <InfoRow label="Submission" value="Open Journal System (OJS)" color="text-[#4BA6B9]" />
+                      </div>
+                   </div>
                 </div>
               </div>
 
-               {/* Institutional Badge */}
-               <div className="p-8 bg-[#F8FAFC] rounded-2xl border border-[#E2E8F0] flex items-center space-x-4">
-                  <div className="w-10 h-10 rounded-full bg-[#4BA6B9]/10 flex items-center justify-center text-[#4BA6B9]">
-                     <ShieldCheck size={20} />
-                  </div>
-                  <div>
-                    <p className="text-[9px] font-black uppercase tracking-widest text-[#555555]">Peer Reviewed</p>
-                    <p className="text-[10px] font-bold text-[#1A1A1A] ">Verified Academic Quality</p>
-                  </div>
-               </div>
+              {/* Journal Statistics Bar */}
+              <div className="space-y-6">
+                <h2 className="text-xl font-bold text-[#1A1A1A]">Journal Statistics</h2>
+                <div className="bg-[#white] rounded-2xl p-10 border-2 border-[#E2E8F0] shadow-sm">
+                   <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8 text-center divide-x divide-[#E2E8F0] overflow-hidden">
+                      <StatItem value={journal.stats.citationsScopus} label="Citations By Scopus" />
+                      <StatItem value={journal.stats.citationsGoogle} label="Citations By Google Scholar" />
+                      <StatItem value={journal.stats.articles} label="Articles" />
+                      <StatItem value={journal.stats.views} label="Total Views" />
+                      <StatItem value={journal.stats.authors} label="Authors" />
+                      <StatItem value={journal.stats.distribution} label="Authors Distribution" />
+                      <StatItem value={journal.stats.acceptance} label="Acceptance Rate" />
+                   </div>
+                </div>
+              </div>
+
+              {/* Latest Published Articles Section - Grid approach from screenshot */}
+              <div className="space-y-10 pt-4">
+                 <h2 className="text-xl font-bold text-[#1A1A1A]">Latest Published Articles</h2>
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {journalArticles.map(article => (
+                       <ArticleCard key={article.slug} article={article} />
+                    ))}
+                 </div>
+              </div>
+
            </div>
 
-           {/* Dynamic Content Display */}
-           <div className="lg:col-span-9 bg-white min-h-[600px]">
-              {renderContent()}
-           </div>
+           {/* Sidebar */}
+           <aside className="lg:col-span-4 space-y-12">
+              
+              {/* Publisher Sidebar Box */}
+              <div className="bg-[#F8F9FB] rounded-2xl p-12 text-center space-y-10 border border-[#E2E8F0] shadow-sm relative overflow-hidden group">
+                 <div className="absolute top-0 left-0 w-32 h-32 bg-[#1e78ff]/5 rounded-full -ml-16 -mt-16 group-hover:scale-110 transition-transform" />
+                 <div className="space-y-4">
+                    <div className="flex items-center justify-center space-x-2">
+                       <span className="text-4xl font-black tracking-tighter text-[#1A1A1A]">EISR</span>
+                    </div>
+                    <p className="text-[11px] font-black text-[#1A1A1A] max-w-[200px] mx-auto opacity-40 leading-relaxed">Eye-Innovations Scientific Research</p>
+                 </div>
+                 <Link href="/submission" className="block w-full bg-[#1A1A1A] text-white py-5 rounded-xl text-[12px] font-black hover:bg-[#4BA6B9] transition-all shadow-xl shadow-black/5">
+                    Submit Manuscript
+                 </Link>
+                 
+                 <div className="space-y-8 pt-6">
+                    {journal.editorialTeam.slice(0, 3).map(editor => (
+                       <div key={editor.id} className="flex items-center space-x-5 text-left group/ed cursor-pointer">
+                          <div className="w-14 h-14 rounded-full bg-white border border-[#E2E8F0] overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
+                             {editor.photo ? <img src={editor.photo} className="w-full h-full object-cover" /> : <Users size={24} className="text-[#BBBBBB]" />}
+                          </div>
+                          <div className="space-y-0.5">
+                             <h4 className="text-[13px] font-bold text-[#1A1A1A] group-hover/ed:text-[#4BA6B9] transition-colors">{editor.name}</h4>
+                             <p className="text-[11px] font-medium text-[#999999] tracking-wider">{editor.role}</p>
+                          </div>
+                       </div>
+                    ))}
+                 </div>
+              </div>
+
+              {/* Journal Menu Sidebar Box */}
+              <div className="border border-[#E2E8F0] rounded-2xl overflow-hidden bg-white shadow-sm">
+                 <div className="bg-[#F8FBFF] px-8 py-5 border-b border-[#E2E8F0] flex items-center justify-between group cursor-pointer">
+                    <span className="text-sm font-bold text-[#0B1F3A]">Journal Menu</span>
+                    <ChevronDown size={14} className="text-[#1e78ff]" />
+                 </div>
+                 <div className="p-2">
+                    {journalMenuItems.map(item => (
+                       <Link key={item.slug} href={`/journals/${journal.slug}/${item.slug}`} className="group block px-8 py-4 text-[13px] font-bold text-[#1A1A1A] hover:bg-[#F8FBFF] hover:text-[#4BA6B9] rounded-xl transition-all border-b border-[#F1F5F9] last:border-0 relative">
+                          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 bg-[#4BA6B9] group-hover:h-6 transition-all rounded-r" />
+                          {item.name}
+                       </Link>
+                    ))}
+                 </div>
+              </div>
+
+              {/* Indexing Partners Sidebar */}
+              <div className="bg-[#F8F9FA] p-10 rounded-2xl border border-[#E2E8F0] space-y-12 text-center shadow-sm">
+                 <div className="space-y-2">
+                    <h4 className="text-[12px] font-black text-[#1A1A1A]">Indexing Partners</h4>
+                    <div className="w-8 h-0.5 bg-[#4BA6B9] mx-auto opacity-40"></div>
+                 </div>
+                 <div className="grid grid-cols-1 gap-12 group">
+                    <div className="flex flex-col items-center space-y-2 group/item">
+                        <div className="text-[14px] font-black text-[#1A1A1A] tracking-[0.2em] border-2 border-[#1A1A1A]/10 px-5 py-2.5 rounded-lg italic group-hover/item:border-[#FF6B00] group-hover/item:text-[#FF6B00] transition-all">Scopus</div>
+                    </div>
+                    <div className="flex flex-col items-center space-y-2 group/item">
+                        <div className="text-[14px] font-black text-[#1A1A1A] tracking-[0.2em] border-2 border-[#1A1A1A]/10 px-5 py-2.5 rounded-lg font-serif group-hover/item:border-[#004A99] group-hover/item:text-[#004A99] transition-all">Ebsco</div>
+                    </div>
+                    <div className="flex flex-col items-center space-y-2 text-[18px] font-black text-[#1A1A1A] tracking-tighter opacity-80 group-hover:text-black group-hover:scale-110 transition-all cursor-default">
+                        Crossref
+                    </div>
+                    <div className="flex flex-col items-center space-y-2 cursor-default group/item">
+                        <span className="text-[16px] font-bold text-[#1A1A1A] opacity-80 group-hover/item:opacity-100 transition-all">Google <span className="text-[#4BA6B9]">Scholar</span></span>
+                    </div>
+                    <div className="flex flex-col items-center space-y-2 text-[11px] font-black text-[#1A1A1A] opacity-40 group-hover:opacity-80 transition-all cursor-default">
+                        PORTICO
+                    </div>
+                 </div>
+              </div>
+
+           </aside>
         </div>
       </main>
-      
+
       <Footer />
+    </div>
+  );
+}
+
+function InfoRow({ label, value, color = "text-[#1A1A1A]" }) {
+  return (
+    <div className="grid grid-cols-12 gap-4 border-b border-[#F1F5F9] pb-4 last:border-0">
+      <p className="col-span-4 text-[11px] font-black text-[#1A1A1A]">{label}</p>
+      <p className={`col-span-8 text-[13px] font-bold ${color} leading-snug`}>{value}</p>
+    </div>
+  );
+}
+
+function StatItem({ value, label }) {
+  return (
+    <div className="space-y-2 px-6 text-center first:pl-0">
+       <p className="text-3xl font-bold text-[#1A1A1A] tracking-tighter">{value}</p>
+        <p className="text-[10px] font-bold text-[#1A1A1A] leading-tight break-words">{label}</p>
+    </div>
+  );
+}
+
+function SocialIcon({ icon: Icon, color }) {
+  return (
+    <Link href="#" className={`w-10 h-10 rounded-full border border-[#E2E8F0] flex items-center justify-center ${color} bg-white hover:bg-[#F8F9FA] transition-all shadow-sm`}>
+       <Icon size={16} />
+    </Link>
+  );
+}
+
+function ArticleCard({ article }) {
+  return (
+    <div className="bg-white border border-[#E2E8F0] rounded-2xl p-8 hover:shadow-2xl transition-all group flex flex-col h-full shadow-sm relative overflow-hidden">
+       <div className="flex flex-wrap items-center gap-4 mb-6 text-[10px] font-bold text-[#1A1A1A]">
+          <div className="flex items-center space-x-1.5 text-orange-600 bg-orange-50 px-2.5 py-1 rounded-md">
+             <Plus size={10} className="rotate-45" /> <span>Open Access</span>
+          </div>
+          <div className="bg-[#7c1414] text-white px-2.5 py-1 rounded-md">Article</div>
+          <div className="flex items-center space-x-1.5 font-bold"><Globe size={11} className="text-[#4BA6B9]" /> <span>{article.views} views</span></div>
+          <div className="flex items-center space-x-1.5 font-bold"><Calendar size={11} className="text-[#4BA6B9]" /> <span>First Online</span></div>
+       </div>
+       
+       <Link href={`/articles/${article.slug}`} className="block flex-grow">
+          <h3 className="text-lg font-bold text-[#1e78ff] group-hover:text-[#4BA6B9] transition-colors leading-tight mb-4">
+             {article.title}
+          </h3>
+       </Link>
+
+       <div className="space-y-5 pt-6 border-t border-[#F1F5F9]">
+          <div className="flex items-center space-x-2">
+              <span className="text-[11px] font-bold text-[#1A1A1A] whitespace-nowrap">Doi :</span>
+             <span className="text-[11px] font-bold text-[#4BA6B9] truncate hover:underline cursor-pointer tracking-tight">{article.doi}</span>
+          </div>
+           <div className="flex flex-wrap gap-2 text-[#1A1A1A] font-bold text-[10px] tracking-tight">
+             {article.authors.join('   |   ')}
+          </div>
+          <p className="text-[11px] font-bold text-[#1A1A1A] leading-relaxed line-clamp-3 opacity-60">{article.affiliations}</p>
+       </div>
     </div>
   );
 }

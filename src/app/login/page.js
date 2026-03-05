@@ -2,7 +2,7 @@
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
-import { User, Lock, Mail, ChevronRight } from 'lucide-react';
+import { User, Lock, Mail, ChevronRight, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -46,105 +46,117 @@ export default function Login() {
     <div className="min-h-screen flex flex-col bg-[#FAFBFC] font-sans selection:bg-[#4BA6B9]/10">
       <Header />
       
-      <main className="flex-grow pt-40 pb-24 px-6">
-        <div className="max-w-[1240px] mx-auto">
-          {/* Breadcrumb - Clean & Subtle */}
-          <nav className="flex items-center space-x-2 text-[10px] font-black uppercase tracking-widest text-[#999999] mb-12">
-            <Link href="/" className="hover:text-[#4BA6B9]">Main Page</Link>
-            <ChevronRight size={10} />
-            <span className="text-[#1A1A1A]">Login Gateway</span>
-          </nav>
+      <main className="flex-grow pt-24 pb-24 px-6 flex items-center justify-center">
+        <div className="max-w-[480px] w-full mx-auto">
+          {/* Subtle Branding Accent */}
+          <div className="flex justify-center mb-8">
+             <div className="h-1.5 w-16 bg-[#4BA6B9] rounded-full opacity-40"></div>
+          </div>
 
-          <div className="max-w-md mx-auto">
-            {/* Minimal Header */}
-            <div className="border-l-4 border-[#4BA6B9] pl-6 mb-12">
-              <h1 className="text-4xl font-serif font-black text-[#1A1A1A]  leading-tight">
-                Researcher <br />Authentication
-              </h1>
-              <p className="text-sm font-medium text-[#555555] mt-3">Access your EISR dashboard and submissions</p>
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-bold text-[#1A1A1A] tracking-tight mb-3">
+               Login
+            </h1>
+            <p className="text-[14px] font-bold text-[#1A1A1A]">
+               Sign in to manage your articles and account
+            </p>
+          </div>
+
+          {error && (
+            <div className="bg-red-50 border border-red-100 text-red-600 px-6 py-4 rounded-xl mb-8 text-[13px] font-bold flex items-center gap-3">
+               <div className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse"></div>
+               {error}
             </div>
+          )}
 
-            {/* Production Grade Form */}
-            {error && <div className="bg-red-50 text-red-500 p-4 rounded-xl mb-6 text-sm font-bold border border-red-100">{error}</div>}
-            <div className="bg-white border border-[#E2E8F0] shadow-sm rounded-xl overflow-hidden">
-              <div className="p-10 lg:p-12 space-y-8">
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Field 1 */}
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-[#555555] flex items-center">
-                      <Mail size={12} className="mr-2 text-[#4BA6B9]" />
-                      Username or Email
-                    </label>
-                    <input 
+          <div className="bg-white border border-[#E2E8F0] shadow-2xl rounded-3xl overflow-hidden">
+            <form onSubmit={handleSubmit} className="p-10 lg:p-12 space-y-8">
+              {/* Email/Username Field */}
+              <div className="space-y-3">
+                <label className="text-[12px] font-bold text-[#1A1A1A] ml-1">
+                   Email or Username
+                </label>
+                <div className="relative group">
+                   <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#BBBBBB] group-focus-within:text-[#4BA6B9] transition-colors">
+                      <Mail size={18} strokeWidth={1.5} />
+                   </div>
+                   <input 
                       type="text" 
                       required
                       value={formData.email}
                       onChange={(e) => setFormData({...formData, email: e.target.value})}
-                      className="w-full border-b-2 border-[#F1F5F9] focus:border-[#4BA6B9] py-3 text-sm font-semibold text-[#1A1A1A] outline-none transition-all placeholder:text-[#BBBBBB] bg-transparent"
-                      placeholder="e.g. m.amin@eisr.org"
-                    />
-                  </div>
+                      placeholder="Email or Username"
+                      className="w-full bg-[#F8F9FA] border border-[#EEEEEE] focus:border-[#4BA6B9] focus:bg-white pl-12 pr-5 py-5 rounded-2xl text-sm font-bold text-[#1A1A1A] outline-none transition-all placeholder:text-[#888888]"
+                   />
+                </div>
+              </div>
 
-                  {/* Field 2 */}
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-[#555555] flex items-center">
-                        <Lock size={12} className="mr-2 text-[#4BA6B9]" />
-                        Secure Password
-                      </label>
-                    </div>
-                    <input 
+              {/* Password Field */}
+              <div className="space-y-3">
+                <label className="text-[12px] font-bold text-[#1A1A1A] ml-1">
+                   Password
+                </label>
+                <div className="relative group">
+                   <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#BBBBBB] group-focus-within:text-[#4BA6B9] transition-colors">
+                      <Lock size={18} strokeWidth={1.5} />
+                   </div>
+                   <input 
                       type="password" 
                       required
                       value={formData.password}
                       onChange={(e) => setFormData({...formData, password: e.target.value})}
-                      className="w-full border-b-2 border-[#F1F5F9] focus:border-[#4BA6B9] py-3 text-sm font-semibold text-[#1A1A1A] outline-none transition-all placeholder:text-[#BBBBBB] bg-transparent"
                       placeholder="••••••••"
-                    />
-                  </div>
-
-                  {/* Controls */}
-                  <div className="flex items-center justify-between pt-2">
-                    <label className="flex items-center space-x-2 cursor-pointer">
-                      <input type="checkbox" className="w-3.5 h-3.5 border-2 border-[#E2E8F0] rounded-sm text-[#4BA6B9] focus:ring-0" />
-                      <span className="text-xs font-bold text-[#555555]">Remember Me</span>
-                    </label>
-                    <Link href="#" className="text-[10px] font-black text-[#4BA6B9] uppercase tracking-widest hover:underline">
-                      Recovery Password?
-                    </Link>
-                  </div>
-
-                  {/* Action */}
-                  <button type="submit" disabled={loading} className="w-full bg-[#1A1A1A] hover:bg-[#4BA6B9] text-white py-4 font-black text-[11px] uppercase tracking-[0.3em] transition-all shadow-lg hover:shadow-[#4BA6B9]/20 group disabled:opacity-50">
-                    {loading ? 'Authenticating...' : 'Sign In'}
-                  </button>
-                </form>
-
-                <div className="pt-8 border-t border-[#F1F5F9] flex flex-col items-center space-y-4">
-                  <p className="text-xs font-bold text-[#555555]">
-                    No EISR account yet?
-                  </p>
-                  <Link 
-                    href="/register" 
-                    className="w-full text-center border-2 border-[#F1F5F9] text-[#1A1A1A] py-3 font-black text-[11px] uppercase tracking-[0.2em] hover:border-[#4BA6B9] hover:text-[#4BA6B9] transition-all"
-                  >
-                    Create Researcher ID
-                  </Link>
+                      className="w-full bg-[#F8F9FA] border border-[#EEEEEE] focus:border-[#4BA6B9] focus:bg-white pl-12 pr-5 py-5 rounded-2xl text-sm font-bold text-[#1A1A1A] outline-none transition-all placeholder:text-[#888888]"
+                   />
                 </div>
               </div>
 
-              {/* Secure indicator footer */}
-              <div className="bg-[#FAFBFC] px-8 py-4 border-t border-[#F1F5F9] flex items-center justify-center space-x-2 text-[9px] font-black text-[#BBBBBB] uppercase tracking-[0.2em]">
-                 <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-                 <span>Secure Institutional SSL Encryption</span>
+              {/* Controls */}
+              <div className="flex items-center pt-2">
+                <label className="flex items-center space-x-3 cursor-pointer group">
+                  <div className="relative flex items-center">
+                    <input type="checkbox" className="peer appearance-none w-5 h-5 border border-[#E2E8F0] rounded-md checked:bg-[#4BA6B9] checked:border-[#4BA6B9] transition-all cursor-pointer" />
+                    <CheckCircle2 size={12} className="absolute left-1 text-white opacity-0 peer-checked:opacity-100 transition-opacity" />
+                  </div>
+                  <span className="text-[12px] font-bold text-[#1A1A1A] group-hover:text-[#4BA6B9] transition-colors tracking-tight">Remember me on this device</span>
+                </label>
               </div>
-            </div>
 
-            {/* Support Info */}
-            <p className="mt-12 text-center text-[10px] font-bold text-[#BBBBBB] px-10 ">
-               If you are experiencing issues logging in, please contact our global editorial office at <span className="text-[#4BA6B9]">support@thestap.com</span>
+              {/* Action Button */}
+              <button 
+                type="submit" 
+                disabled={loading} 
+                className="w-full bg-[#0B1F3A] hover:bg-[#4BA6B9] text-white py-5 rounded-xl font-bold text-[13px] transition-all shadow-xl hover:shadow-[#4BA6B9]/20 group disabled:opacity-50"
+              >
+                {loading ? 'Logging in...' : 'Login'}
+              </button>
+            </form>
+
+            <div className="text-center pt-8 border-t border-[#F1F5F9] mt-auto pb-8">
+            <p className="text-[13px] font-bold text-[#1A1A1A] mb-4">
+               New to EISR Research Center?
             </p>
+            <Link 
+               href="/register" 
+               className="inline-flex items-center gap-2 text-[#4BA6B9] font-bold text-[13px] hover:translate-x-1 transition-all group"
+            >
+               Register Researcher ID <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
           </div>
+          </div>
+
+          {/* Institutional Support */}
+          <div className="mt-12 text-center space-y-4 max-w-md">
+           <div className="flex items-center justify-center space-x-4">
+              <div className="h-px w-12 bg-[#E2E8F0]"></div>
+              <span className="text-[11px] font-bold text-[#1A1A1A]">Institutional Support</span>
+              <div className="h-px w-12 bg-[#E2E8F0]"></div>
+           </div>
+           <p className="text-[11px] font-bold text-[#1A1A1A] leading-relaxed">
+              For assistance or recovery, contact the <br />
+              <button className="text-[#4BA6B9] hover:underline font-bold">Global Editorial Office</button>
+           </p>
+        </div>
         </div>
       </main>
 
