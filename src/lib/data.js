@@ -4,7 +4,7 @@ export const journals = [
     slug: 'jeiml',
     title: 'Journal of Eye-Innovation in Machine Learning',
     issn: 'ISSN 3079-5354 (Online)',
-    chief: 'Rajit Nair',
+    chief: 'Prof. Ali Kashif Bashir',
     publishingModel: 'Open access',
     frequency: 'Bi-annual',
     reviewType: 'Double Blind Review',
@@ -26,7 +26,7 @@ export const journals = [
     ],
     guidelines: `The Journal of Eye-Innovation in Machine Learning (JEIML) invites high-quality original research that presents significant advances in the field of artificial intelligence. All submissions must represent original work that has not been previously published or is currently under consideration elsewhere.\n\nManuscript Preparation:\nAuthors must adhere to the JEIML LaTeX/Word house style. Manuscripts should clearly articulate the research problem, methodology, experimental results, and theoretical implications. The abstract should be concise (max 250 words) and summarize the core contributions.\n\nPeer Review Process:\nJEIML employs a double-blind peer-review system. Each manuscript is evaluated by at least three independent experts for technical soundness, novelty, and clarity. The editorial board maintains a commitment to a rapid turnaround, aiming for a first decision within 45 days.\n\nOpen Access & Ethics:\nAs a Gold Open Access journal, all published work is immediately available to the global research community under the CC BY 4.0 license. Authors undergo rigorous plagiarism screening via CrossCheck. Ethical considerations regarding data privacy and AI safety must be explicitly addressed in the results section.`,
     editorialTeam: [
-      { id: 'rajit-nair', name: 'Rajit Nair', affiliation: 'VIT Bhopal University, Bhopal, India', role: 'Editor-in-Chief' },
+      { id: 'rajit-nair', name: 'Prof. Ali Kashif Bashir', affiliation: 'VIT Bhopal University, Bhopal, India', role: 'Editor-in-Chief' },
       { id: 'sultan-ahmed', name: 'Sultan Ahmed', affiliation: 'Prince Sattam Bin Abdulaziz University, Al-Kharj, Saudi Arabia', role: 'Editorial Board' },
       { id: 'nesren-farhan', name: 'Nesren S. Farhan', affiliation: 'Department of Health Informatics, College of Health Science, Saudi Electronic University, Riyadh, Saudi Arabia', role: 'Editorial Board' },
       { id: 'nadhem-ebrahim', name: 'Nadhem Ebrahim', affiliation: 'University of Akron, Akron, United States', role: 'Editorial Board' },
@@ -78,7 +78,7 @@ export const journals = [
     slug: 'jcsra',
     title: 'Journal of Cyber Security and Risk Auditing',
     issn: 'ISSN 3080-9444 (Online)',
-    chief: 'Prof. Diego Oliva',
+    chief: 'Prof. Dr. M. Irfan Uddin',
     publishingModel: 'Open access',
     frequency: 'Quarterly',
     reviewType: 'Double Blind Review',
@@ -94,7 +94,7 @@ export const journals = [
       'Cloud and IoT Security Assessments'
     ],
     editorialTeam: [
-      { id: 'diego-oliva', name: 'Prof. Diego Oliva', role: 'Editor in Chief', affiliation: 'University of Guadalajara, Mexico', photo: '/diego.jpg' },
+      { id: 'Irfan Uddin', name: 'Prof. Dr. M. Irfan Uddin', role: 'Editor in Chief', affiliation: 'University of Guadalajara, Mexico', photo: '/diego.jpg' },
       { id: 'youakim-badr', name: 'Prof. Youakim Badr', role: 'Editor in Chief', affiliation: 'Penn State University, USA', photo: '/youakim.jpg' }
     ],
     indexing: 'Journal of Cyber Security and Risk Auditing (JCSRA) is currently indexed in Crossref, Google Scholar, and Portico.',
@@ -148,20 +148,20 @@ export const articles = [
 export const editors = [
   {
     id: 'rajit-nair',
-    name: 'Rajit Nair',
+    name: 'Prof. Ali Kashif Bashir',
     role: 'Editor-in-Chief',
     affiliation: 'VIT Bhopal University, Bhopal, India',
     areas: ['Machine Learning', 'Computer Vision', 'Image Processing'],
-    bio: 'Dr. Rajit Nair is an Associate Professor at VIT Bhopal University. His research focuses on the intersection of machine learning and healthcare diagnostics.',
+    bio: 'Prof. Ali Kashif Bashir is an Associate Professor at VIT Bhopal University. His research focuses on the intersection of machine learning and healthcare diagnostics.',
     photo: null
   },
   {
-     id: 'diego-oliva',
-     name: 'Prof. Diego Oliva',
+     id: 'Irfan Uddin',
+     name: 'Prof. Dr. M. Irfan Uddin',
      role: 'Editor-in-Chief',
      affiliation: 'University of Guadalajara, Mexico',
      areas: ['Swarm Intelligence', 'Image Processing', 'Optimization'],
-     bio: 'Professor Diego Oliva is a renowned researcher in meta-heuristic optimization and its applications in image engineering.',
+     bio: 'Prof. Dr. M. Irfan Uddin is a renowned researcher in meta-heuristic optimization and its applications in image engineering.',
      photo: null
   },
   {

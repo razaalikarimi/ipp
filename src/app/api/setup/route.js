@@ -7,7 +7,7 @@ export async function GET() {
     const connection = await mysql.createConnection({
       host: process.env.MYSQL_HOST || 'localhost',
       user: process.env.MYSQL_USER || 'root',
-      password: process.env.MYSQL_PASSWORD || '',
+      password: process.env.MYSQL_PASSWORD || 'password2root',
     });
 
     const dbName = process.env.MYSQL_DATABASE || 'eisr_db';
