@@ -1,4 +1,5 @@
 'use client';
+import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
@@ -6,26 +7,47 @@ import { FileText, Calendar, User, Search, Globe, ChevronRight, BookOpen, Target
 import { journals, articles, leaders } from '@/lib/data';
 
 export default function Home() {
+  const [currentBanner, setCurrentBanner] = useState(0);
+  const banners = ['/baner0001.jpg', '/baner0002.jpg', '/baner0003.jpg', '/baner0004.jpg'];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentBanner((prev) => (prev + 1) % banners.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [banners.length]);
+
   return (
     <div className="min-h-screen flex flex-col font-sans bg-white">
       <Header />
       
       <main className="flex-grow">
-        {/* Exact EISR Hero Section */}
+        {/* Sliding Hero Section */}
         <section 
           id="home"
-          className="relative h-[500px] bg-[#050B14] bg-cover bg-[center_top] flex items-center px-6 antialiased z-40"
+          className="relative h-[500px] bg-[#050B14] bg-cover bg-center flex items-center px-6 antialiased z-40 transition-all duration-1000 ease-in-out"
           style={{ 
-            backgroundImage: "url('/eisr_hero_exact.jpg')",
+            backgroundImage: `url('${banners[currentBanner]}')`,
             backgroundRepeat: "no-repeat",
             imageRendering: "auto"
           }}
         >
           {/* Enhanced Clarity Overlay */}
-          <div className="absolute inset-0 bg-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-black/10"></div>
+          <div className="absolute inset-0 bg-black/10"></div>
           
           <div className="max-w-[1240px] mx-auto w-full flex justify-end relative z-10">
              {/* Text is directly in the image */}
+          </div>
+
+          {/* Banner Indicators */}
+          <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex space-x-2 z-50">
+            {banners.map((_, i) => (
+              <button 
+                key={i} 
+                onClick={() => setCurrentBanner(i)}
+                className={`w-2.5 h-2.5 rounded-full transition-all ${i === currentBanner ? 'bg-[#4BA6B9] w-8' : 'bg-white/50 hover:bg-white'}`}
+              />
+            ))}
           </div>
 
           {/* Floating Stats Bar */}
