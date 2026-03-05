@@ -1,10 +1,12 @@
 'use client';
+
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
-import { Eye, EyeOff, Search } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, User, Globe, MapPin, BadgeCheck, FileText, ArrowRight, Fingerprint } from 'lucide-react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Register() {
   const router = useRouter();
@@ -27,48 +29,6 @@ export default function Register() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [agreedPrivacy, setAgreedPrivacy] = useState(false);
   const [wantReviewer, setWantReviewer] = useState(false);
-
-  const inputStyle = {
-    width: '100%',
-    border: '1px solid #ccc',
-    borderRadius: '3px',
-    padding: '8px 10px',
-    fontSize: '13px',
-    color: '#333',
-    outline: 'none',
-    boxSizing: 'border-box',
-    backgroundColor: '#fff',
-    fontFamily: 'Arial, sans-serif',
-  };
-
-  const labelStyle = {
-    display: 'block',
-    fontSize: '13px',
-    fontWeight: '700',
-    color: '#333',
-    marginBottom: '5px',
-  };
-
-  const sectionHeadStyle = {
-    fontSize: '14px',
-    fontWeight: '700',
-    color: '#005F8E',
-    borderBottom: '1px solid #e0e0e0',
-    paddingBottom: '8px',
-    marginTop: '0',
-    marginBottom: '16px',
-  };
-
-  const fieldWrap = { marginBottom: '16px' };
-
-  const handleFocus = e => {
-    e.target.style.borderColor = '#007ab8';
-    e.target.style.boxShadow = '0 0 0 2px rgba(0,122,184,0.15)';
-  };
-  const handleBlur = e => {
-    e.target.style.borderColor = '#ccc';
-    e.target.style.boxShadow = 'none';
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -100,7 +60,7 @@ export default function Register() {
   };
 
   const countries = [
-    '', 'Afghanistan', 'Albania', 'Algeria', 'Argentina', 'Australia', 'Austria',
+    'Afghanistan', 'Albania', 'Algeria', 'Argentina', 'Australia', 'Austria',
     'Bangladesh', 'Belgium', 'Brazil', 'Canada', 'China', 'Colombia', 'Croatia',
     'Czech Republic', 'Denmark', 'Egypt', 'Ethiopia', 'Finland', 'France',
     'Germany', 'Ghana', 'Greece', 'Hungary', 'India', 'Indonesia', 'Iran',
@@ -113,414 +73,260 @@ export default function Register() {
   ];
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#fff', fontFamily: 'Arial, sans-serif' }}>
+    <div className="min-h-screen flex flex-col bg-[#F8F9FA] font-sans selection:bg-[#4BA6B9]/10">
+      <Header />
 
-      {/* ── OJS-Style Top Header ── */}
-      <div style={{ backgroundColor: '#005F8E', color: '#fff' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '60px' }}>
-          <div>
-            <div style={{ fontSize: '16px', fontWeight: '700', color: '#fff', letterSpacing: '-0.01em', lineHeight: 1.2 }}>
-              Eye-Innovations Scientific Research
-            </div>
-            <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.75)', marginTop: '1px' }}>
-              International Publishing Platform
-            </div>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-            <Link href="/" style={{ color: 'rgba(255,255,255,0.85)', fontSize: '13px', textDecoration: 'none', fontWeight: '500' }}>Submissions</Link>
-            <Link href="/contact" style={{ color: 'rgba(255,255,255,0.85)', fontSize: '13px', textDecoration: 'none', fontWeight: '500' }}>Contact</Link>
-            <Link href="/login" style={{ color: 'rgba(255,255,255,0.85)', fontSize: '13px', textDecoration: 'none', fontWeight: '500' }}>Login</Link>
-            <Link href="/register" style={{ color: '#fff', fontSize: '13px', textDecoration: 'none', fontWeight: '700', borderBottom: '2px solid rgba(255,255,255,0.6)', paddingBottom: '2px' }}>Register</Link>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'rgba(255,255,255,0.85)', cursor: 'pointer', fontSize: '13px' }}>
-              <Search size={14} />
-              Search
-            </div>
-          </div>
+      <main className="flex-grow py-20 px-6 relative overflow-hidden flex items-center justify-center">
+        {/* Subtle Background Elements */}
+        <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
+            <div className="absolute -top-[10%] -left-[5%] w-[40%] h-[40%] bg-[#4BA6B9]/5 rounded-full blur-[120px]" />
+            <div className="absolute -bottom-[10%] -right-[5%] w-[30%] h-[30%] bg-[#6366f1]/5 rounded-full blur-[100px]" />
         </div>
-      </div>
 
-      {/* ── Main Content ── */}
-      <main style={{ flex: 1, backgroundColor: '#fff' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 24px' }}>
-
-          {/* Breadcrumb */}
-          <div style={{ padding: '12px 0', borderBottom: '1px solid #e0e0e0', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: '#555' }}>
-            <Link href="/" style={{ color: '#007ab8', textDecoration: 'none' }}>Home</Link>
-            <span style={{ color: '#999' }}>/</span>
-            <span style={{ color: '#333' }}>Register</span>
-          </div>
-
-          {/* Page Title */}
-          <h1 style={{ fontSize: '22px', fontWeight: '700', color: '#333', marginTop: 0, marginBottom: '6px' }}>Register</h1>
-          <p style={{ fontSize: '13px', color: '#555', marginBottom: '24px' }}>
-            Complete the form below to create your researcher account.
-            Required fields are marked with an asterisk <span style={{ color: '#cc0000' }}>*</span>
-          </p>
-
-          {/* Error */}
-          {error && (
-            <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', color: '#dc2626', padding: '10px 14px', borderRadius: '4px', fontSize: '13px', marginBottom: '20px' }}>
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '40px', alignItems: 'start' }}>
-
-              {/* ── Left: Form Fields ── */}
-              <div>
-
-                {/* ── Section: Name ── */}
-                <div style={{ marginBottom: '28px' }}>
-                  <h2 style={sectionHeadStyle}>Your Name</h2>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                    <div style={fieldWrap}>
-                      <label style={labelStyle}>
-                        Given Name <span style={{ color: '#cc0000' }}>*</span>
-                      </label>
-                      <input
-                        id="reg-given-name"
-                        type="text"
-                        required
-                        placeholder="First name"
-                        value={formData.givenName}
-                        onChange={e => setFormData({ ...formData, givenName: e.target.value })}
-                        style={inputStyle}
-                        onFocus={handleFocus}
-                        onBlur={handleBlur}
-                      />
-                    </div>
-                    <div style={fieldWrap}>
-                      <label style={labelStyle}>
-                        Family Name <span style={{ color: '#cc0000' }}>*</span>
-                      </label>
-                      <input
-                        id="reg-family-name"
-                        type="text"
-                        required
-                        placeholder="Last name"
-                        value={formData.familyName}
-                        onChange={e => setFormData({ ...formData, familyName: e.target.value })}
-                        style={inputStyle}
-                        onFocus={handleFocus}
-                        onBlur={handleBlur}
-                      />
-                    </div>
-                  </div>
-
-                  <p style={{ fontSize: '12px', color: '#888', marginTop: '4px', marginBottom: 0 }}>
-                    Please provide the full name as the author should be identified on the published work.
-                    Example: Dr. John F. Mannings
-                  </p>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="w-full max-w-[900px] bg-white rounded-[40px] shadow-2xl overflow-hidden border border-[#F1F1F1] relative z-10"
+        >
+          <div className="p-8 lg:p-16">
+            <div className="max-w-[700px] mx-auto space-y-12">
+              
+              {/* Header */}
+              <div className="text-center space-y-2">
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#4BA6B9]/10 rounded-full mb-2">
+                   <BadgeCheck className="text-[#4BA6B9]" size={14} />
+                   <span className="text-[11px] font-black uppercase tracking-widest text-[#4BA6B9]">Researcher Enrollment</span>
                 </div>
-
-                {/* ── Section: Contact ── */}
-                <div style={{ marginBottom: '28px' }}>
-                  <h2 style={sectionHeadStyle}>Contact Details</h2>
-
-                  <div style={fieldWrap}>
-                    <label style={labelStyle}>Affiliation</label>
-                    <input
-                      id="reg-affiliation"
-                      type="text"
-                      placeholder="University or institution name"
-                      value={formData.affiliation}
-                      onChange={e => setFormData({ ...formData, affiliation: e.target.value })}
-                      style={inputStyle}
-                      onFocus={handleFocus}
-                      onBlur={handleBlur}
-                    />
-                  </div>
-
-                  <div style={fieldWrap}>
-                    <label style={labelStyle}>Country <span style={{ color: '#cc0000' }}>*</span></label>
-                    <select
-                      id="reg-country"
-                      required
-                      value={formData.country}
-                      onChange={e => setFormData({ ...formData, country: e.target.value })}
-                      style={{ ...inputStyle, cursor: 'pointer' }}
-                      onFocus={handleFocus}
-                      onBlur={handleBlur}
-                    >
-                      <option value="">Select Country</option>
-                      {countries.slice(1).map(c => (
-                        <option key={c} value={c}>{c}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div style={fieldWrap}>
-                    <label style={labelStyle}>Mailing Address</label>
-                    <textarea
-                      id="reg-mailing"
-                      placeholder="Enter your mailing address"
-                      value={formData.mailingAddress}
-                      onChange={e => setFormData({ ...formData, mailingAddress: e.target.value })}
-                      rows={3}
-                      style={{ ...inputStyle, resize: 'vertical' }}
-                      onFocus={handleFocus}
-                      onBlur={handleBlur}
-                    />
-                  </div>
-                </div>
-
-                {/* ── Section: Login Details ── */}
-                <div style={{ marginBottom: '28px' }}>
-                  <h2 style={sectionHeadStyle}>Login Details</h2>
-
-                  <div style={fieldWrap}>
-                    <label style={labelStyle}>
-                      Email <span style={{ color: '#cc0000' }}>*</span>
-                    </label>
-                    <input
-                      id="reg-email"
-                      type="email"
-                      required
-                      placeholder="researcher@institute.edu"
-                      value={formData.email}
-                      onChange={e => setFormData({ ...formData, email: e.target.value })}
-                      style={inputStyle}
-                      onFocus={handleFocus}
-                      onBlur={handleBlur}
-                    />
-                  </div>
-
-                  <div style={fieldWrap}>
-                    <label style={labelStyle}>
-                      Username <span style={{ color: '#cc0000' }}>*</span>
-                    </label>
-                    <input
-                      id="reg-username"
-                      type="text"
-                      required
-                      placeholder="Choose a unique username"
-                      value={formData.username}
-                      onChange={e => setFormData({ ...formData, username: e.target.value })}
-                      style={inputStyle}
-                      onFocus={handleFocus}
-                      onBlur={handleBlur}
-                    />
-                    <p style={{ fontSize: '12px', color: '#888', marginTop: '4px', marginBottom: 0 }}>
-                      Please provide your preferred username, which must be unique to this site.
-                    </p>
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                    <div style={fieldWrap}>
-                      <label style={labelStyle}>
-                        Password <span style={{ color: '#cc0000' }}>*</span>
-                      </label>
-                      <div style={{ position: 'relative' }}>
-                        <input
-                          id="reg-password"
-                          type={showPassword ? 'text' : 'password'}
-                          required
-                          placeholder="Min. 8 characters"
-                          value={formData.password}
-                          onChange={e => setFormData({ ...formData, password: e.target.value })}
-                          style={{ ...inputStyle, paddingRight: '36px' }}
-                          onFocus={handleFocus}
-                          onBlur={handleBlur}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#888', padding: 0 }}
-                        >
-                          {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
-                        </button>
-                      </div>
-                    </div>
-
-                    <div style={fieldWrap}>
-                      <label style={labelStyle}>
-                        Repeat Password <span style={{ color: '#cc0000' }}>*</span>
-                      </label>
-                      <div style={{ position: 'relative' }}>
-                        <input
-                          id="reg-confirm-password"
-                          type={showConfirm ? 'text' : 'password'}
-                          required
-                          placeholder="Re-enter password"
-                          value={formData.confirmPassword}
-                          onChange={e => setFormData({ ...formData, confirmPassword: e.target.value })}
-                          style={{ ...inputStyle, paddingRight: '36px' }}
-                          onFocus={handleFocus}
-                          onBlur={handleBlur}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowConfirm(!showConfirm)}
-                          style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#888', padding: 0 }}
-                        >
-                          {showConfirm ? <EyeOff size={14} /> : <Eye size={14} />}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* ── Section: Optional ── */}
-                <div style={{ marginBottom: '28px' }}>
-                  <h2 style={sectionHeadStyle}>Profile (Optional)</h2>
-
-                  <div style={fieldWrap}>
-                    <label style={labelStyle}>ORCiD iD</label>
-                    <input
-                      id="reg-orcid"
-                      type="text"
-                      placeholder="0000-0000-0000-0000"
-                      value={formData.orcid}
-                      onChange={e => setFormData({ ...formData, orcid: e.target.value })}
-                      style={inputStyle}
-                      onFocus={handleFocus}
-                      onBlur={handleBlur}
-                    />
-                    <p style={{ fontSize: '12px', color: '#888', marginTop: '4px', marginBottom: 0 }}>
-                      Your ORCiD profile authentication will be used to link your account.
-                    </p>
-                  </div>
-
-                  <div style={fieldWrap}>
-                    <label style={labelStyle}>Bio Statement</label>
-                    <textarea
-                      id="reg-bio"
-                      placeholder="Brief biography or research interests..."
-                      value={formData.bio}
-                      onChange={e => setFormData({ ...formData, bio: e.target.value })}
-                      rows={4}
-                      style={{ ...inputStyle, resize: 'vertical' }}
-                      onFocus={handleFocus}
-                      onBlur={handleBlur}
-                    />
-                  </div>
-                </div>
-
-                {/* ── Section: Consent ── */}
-                <div style={{ marginBottom: '28px' }}>
-                  <h2 style={sectionHeadStyle}>Terms &amp; Consent</h2>
-
-                  <div style={{ marginBottom: '12px', display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                    <input
-                      id="reg-privacy"
-                      type="checkbox"
-                      required
-                      checked={agreedPrivacy}
-                      onChange={e => setAgreedPrivacy(e.target.checked)}
-                      style={{ marginTop: '2px', width: '14px', height: '14px', cursor: 'pointer', accentColor: '#007ab8', flexShrink: 0 }}
-                    />
-                    <label htmlFor="reg-privacy" style={{ fontSize: '13px', color: '#333', cursor: 'pointer', lineHeight: '1.5' }}>
-                      I agree to have my data collected and stored according to the{' '}
-                      <Link href="/policies/privacy" style={{ color: '#007ab8', textDecoration: 'underline' }}>privacy statement</Link>.
-                      <span style={{ color: '#cc0000' }}> *</span>
-                    </label>
-                  </div>
-
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                    <input
-                      id="reg-reviewer"
-                      type="checkbox"
-                      checked={wantReviewer}
-                      onChange={e => setWantReviewer(e.target.checked)}
-                      style={{ marginTop: '2px', width: '14px', height: '14px', cursor: 'pointer', accentColor: '#007ab8', flexShrink: 0 }}
-                    />
-                    <label htmlFor="reg-reviewer" style={{ fontSize: '13px', color: '#333', cursor: 'pointer', lineHeight: '1.5' }}>
-                      I would like to be contacted with requests to review submissions to this journal.
-                    </label>
-                  </div>
-                </div>
-
-                {/* Required note */}
-                <p style={{ fontSize: '12px', color: '#888', marginBottom: '20px' }}>
-                  <span style={{ color: '#cc0000' }}>*</span> Required fields are marked with an asterisk
+                <h1 className="text-4xl font-bold text-[#1A1A1A] tracking-tight">Create Account</h1>
+                <p className="text-[#555555] text-[15px] font-semibold">
+                  Join the global community of scholarly excellence
                 </p>
+              </div>
 
-                {/* Submit */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '20px', paddingBottom: '40px' }}>
+              <AnimatePresence mode="wait">
+                {error && (
+                  <motion.div 
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="bg-red-50 border border-red-100 p-4 rounded-2xl flex items-center gap-3"
+                  >
+                    <div className="w-2 h-2 rounded-full bg-red-500 shrink-0" />
+                    <p className="text-red-600 text-[13px] font-bold">{error}</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <form onSubmit={handleSubmit} className="space-y-12">
+                
+                {/* Section 1: Identity */}
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-[#4BA6B9]/10 flex items-center justify-center text-[#4BA6B9]">
+                      <User size={16} />
+                    </div>
+                    <h3 className="text-[15px] font-black text-[#1A1A1A] uppercase tracking-wider">Personal Identity</h3>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2 group">
+                      <label className="text-[12px] font-black text-[#1A1A1A]/60 uppercase tracking-widest pl-1">Given Name *</label>
+                      <input 
+                        type="text" required value={formData.givenName}
+                        onChange={e => setFormData({ ...formData, givenName: e.target.value })}
+                        placeholder="e.g. Abdullah"
+                        className="w-full h-14 bg-[#F8F9FA] border border-[#F1F1F1] rounded-2xl px-5 text-[14px] font-bold text-[#1A1A1A] outline-none transition-all focus:border-[#4BA6B9] focus:bg-white focus:ring-4 focus:ring-[#4BA6B9]/5"
+                      />
+                    </div>
+                    <div className="space-y-2 group">
+                      <label className="text-[12px] font-black text-[#1A1A1A]/60 uppercase tracking-widest pl-1">Family Name *</label>
+                      <input 
+                        type="text" required value={formData.familyName}
+                        onChange={e => setFormData({ ...formData, familyName: e.target.value })}
+                        placeholder="e.g. Alessa"
+                        className="w-full h-14 bg-[#F8F9FA] border border-[#F1F1F1] rounded-2xl px-5 text-[14px] font-bold text-[#1A1A1A] outline-none transition-all focus:border-[#4BA6B9] focus:bg-white focus:ring-4 focus:ring-[#4BA6B9]/5"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section 2: Affiliation */}
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-[#6366f1]/10 flex items-center justify-center text-[#6366f1]">
+                      <Globe size={16} />
+                    </div>
+                    <h3 className="text-[15px] font-black text-[#1A1A1A] uppercase tracking-wider">Global Affiliation</h3>
+                  </div>
+
+                  <div className="space-y-6">
+                    <div className="space-y-2 group">
+                      <label className="text-[12px] font-black text-[#1A1A1A]/60 uppercase tracking-widest pl-1">Institution/University</label>
+                      <div className="relative">
+                        <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-[#CCCCCC]" size={18} />
+                        <input 
+                          type="text" value={formData.affiliation}
+                          onChange={e => setFormData({ ...formData, affiliation: e.target.value })}
+                          placeholder="Search for your institution"
+                          className="w-full h-14 bg-[#F8F9FA] border border-[#F1F1F1] rounded-2xl pl-12 pr-4 text-[14px] font-bold text-[#1A1A1A] outline-none transition-all focus:border-[#4BA6B9] focus:bg-white focus:ring-4 focus:ring-[#4BA6B9]/5"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2 group">
+                      <label className="text-[12px] font-black text-[#1A1A1A]/60 uppercase tracking-widest pl-1">Country *</label>
+                      <select 
+                        required value={formData.country}
+                        onChange={e => setFormData({ ...formData, country: e.target.value })}
+                        className="w-full h-14 bg-[#F8F9FA] border border-[#F1F1F1] rounded-2xl px-5 text-[14px] font-bold text-[#1A1A1A] outline-none transition-all focus:border-[#4BA6B9] focus:bg-white focus:ring-4 focus:ring-[#4BA6B9]/5 appearance-none cursor-pointer"
+                      >
+                        <option value="">Select your country</option>
+                        {countries.map(c => <option key={c} value={c}>{c}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section 3: Credentials */}
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center text-orange-500">
+                      <Fingerprint size={16} />
+                    </div>
+                    <h3 className="text-[15px] font-black text-[#1A1A1A] uppercase tracking-wider">Login Credentials</h3>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2 group md:col-span-2">
+                       <label className="text-[12px] font-black text-[#1A1A1A]/60 uppercase tracking-widest pl-1">Work Email *</label>
+                       <div className="relative">
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-[#CCCCCC]" size={18} />
+                        <input 
+                          type="email" required value={formData.email}
+                          onChange={e => setFormData({ ...formData, email: e.target.value })}
+                          placeholder="researcher@university.edu"
+                          className="w-full h-14 bg-[#F8F9FA] border border-[#F1F1F1] rounded-2xl pl-12 pr-4 text-[14px] font-bold text-[#1A1A1A] outline-none transition-all focus:border-[#4BA6B9] focus:bg-white focus:ring-4 focus:ring-[#4BA6B9]/5"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2 group">
+                      <label className="text-[12px] font-black text-[#1A1A1A]/60 uppercase tracking-widest pl-1">Username *</label>
+                      <input 
+                        type="text" required value={formData.username}
+                        onChange={e => setFormData({ ...formData, username: e.target.value })}
+                        placeholder="Choose unique username"
+                        className="w-full h-14 bg-[#F8F9FA] border border-[#F1F1F1] rounded-2xl px-5 text-[14px] font-bold text-[#1A1A1A] outline-none transition-all focus:border-[#4BA6B9] focus:bg-white focus:ring-4 focus:ring-[#4BA6B9]/5"
+                      />
+                    </div>
+
+                    <div className="space-y-2 group">
+                      <label className="text-[12px] font-black text-[#1A1A1A]/60 uppercase tracking-widest pl-1">ORCiD iD (Optional)</label>
+                      <input 
+                        type="text" value={formData.orcid}
+                        onChange={e => setFormData({ ...formData, orcid: e.target.value })}
+                        placeholder="0000-0000-0000-0000"
+                        className="w-full h-14 bg-[#F8F9FA] border border-[#F1F1F1] rounded-2xl px-5 text-[14px] font-bold text-[#1A1A1A] outline-none transition-all focus:border-[#4BA6B9] focus:bg-white focus:ring-4 focus:ring-[#4BA6B9]/5"
+                      />
+                    </div>
+
+                    <div className="space-y-2 group">
+                      <label className="text-[12px] font-black text-[#1A1A1A]/60 uppercase tracking-widest pl-1">Password *</label>
+                      <div className="relative">
+                        <input 
+                          type={showPassword ? 'text' : 'password'} required value={formData.password}
+                          onChange={e => setFormData({ ...formData, password: e.target.value })}
+                          placeholder="••••••••"
+                          className="w-full h-14 bg-[#F8F9FA] border border-[#F1F1F1] rounded-2xl px-5 pr-12 text-[14px] font-bold text-[#1A1A1A] outline-none transition-all focus:border-[#4BA6B9] focus:bg-white focus:ring-4 focus:ring-[#4BA6B9]/5"
+                        />
+                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-[#CCCCCC] hover:text-[#1A1A1A]">
+                          {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2 group">
+                      <label className="text-[12px] font-black text-[#1A1A1A]/60 uppercase tracking-widest pl-1">Confirm Password *</label>
+                      <div className="relative">
+                        <input 
+                          type={showConfirm ? 'text' : 'password'} required value={formData.confirmPassword}
+                          onChange={e => setFormData({ ...formData, confirmPassword: e.target.value })}
+                          placeholder="••••••••"
+                          className="w-full h-14 bg-[#F8F9FA] border border-[#F1F1F1] rounded-2xl px-5 pr-12 text-[14px] font-bold text-[#1A1A1A] outline-none transition-all focus:border-[#4BA6B9] focus:bg-white focus:ring-4 focus:ring-[#4BA6B9]/5"
+                        />
+                        <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-4 top-1/2 -translate-y-1/2 text-[#CCCCCC] hover:text-[#1A1A1A]">
+                          {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section 4: Bio & Consent */}
+                <div className="space-y-8 pt-6 border-t border-[#F1F1F1]">
+                  <div className="space-y-2 group">
+                    <label className="text-[12px] font-black text-[#1A1A1A]/60 uppercase tracking-widest pl-1">Brief Biography Statement</label>
+                    <textarea 
+                      rows={4} value={formData.bio}
+                      onChange={e => setFormData({ ...formData, bio: e.target.value })}
+                      placeholder="Share your research focus or scholarly background..."
+                      className="w-full bg-[#F8F9FA] border border-[#F1F1F1] rounded-2xl p-5 text-[14px] font-bold text-[#1A1A1A] outline-none transition-all focus:border-[#4BA6B9] focus:bg-white focus:ring-4 focus:ring-[#4BA6B9]/5 resize-none"
+                    />
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-4 p-4 rounded-2xl bg-[#F8F9FA] hover:bg-white border border-transparent hover:border-[#F1F1F1] transition-all cursor-pointer group">
+                      <input id="agreed" type="checkbox" required checked={agreedPrivacy} onChange={e => setAgreedPrivacy(e.target.checked)} className="mt-1 w-5 h-5 rounded-lg border-[#F1F1F1] text-[#4BA6B9] focus:ring-[#4BA6B9] cursor-pointer" />
+                      <label htmlFor="agreed" className="text-[13px] font-semibold text-[#555555] cursor-pointer group-hover:text-[#1A1A1A] transition-colors leading-relaxed">
+                        I confirm that my data will be handled in accordance with the 
+                        <Link href="/policies/privacy" className="text-[#4BA6B9] font-black px-1 hover:underline underline-offset-4">Privacy Statement</Link> 
+                        of EISR. *
+                      </label>
+                    </div>
+
+                    <div className="flex items-start gap-4 p-4 rounded-2xl bg-[#F8F9FA] hover:bg-white border border-transparent hover:border-[#F1F1F1] transition-all cursor-pointer group">
+                      <input id="reviewer" type="checkbox" checked={wantReviewer} onChange={e => setWantReviewer(e.target.checked)} className="mt-1 w-5 h-5 rounded-lg border-[#F1F1F1] text-[#4BA6B9] focus:ring-[#4BA6B9] cursor-pointer" />
+                      <label htmlFor="reviewer" className="text-[13px] font-semibold text-[#555555] cursor-pointer group-hover:text-[#1A1A1A] transition-colors leading-relaxed">
+                        Register as a Peer Reviewer. I would like to be contacted to evaluate submissions in my expertise areas.
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-6 space-y-6">
                   <button
-                    id="register-submit"
                     type="submit"
                     disabled={loading}
-                    style={{
-                      backgroundColor: loading ? '#5b99bb' : '#007ab8',
-                      color: '#fff',
-                      border: 'none',
-                      borderRadius: '3px',
-                      padding: '10px 24px',
-                      fontSize: '13px',
-                      fontWeight: '700',
-                      cursor: loading ? 'not-allowed' : 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                    }}
-                    onMouseEnter={e => { if (!loading) e.currentTarget.style.backgroundColor = '#005f8e'; }}
-                    onMouseLeave={e => { if (!loading) e.currentTarget.style.backgroundColor = '#007ab8'; }}
+                    className="w-full h-16 bg-[#1A1A1A] hover:bg-[#4BA6B9] text-white rounded-3xl font-black text-[16px] transition-all duration-300 shadow-xl shadow-[#1A1A1A]/5 hover:shadow-[#4BA6B9]/20 flex items-center justify-center gap-3 group disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {loading && (
-                      <span style={{ width: '14px', height: '14px', border: '2px solid rgba(255,255,255,0.4)', borderTopColor: '#fff', borderRadius: '50%', display: 'inline-block', animation: 'spin 0.7s linear infinite' }}></span>
+                    {loading ? (
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    ) : (
+                      <>
+                        <span>CREATE RESEARCHER ACCOUNT</span>
+                        <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                      </>
                     )}
-                    {loading ? 'Registering...' : 'Register'}
                   </button>
 
-                  <Link href="/login" style={{ color: '#007ab8', fontSize: '13px', textDecoration: 'underline' }}>
-                    Already have an account? Login
-                  </Link>
-                </div>
-              </div>
-
-              {/* ── Right: Sidebar Info ── */}
-              <div style={{ position: 'sticky', top: '24px' }}>
-                <div style={{ backgroundColor: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '4px', padding: '20px', marginBottom: '16px' }}>
-                  <h3 style={{ fontSize: '13px', fontWeight: '700', color: '#333', marginTop: 0, marginBottom: '10px' }}>
-                    After registering you can:
-                  </h3>
-                  <ul style={{ fontSize: '13px', color: '#555', lineHeight: '2.0', paddingLeft: '18px', margin: 0 }}>
-                    <li>View Submissions</li>
-                    <li>Make a New Submission</li>
-                    <li>Edit My Profile</li>
-                    <li>Continue Browsing</li>
-                  </ul>
+                  <div className="text-center">
+                    <p className="text-[14px] font-bold text-[#555555]">
+                       Already established?{' '}
+                       <Link href="/login" className="text-[#4BA6B9] hover:text-[#1A1A1A] underline transition-colors underline-offset-4">
+                         Go to Login
+                       </Link>
+                    </p>
+                  </div>
                 </div>
 
-                <div style={{ backgroundColor: '#f0f7fb', border: '1px solid #c8dde9', borderRadius: '4px', padding: '16px' }}>
-                  <h3 style={{ fontSize: '13px', fontWeight: '700', color: '#005F8E', marginTop: 0, marginBottom: '8px' }}>
-                    Already registered?
-                  </h3>
-                  <p style={{ fontSize: '12px', color: '#555', lineHeight: '1.6', marginBottom: '12px' }}>
-                    If you have previously registered, you can log in with your username and password.
-                  </p>
-                  <Link
-                    href="/login"
-                    style={{ display: 'inline-block', backgroundColor: '#005f8e', color: '#fff', textDecoration: 'none', borderRadius: '3px', padding: '8px 16px', fontSize: '13px', fontWeight: '700' }}
-                  >
-                    Go to Login
-                  </Link>
-                </div>
-              </div>
-
+              </form>
             </div>
-          </form>
-        </div>
+          </div>
+        </motion.div>
       </main>
 
-      {/* ── Bottom Strip ── */}
-      <div style={{ backgroundColor: '#3e4444', padding: '8px 24px' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '11px' }}>
-            © 2025 Eye-Innovations Scientific Research. All rights reserved.
-          </span>
-          <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '11px' }}>
-            Secure Researcher Enrollment Portal
-          </span>
-        </div>
-      </div>
-
-      <style>{`
-        @keyframes spin { to { transform: rotate(360deg); } }
-      `}</style>
+      <Footer />
     </div>
   );
 }

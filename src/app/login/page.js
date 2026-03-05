@@ -1,10 +1,12 @@
 'use client';
+
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
-import { Mail, Lock, Eye, EyeOff, Search } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ShieldCheck, ArrowRight, UserCheck } from 'lucide-react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Login() {
   const router = useRouter();
@@ -35,234 +37,132 @@ export default function Login() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#fff', fontFamily: 'Arial, sans-serif' }}>
+    <div className="min-h-screen flex flex-col bg-[#F8F9FA] font-sans selection:bg-[#4BA6B9]/10">
+      <Header />
 
-      {/* ── OJS-Style Top Header ── */}
-      <div style={{ backgroundColor: '#005F8E', color: '#fff', padding: '0' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '60px' }}>
-          {/* Journal Title */}
-          <div>
-            <div style={{ fontSize: '16px', fontWeight: '700', color: '#fff', letterSpacing: '-0.01em', lineHeight: 1.2 }}>
-              Eye-Innovations Scientific Research
-            </div>
-            <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.75)', marginTop: '1px' }}>
-              International Publishing Platform
-            </div>
-          </div>
-
-          {/* Top Nav Links */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-            <Link href="/" style={{ color: 'rgba(255,255,255,0.85)', fontSize: '13px', textDecoration: 'none', fontWeight: '500' }}
-              onMouseEnter={e => e.target.style.color='#fff'} onMouseLeave={e => e.target.style.color='rgba(255,255,255,0.85)'}>
-              Submissions
-            </Link>
-            <Link href="/contact" style={{ color: 'rgba(255,255,255,0.85)', fontSize: '13px', textDecoration: 'none', fontWeight: '500' }}>
-              Contact
-            </Link>
-            <Link href="/login" style={{ color: '#fff', fontSize: '13px', textDecoration: 'none', fontWeight: '700', borderBottom: '2px solid rgba(255,255,255,0.6)', paddingBottom: '2px' }}>
-              Login
-            </Link>
-            <Link href="/register" style={{ color: 'rgba(255,255,255,0.85)', fontSize: '13px', textDecoration: 'none', fontWeight: '500' }}>
-              Register
-            </Link>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'rgba(255,255,255,0.85)', cursor: 'pointer', fontSize: '13px' }}>
-              <Search size={14} />
-              Search
-            </div>
-          </div>
+      <main className="flex-grow flex items-center justify-center py-20 px-6 relative overflow-hidden">
+        {/* Subtle Background Elements */}
+        <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
+            <div className="absolute -top-[10%] -right-[5%] w-[40%] h-[40%] bg-[#4BA6B9]/5 rounded-full blur-[120px]" />
+            <div className="absolute -bottom-[10%] -left-[5%] w-[30%] h-[30%] bg-[#6366f1]/5 rounded-full blur-[100px]" />
         </div>
-      </div>
 
-      {/* ── Main Content ── */}
-      <main style={{ flex: 1, backgroundColor: '#fff', padding: '0' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 24px' }}>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="w-full max-w-[540px] bg-white rounded-[32px] shadow-2xl overflow-hidden border border-[#F1F1F1] relative z-10"
+        >
+          {/* Main: Login Form */}
+          <div className="p-12 lg:p-16">
+            <div className="space-y-10">
+              <div className="space-y-2 text-center">
+                <h1 className="text-3xl font-bold text-[#1A1A1A] tracking-tight">Sign In</h1>
+                <p className="text-[#555555] text-[15px] font-semibold">
+                  Manage your submissions and editorial tasks
+                </p>
+              </div>
 
-          {/* Breadcrumb */}
-          <div style={{ padding: '12px 0', borderBottom: '1px solid #e0e0e0', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: '#555' }}>
-            <Link href="/" style={{ color: '#007ab8', textDecoration: 'none' }}>Home</Link>
-            <span style={{ color: '#999' }}>/</span>
-            <span style={{ color: '#333' }}>Login</span>
-          </div>
+              <AnimatePresence mode="wait">
+                {error && (
+                  <motion.div 
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="bg-red-50 border border-red-100 p-4 rounded-2xl flex items-center gap-3"
+                  >
+                    <div className="w-2 h-2 rounded-full bg-red-500 shrink-0" />
+                    <p className="text-red-600 text-[13px] font-bold">{error}</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
-          {/* Login Form Container */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '48px', alignItems: 'start', paddingBottom: '48px' }}>
-
-            {/* Left: Login Form */}
-            <div>
-              <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#333', marginBottom: '6px', marginTop: 0 }}>Login</h1>
-              <p style={{ fontSize: '13px', color: '#555', marginBottom: '24px' }}>
-                Sign in to manage your articles and account
-              </p>
-
-              {/* Error */}
-              {error && (
-                <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', color: '#dc2626', padding: '10px 14px', borderRadius: '4px', fontSize: '13px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#dc2626', flexShrink: 0, display: 'inline-block' }}></span>
-                  {error}
-                </div>
-              )}
-
-              <form onSubmit={handleSubmit}>
-
-                {/* Email */}
-                <div style={{ marginBottom: '16px' }}>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: '#333', marginBottom: '5px' }}>
-                    Email or Username <span style={{ color: '#cc0000' }}>*</span>
-                  </label>
-                  <input
-                    id="login-email"
-                    type="text"
-                    required
-                    value={formData.email}
-                    onChange={e => setFormData({ ...formData, email: e.target.value })}
-                    placeholder="Enter your email or username"
-                    style={{ width: '100%', border: '1px solid #ccc', borderRadius: '3px', padding: '8px 10px', fontSize: '13px', color: '#333', outline: 'none', boxSizing: 'border-box', backgroundColor: '#fff' }}
-                    onFocus={e => { e.target.style.borderColor = '#007ab8'; e.target.style.boxShadow = '0 0 0 2px rgba(0,122,184,0.15)'; }}
-                    onBlur={e => { e.target.style.borderColor = '#ccc'; e.target.style.boxShadow = 'none'; }}
-                  />
-                </div>
-
-                {/* Password */}
-                <div style={{ marginBottom: '16px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
-                    <label style={{ fontSize: '13px', fontWeight: '700', color: '#333' }}>
-                      Password <span style={{ color: '#cc0000' }}>*</span>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="space-y-5">
+                  <div className="space-y-2 group">
+                    <label className="text-[13px] font-black text-[#1A1A1A] uppercase tracking-wider">
+                      Email address
                     </label>
-                    <button type="button" style={{ fontSize: '12px', color: '#007ab8', background: 'none', border: 'none', cursor: 'pointer', padding: 0, textDecoration: 'underline' }}>
-                      Forgot your password?
-                    </button>
+                    <div className="relative">
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-[#CCCCCC] group-focus-within:text-[#4BA6B9] transition-colors" size={18} />
+                      <input 
+                        type="text"
+                        required
+                        value={formData.email}
+                        onChange={e => setFormData({ ...formData, email: e.target.value })}
+                        placeholder="Enter your email"
+                        className="w-full h-14 bg-[#F8F9FA] border border-[#F1F1F1] rounded-2xl pl-12 pr-4 text-[14px] font-bold text-[#1A1A1A] outline-none transition-all focus:border-[#4BA6B9] focus:bg-white focus:ring-4 focus:ring-[#4BA6B9]/5"
+                      />
+                    </div>
                   </div>
-                  <div style={{ position: 'relative' }}>
-                    <input
-                      id="login-password"
-                      type={showPassword ? 'text' : 'password'}
-                      required
-                      value={formData.password}
-                      onChange={e => setFormData({ ...formData, password: e.target.value })}
-                      placeholder="••••••••"
-                      style={{ width: '100%', border: '1px solid #ccc', borderRadius: '3px', padding: '8px 36px 8px 10px', fontSize: '13px', color: '#333', outline: 'none', boxSizing: 'border-box', backgroundColor: '#fff' }}
-                      onFocus={e => { e.target.style.borderColor = '#007ab8'; e.target.style.boxShadow = '0 0 0 2px rgba(0,122,184,0.15)'; }}
-                      onBlur={e => { e.target.style.borderColor = '#ccc'; e.target.style.boxShadow = 'none'; }}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#888', padding: 0 }}
-                    >
-                      {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
-                    </button>
+
+                  <div className="space-y-2 group">
+                    <div className="flex justify-between items-center">
+                      <label className="text-[13px] font-black text-[#1A1A1A] uppercase tracking-wider">
+                        Password
+                      </label>
+                      <button type="button" className="text-[12px] font-black text-[#4BA6B9] hover:text-[#1A1A1A] transition-colors tracking-tighter">
+                        FORGOT PASSWORD?
+                      </button>
+                    </div>
+                    <div className="relative">
+                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-[#CCCCCC] group-focus-within:text-[#4BA6B9] transition-colors" size={18} />
+                      <input 
+                        type={showPassword ? 'text' : 'password'}
+                        required
+                        value={formData.password}
+                        onChange={e => setFormData({ ...formData, password: e.target.value })}
+                        placeholder="••••••••"
+                        className="w-full h-14 bg-[#F8F9FA] border border-[#F1F1F1] rounded-2xl pl-12 pr-12 text-[14px] font-bold text-[#1A1A1A] outline-none transition-all focus:border-[#4BA6B9] focus:bg-white focus:ring-4 focus:ring-[#4BA6B9]/5"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-[#CCCCCC] hover:text-[#1A1A1A] transition-colors"
+                      >
+                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                      </button>
+                    </div>
                   </div>
                 </div>
 
-                {/* Remember Me */}
-                <div style={{ marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <input id="remember-me" type="checkbox" style={{ width: '14px', height: '14px', cursor: 'pointer', accentColor: '#007ab8' }} />
-                  <label htmlFor="remember-me" style={{ fontSize: '13px', color: '#555', cursor: 'pointer' }}>
-                    Remember me on this device
+                <div className="flex items-center gap-3 py-2">
+                  <input id="remember-me" type="checkbox" className="w-5 h-5 rounded-lg border-[#F1F1F1] text-[#4BA6B9] focus:ring-[#4BA6B9] cursor-pointer" />
+                  <label htmlFor="remember-me" className="text-[13px] font-bold text-[#555555] cursor-pointer hover:text-[#1A1A1A] transition-colors">
+                    Keep me logged in
                   </label>
                 </div>
 
-                {/* Submit Button */}
                 <button
-                  id="login-submit"
                   type="submit"
                   disabled={loading}
-                  style={{
-                    backgroundColor: loading ? '#5b99bb' : '#007ab8',
-                    color: '#fff',
-                    border: 'none',
-                    borderRadius: '3px',
-                    padding: '10px 24px',
-                    fontSize: '13px',
-                    fontWeight: '700',
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    transition: 'background 0.2s',
-                  }}
-                  onMouseEnter={e => { if (!loading) e.currentTarget.style.backgroundColor = '#005f8e'; }}
-                  onMouseLeave={e => { if (!loading) e.currentTarget.style.backgroundColor = '#007ab8'; }}
+                  className="w-full h-14 bg-[#1A1A1A] hover:bg-[#4BA6B9] text-white rounded-2xl font-black text-[15px] transition-all duration-300 shadow-xl shadow-[#1A1A1A]/5 hover:shadow-[#4BA6B9]/20 flex items-center justify-center gap-3 group disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {loading && (
-                    <span style={{ width: '14px', height: '14px', border: '2px solid rgba(255,255,255,0.4)', borderTopColor: '#fff', borderRadius: '50%', display: 'inline-block', animation: 'spin 0.7s linear infinite' }}></span>
+                  {loading ? (
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <span>SIGN IN</span>
+                      <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                    </>
                   )}
-                  {loading ? 'Logging in...' : 'Login'}
                 </button>
+
+                <div className="pt-8 text-center">
+                   <p className="text-[14px] font-bold text-[#555555]">
+                    Don't have an account?{' '}
+                    <Link href="/register" className="text-[#4BA6B9] hover:text-[#1A1A1A] underline transition-colors decoration-2 underline-offset-4">
+                      Register Now
+                    </Link>
+                   </p>
+                </div>
               </form>
             </div>
-
-            {/* Right: Info / Register Prompt */}
-            <div>
-              <div style={{ backgroundColor: '#f8f9fa', border: '1px solid #e0e0e0', borderRadius: '4px', padding: '24px' }}>
-                <h2 style={{ fontSize: '15px', fontWeight: '700', color: '#333', marginTop: 0, marginBottom: '10px' }}>
-                  Not registered yet?
-                </h2>
-                <p style={{ fontSize: '13px', color: '#555', lineHeight: '1.6', marginBottom: '16px' }}>
-                  Create a free account to submit manuscripts, track your reviews, 
-                  and join the global EISR research community.
-                </p>
-                <Link
-                  href="/register"
-                  style={{
-                    display: 'inline-block',
-                    backgroundColor: '#005f8e',
-                    color: '#fff',
-                    textDecoration: 'none',
-                    borderRadius: '3px',
-                    padding: '9px 20px',
-                    fontSize: '13px',
-                    fontWeight: '700',
-                  }}
-                >
-                  Register Now
-                </Link>
-
-                <hr style={{ borderColor: '#e0e0e0', borderStyle: 'solid', borderWidth: '1px 0 0 0', margin: '20px 0' }} />
-
-                <h3 style={{ fontSize: '13px', fontWeight: '700', color: '#333', marginTop: 0, marginBottom: '10px' }}>
-                  What you can do after logging in:
-                </h3>
-                <ul style={{ fontSize: '13px', color: '#555', lineHeight: '2.0', paddingLeft: '18px', margin: 0 }}>
-                  <li>View &amp; manage submissions</li>
-                  <li>Make a new submission</li>
-                  <li>Edit your profile</li>
-                  <li>Respond to peer review requests</li>
-                </ul>
-              </div>
-
-              {/* Support */}
-              <div style={{ marginTop: '16px', padding: '14px', background: '#f0f7fb', border: '1px solid #c8dde9', borderRadius: '4px' }}>
-                <p style={{ fontSize: '12px', color: '#555', margin: 0, lineHeight: '1.6' }}>
-                  <strong>Need help?</strong> For account assistance or recovery, contact the{' '}
-                  <button style={{ color: '#007ab8', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline', fontSize: '12px', padding: 0 }}>
-                    Global Editorial Office
-                  </button>
-                  .
-                </p>
-              </div>
-            </div>
-
           </div>
-        </div>
+        </motion.div>
       </main>
 
-      {/* ── Bottom Strip ── */}
-      <div style={{ backgroundColor: '#3e4444', padding: '8px 24px' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '11px' }}>
-            © 2025 Eye-Innovations Scientific Research. All rights reserved.
-          </span>
-          <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '11px' }}>
-            Secure Researcher Portal
-          </span>
-        </div>
-      </div>
-
-      <style>{`
-        @keyframes spin { to { transform: rotate(360deg); } }
-        a:hover { opacity: 0.85; }
-      `}</style>
+      <Footer />
     </div>
   );
 }
