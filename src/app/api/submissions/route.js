@@ -8,11 +8,28 @@ export async function GET(req) {
 
   try {
     const [rows] = await pool.query(
-      'SELECT id, title, status, activity, created_at as date FROM submissions WHERE user_id = ? ORDER BY created_at DESC',
+      `SELECT 
+        id, title, status, activity,
+        editor_comments,
+        DATE_FORMAT(created_at, '%M %d, %Y') as date,
+        created_at
+       FROM submissions 
+       WHERE user_id = ? 
+       ORDER BY created_at DESC`,
       [user.userId]
     );
 
-    return NextResponse.json({ success: true, submissions: rows }, { status: 200 });
+    // Enrich with formatted data
+    const submissions = rows.map(row => ({
+      id: row.id,
+      title: row.title || 'Untitled Submission',
+      status: row.status || 'Submitted',
+      activity: row.activity || 'Unassigned',
+      date: row.date,
+      created_at: row.created_at,
+    }));
+
+    return NextResponse.json({ success: true, submissions }, { status: 200 });
   } catch (error) {
     console.error('Fetch submissions error:', error);
     return NextResponse.json({ success: false, message: 'Internal server error' }, { status: 500 });
@@ -27,14 +44,14 @@ export async function POST(req) {
     const body = await req.json();
     const { title, editorComments, contributors, files } = body;
 
-    if (!title) {
+    if (!title || !title.trim()) {
       return NextResponse.json({ success: false, message: 'Title is required' }, { status: 400 });
     }
 
     // Insert submission
     const [submissionResult] = await pool.query(
       'INSERT INTO submissions (user_id, title, status, activity, editor_comments) VALUES (?, ?, ?, ?, ?)',
-      [user.userId, title, 'Submitted', 'Unassigned', editorComments || '']
+      [user.userId, title.trim(), 'Submitted', 'Unassigned', editorComments || '']
     );
 
     const submissionId = submissionResult.insertId;
@@ -48,9 +65,9 @@ export async function POST(req) {
       );
     }
 
-    // Insert files metadata (this handles simple file names, real impl would use S3/GridFS)
+    // Insert files metadata
     if (files && files.length > 0) {
-      const fileValues = files.map(f => [submissionId, f.name, f.type || 'Article Text', f.path || '/fake/path']);
+      const fileValues = files.map(f => [submissionId, f.name, f.type || 'Article Text', f.path || '/uploads/' + f.name]);
       await pool.query(
         'INSERT INTO submission_files (submission_id, name, type, path) VALUES ?',
         [fileValues]

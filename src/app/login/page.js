@@ -101,9 +101,9 @@ export default function Login() {
                       <label className="text-[13px] font-black text-[#1A1A1A] uppercase tracking-wider">
                         Password
                       </label>
-                      <button type="button" className="text-[12px] font-black text-[#4BA6B9] hover:text-[#1A1A1A] transition-colors tracking-tighter">
+                      <Link href="/forgot-password" className="text-[12px] font-black text-[#4BA6B9] hover:text-[#1A1A1A] transition-colors tracking-tighter">
                         FORGOT PASSWORD?
-                      </button>
+                      </Link>
                     </div>
                     <div className="relative">
                       <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-[#CCCCCC] group-focus-within:text-[#4BA6B9] transition-colors" size={18} />

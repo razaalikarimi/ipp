@@ -6,7 +6,7 @@ export async function GET(req, { params }) {
   const user = verifyRequestUser(req);
   if (!user) return unauthorizedResponse();
 
-  const { id } = params;
+  const { id } = await params;
 
   try {
     // 1. Get submission

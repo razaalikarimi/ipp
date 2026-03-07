@@ -1,6 +1,7 @@
 {
-  "name": "tmp-app",
-  "version": "0.1.0",
+  "name": "eisr-portal",
+  "version": "1.0.0",
+  "description": "Eye-Innovations Scientific Research — Academic Publishing Portal",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -16,6 +17,7 @@
     "lucide-react": "^0.576.0",
     "mysql2": "^3.18.2",
     "next": "16.1.6",
+    "nodemailer": "^8.0.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "tailwind-merge": "^3.5.0"

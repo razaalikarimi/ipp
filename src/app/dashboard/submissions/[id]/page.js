@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronUp, ChevronDown, MoreHorizontal, Bold, Italic, Underline, Link2, DivideSquare, Image as ImageIcon, UploadCloud } from 'lucide-react';
 
@@ -21,6 +21,7 @@ const WysiwygToolbar = () => (
 );
 
 export default function SubmissionWorkflowPage({ params }) {
+  const { id } = use(params);
   const [submission, setSubmission] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -34,7 +35,7 @@ export default function SubmissionWorkflowPage({ params }) {
     const fetchSubmission = async () => {
       try {
         const token = localStorage.getItem('eisr_token');
-        const res = await fetch(`/api/submissions/${params.id}`, {
+        const res = await fetch(`/api/submissions/${id}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -52,7 +53,7 @@ export default function SubmissionWorkflowPage({ params }) {
       }
     };
     fetchSubmission();
-  }, [params.id]);
+  }, [id]);
 
   if (loading) {
     return <div style={{ padding: '40px', textAlign: 'center', color: '#64748b', fontFamily: '"Noto Sans", sans-serif' }}>Loading submission details...</div>;

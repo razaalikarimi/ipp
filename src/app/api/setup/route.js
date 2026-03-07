@@ -3,7 +3,6 @@ import mysql from 'mysql2/promise';
 
 export async function GET() {
   try {
-    // 1. Establish connection *without* selecting a database
     const connection = await mysql.createConnection({
       host: process.env.MYSQL_HOST || 'localhost',
       user: process.env.MYSQL_USER || 'root',
@@ -11,15 +10,11 @@ export async function GET() {
     });
 
     const dbName = process.env.MYSQL_DATABASE || 'eisr_db';
-
-    // 2. Create the Database if it doesn't exist
     await connection.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\`;`);
-
-    // 3. Switch to the newly created Database
     await connection.query(`USE \`${dbName}\`;`);
 
-    // 4. Create the Users table
-    const createTableQuery = `
+    // Users table
+    await connection.query(`
       CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
         fullName VARCHAR(255) NOT NULL,
@@ -28,22 +23,34 @@ export async function GET() {
         password VARCHAR(255) NOT NULL,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
-    `;
-    await connection.query(createTableQuery);
+    `);
 
-    // Close the temporary connection
+    // Password reset tokens table
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS password_resets (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        email VARCHAR(255) NOT NULL,
+        token VARCHAR(255) NOT NULL UNIQUE,
+        expires_at DATETIME NOT NULL,
+        used TINYINT(1) DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_token (token),
+        INDEX idx_email (email)
+      )
+    `);
+
     await connection.end();
 
-    return NextResponse.json({ 
-      success: true, 
-      message: 'Database and users table created successfully!' 
+    return NextResponse.json({
+      success: true,
+      message: 'Database tables created successfully!'
     }, { status: 200 });
   } catch (error) {
     console.error('Database setup error:', error);
-    return NextResponse.json({ 
-      success: false, 
-      message: 'Failed to setup database', 
-      error: error.message 
+    return NextResponse.json({
+      success: false,
+      message: 'Failed to setup database',
+      error: error.message
     }, { status: 500 });
   }
 }

@@ -6,45 +6,101 @@ import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { articles, journals } from '@/lib/data';
 import { FileText, Calendar, User, Search, Globe, ChevronRight, BookOpen, Download, Activity, Eye, FilePieChart, Mail, MapPin } from 'lucide-react';
+import { useState, useEffect } from 'react';
+
+const BANNERS = ['/baner0001.jpg', '/baner0002.jpg', '/baner0003.jpg', '/baner0004.jpg'];
 
 export default function ArticlePage() {
   const { slug } = useParams();
   const article = articles.find(a => a.slug === slug) || articles[0];
   const journal = journals.find(j => j.id === article.journal.toLowerCase()) || journals[0];
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(() => setCurrent(p => (p + 1) % BANNERS.length), 5000);
+    return () => clearInterval(t);
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col font-sans bg-white selection:bg-[#4BA6B9]/10">
       <Header />
       
-      {/* Article Hero Header */}
-      <section className="bg-[#0B1F3A] text-white pt-48 pb-20 px-6 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#4BA6B9]/10 rounded-full blur-[100px] -mr-48 -mt-48" />
-        <div className="max-w-[1240px] mx-auto relative z-10 space-y-8">
-           <div className="space-y-4">
-              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#4BA6B9]">Research Article | Open Access</span>
-              <h1 className="text-3xl md:text-5xl font-sans font-bold leading-tight max-w-5xl ">{article.title}</h1>
-           </div>
-           
-           <div className="flex flex-wrap gap-x-12 gap-y-6 pt-4 border-t border-white/10 mt-8">
-              <div className="space-y-2">
-                 <p className="text-[10px] font-bold uppercase tracking-widest text-white/40">Authors</p>
-                 <p className="text-sm font-bold text-white">{article.authors}</p>
-              </div>
-              <div className="space-y-2">
-                 <p className="text-[10px] font-bold uppercase tracking-widest text-white/40">Journal</p>
-                 <p className="text-sm font-bold text-[#4BA6B9]">{article.journal}</p>
-              </div>
-              <div className="space-y-2">
-                 <p className="text-[10px] font-bold uppercase tracking-widest text-white/40">Publication Date</p>
-                 <p className="text-sm font-bold text-white">{article.published}</p>
-              </div>
-              <div className="space-y-2">
-                 <p className="text-[10px] font-bold uppercase tracking-widest text-white/40">DOI</p>
-                 <p className="text-sm font-bold text-white">{article.doi}</p>
-              </div>
-           </div>
+      {/* ── Article Sliding Banner ── */}
+      <section className="relative text-white pt-48 pb-20 px-6 bg-[#0B1F3A]">
+        {/* Clipped background images */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {BANNERS.map((src, i) => (
+            <div
+              key={src}
+              className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
+              style={{ backgroundImage: `url('${src}')`, opacity: i === current ? 1 : 0 }}
+            />
+          ))}
+          {/* Dark overlay */}
+          <div className="absolute inset-0 bg-[#0B1F3A]/70" />
+          {/* Decorative glow */}
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#4BA6B9]/10 rounded-full blur-[100px] -mr-48 -mt-48" />
+        </div>
+
+        {/* Dot indicators */}
+        <div className="absolute bottom-6 left-8 flex gap-1.5 z-20">
+          {BANNERS.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrent(i)}
+              className="border-none cursor-pointer p-0"
+              style={{
+                width: i === current ? '28px' : '8px', height: '8px', borderRadius: '4px',
+                backgroundColor: i === current ? '#4BA6B9' : 'rgba(255,255,255,0.35)',
+                transition: 'all 0.4s ease',
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Content overlay */}
+        <div className="max-w-[1240px] mx-auto relative z-10 space-y-6">
+          <div className="space-y-3" style={{ maxWidth: '58%' }}>
+            <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#4BA6B9]">
+              Research Article | Open Access
+            </span>
+            <h1
+              className="font-sans font-bold leading-snug"
+              style={{
+                fontSize: 'clamp(20px, 2.6vw, 36px)',
+                color: '#ffffff',
+                textShadow: '0 2px 16px rgba(0,0,0,0.85), 0 1px 4px rgba(0,0,0,0.9)',
+                letterSpacing: '-0.01em',
+              }}
+            >
+              {article.title}
+            </h1>
+          </div>
+          
+          <div
+            className="flex flex-wrap gap-x-8 gap-y-5 pt-4 border-t border-white/15"
+            style={{ maxWidth: '70%' }}
+          >
+            <div className="space-y-1">
+              <p className="text-[9px] font-black uppercase tracking-widest text-white/40">Authors</p>
+              <p className="text-[13px] font-semibold text-white leading-snug">{article.authors}</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-[9px] font-black uppercase tracking-widest text-white/40">Journal</p>
+              <p className="text-[13px] font-bold text-[#4BA6B9]">{article.journal}</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-[9px] font-black uppercase tracking-widest text-white/40">Publication Date</p>
+              <p className="text-[13px] font-semibold text-white">{article.published}</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-[9px] font-black uppercase tracking-widest text-white/40">DOI</p>
+              <p className="text-[12px] font-semibold text-white/80">{article.doi}</p>
+            </div>
+          </div>
         </div>
       </section>
+
 
       {/* Breadcrumb Band */}
       <div className="w-full bg-[#FAFBFC] py-4 px-6 border-b border-[#F1F5F9] text-[10px] font-bold uppercase tracking-widest text-[#999999]">
