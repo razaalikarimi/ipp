@@ -3,33 +3,33 @@ export const journals = [
     id: 'jeiml',
     slug: 'jeiml',
     title: 'Journal of Eye-Innovation in Machine Learning',
-    issn: 'ISSN 3079-5354 (Online)',
-    chief: 'Prof. Ali Kashif Bashir',
+    issn: '',
+    chief: 'Prof. Dr. M. Irfan Uddin',
     publishingModel: 'Open access',
     frequency: 'Bi-annual',
     reviewType: 'Double Blind Review',
-    doiPrefix: '10.58913',
+    doiPrefix: '',
     publisher: 'Eye-Innovations Scientific Research (EISR)',
     reviewSpeed: '60 days',
-    aims: 'Journal of Eye-Innovation in Machine Learning (JEIML) is a premier international venue dedicated to the advancement of theoretical and applied machine learning. Our mission is to bridge the gap between pure algorithmic research and real-world system implementations, providing a rigorous platform for the dissemination of high-impact scholarly contributions.',
+    aims: 'JEIML aims to promote scientific excellence, foster interdisciplinary collaboration, and support the rapid dissemination of impactful research. All submitted manuscripts undergo a rigorous double-blind peer-review process to ensure originality, technical quality, clarity, and relevance.',
     scope: [
-      'Advanced Neural Architectures & Deep Learning',
-      'Reinforcement Learning & Autonomous Systems',
-      'Quantum Machine Learning Foundations',
-      'Explainable AI (XAI) & Interpretability',
-      'Ethical AI, Bias Mitigation & Governance',
-      'Computer Vision & Multimodal Perception',
-      'Natural Language Processing & Large Language Models',
-      'AI in Proteomics, Genomics & Precision Medicine',
-      'Edge Intelligence & Low-Resource Computing',
-      'Robustness, Security & Privacy-Preserving AI'
+      'Machine Learning Algorithms and Models',
+      'Deep Learning and Neural Networks',
+      'Computer Vision and Image Processing',
+      'Natural Language Processing (NLP)',
+      'Explainable Artificial Intelligence (XAI)',
+      'Data Mining and Big Data Analytics',
+      'Reinforcement Learning',
+      'AI in Healthcare and Medical Imaging',
+      'Intelligent Systems and Robotics',
+      'Smart Cities and IoT Applications'
     ],
     guidelines: `The Journal of Eye-Innovation in Machine Learning (JEIML) invites high-quality original research that presents significant advances in the field of artificial intelligence. All submissions must represent original work that has not been previously published or is currently under consideration elsewhere.\n\nManuscript Preparation:\nAuthors must adhere to the JEIML LaTeX/Word house style. Manuscripts should clearly articulate the research problem, methodology, experimental results, and theoretical implications. The abstract should be concise (max 250 words) and summarize the core contributions.\n\nPeer Review Process:\nJEIML employs a double-blind peer-review system. Each manuscript is evaluated by at least three independent experts for technical soundness, novelty, and clarity. The editorial board maintains a commitment to a rapid turnaround, aiming for a first decision within 45 days.\n\nOpen Access & Ethics:\nAs a Gold Open Access journal, all published work is immediately available to the global research community under the CC BY 4.0 license. Authors undergo rigorous plagiarism screening via CrossCheck. Ethical considerations regarding data privacy and AI safety must be explicitly addressed in the results section.`,
     editorialTeam: [
-      { id: 'rajit-nair', name: 'Prof. Ali Kashif Bashir', affiliation: 'VIT Bhopal University, Bhopal, India', role: 'Editor-in-Chief' }
+      { id: 'Irfan Uddin', name: 'Prof. Dr. M. Irfan Uddin', affiliation: 'University of Guadalajara, Mexico', role: 'Editor-in-Chief' }
     ],
     indexing: 'Journal of Eye-Innovation in Machine Learning (JEIML) is indexed and archived in leading scholarly platforms, ensuring global visibility and long-term accessibility of published research.',
-    indexingPartners: ['Scopus', 'Crossref', 'Google Scholar', 'Portico', 'EBSCO'],
+    indexingPartners: ['Crossref', 'Google Scholar'],
     apc: 'No PC',
     policies: {
       publicationethics: `Journal of Eye-Innovation in Machine Learning (JEIML) is committed to upholding the highest standards of publication ethics and academic integrity. The journal follows internationally accepted ethical guidelines to ensure transparency, fairness, and quality in scholarly publishing. All parties involved in the publication process — authors, reviewers, editors, and the publisher — are expected to adhere to these ethical principles.\n\n1. Duties of Authors\nAuthors submitting manuscripts to JEIML must ensure that:\n• The submitted work is original, unpublished, and not under consideration elsewhere.\n• All sources are properly cited, and plagiarism in any form is strictly prohibited.\n• Data presented in the manuscript is accurate, honest, and not fabricated or manipulated.\n• All listed authors have made significant contributions to the research.\n• Any conflicts of interest are clearly disclosed.\n• Ethical approval is obtained for studies involving human participants or animals, where applicable.\n\n2. Duties of Editors\nEditors are responsible for:\n• Making fair, unbiased, and timely publication decisions based solely on academic merit.\n• Maintaining the confidentiality of submitted manuscripts.\n• Ensuring a rigorous and transparent peer-review process.\n• Taking appropriate actions in cases of suspected misconduct, plagiarism, or ethical violations.\n• Preventing conflicts of interest and ensuring editorial independence.\n\n3. Duties of Reviewers\nReviewers are expected to:\n• Conduct reviews objectively, fairly, and confidentially.\n• Provide constructive feedback to improve the quality of manuscripts.\n• Report any suspected plagiarism, duplication, or ethical issues.\n• Declare any conflicts of interest and decline reviews when necessary.`,
@@ -45,13 +45,13 @@ export const journals = [
       corrections: 'JEIML allows: \n• Corrections (Errata) for minor errors not affecting conclusions. \n• Withdrawals for early-stage submissions before peer review. \nPost-publication withdrawals are permitted only in exceptional circumstances.'
     },
     stats: {
-      citationsScopus: '535',
-      citationsGoogle: '674',
-      articles: '44',
-      views: '11146',
-      authors: '77',
-      distribution: '15',
-      acceptance: '40%'
+      citationsScopus: '----',
+      citationsGoogle: '----',
+      articles: '----',
+      views: '----',
+      authors: '----',
+      distribution: '----',
+      acceptance: '----'
     },
     organizer: 'Institute for Systems Intelligence Research (ISIR) & Scholarly Council on Computational Sciences',
     digitalMarketing: [
@@ -72,12 +72,12 @@ export const journals = [
     id: 'jcsra',
     slug: 'jcsra',
     title: 'Journal of Cyber Security and Risk Auditing',
-    issn: 'ISSN 3080-9444 (Online)',
-    chief: 'Prof. Dr. M. Irfan Uddin',
+    issn: '',
+    chief: 'Prof. Ali Kashif Bashir',
     publishingModel: 'Open access',
     frequency: 'Quarterly',
     reviewType: 'Double Blind Review',
-    doiPrefix: '10.63180/jcsra.eisr',
+    doiPrefix: '',
     publisher: 'Eye-Innovations Scientific Research (EISR)',
     reviewSpeed: '60 days',
     aims: 'JCSRA aims to provide a leading platform for researchers and practitioners to discuss challenges and innovations in protecting critical information infrastructures.',
@@ -89,19 +89,19 @@ export const journals = [
       'Cloud and IoT Security Assessments'
     ],
     editorialTeam: [
-      { id: 'Irfan Uddin', name: 'Prof. Dr. M. Irfan Uddin', role: 'Editor in Chief', affiliation: 'University of Guadalajara, Mexico', photo: '/diego.jpg' }
+      { id: 'rajit-nair', name: 'Prof. Ali Kashif Bashir', role: 'Editor in Chief', affiliation: 'VIT Bhopal University, Bhopal, India', photo: '/diego.jpg' }
     ],
-    indexing: 'Journal of Cyber Security and Risk Auditing (JCSRA) is currently indexed in Crossref, Google Scholar, and Portico.',
-    indexingPartners: ['Crossref', 'Google Scholar', 'Portico'],
+    indexing: 'Journal of Cyber Security and Risk Auditing (JCSRA) is currently indexed in Crossref and Google Scholar.',
+    indexingPartners: ['Crossref', 'Google Scholar'],
     apc: 'No PC',
     stats: {
-      citationsScopus: '89',
-      citationsGoogle: '142',
-      articles: '12',
-      views: '2150',
-      authors: '28',
-      distribution: '8',
-      acceptance: '28%'
+      citationsScopus: '----',
+      citationsGoogle: '----',
+      articles: '----',
+      views: '----',
+      authors: '----',
+      distribution: '----',
+      acceptance: '----'
     },
     organizer: 'Eye-Innovations Scientific Research Global HQ',
     digitalMarketing: [
@@ -112,32 +112,7 @@ export const journals = [
   }
 ];
 
-export const articles = [
-  {
-    slug: 'mitigating-insider-threats-ehr',
-    title: 'Machine Learning Approaches to Mitigate Insider Threats in Electronic Health Records Systems',
-    authors: ['Abdullah Alessa', 'Yaseen Alduwayl', 'M M Hafizur Rahman'],
-    affiliations: 'Department of computer networks and communications, College of Computer Sciences and Information Technology, King Faisal University, Al-Ahsa, 31982 Saudi Arabia',
-    journal: 'jeiml',
-    published: 'January 22, 2025',
-    doi: 'https://doi.org/10.58913/jeiml.2025.1.1',
-    views: '313',
-    pdfUrl: '#',
-    type: 'Research Article'
-  },
-  {
-    slug: 'geometry-aware-malware-detection',
-    title: 'Geometry-Aware Multi-view Malware Detection Using Gromov-Wasserstein Fusion',
-    authors: ['Vijay Kalmani', 'Vedant Jadhav', 'Amer Alqutaish'],
-    affiliations: 'Department of Computer Science and Engineering, Kasegaon Education Society\'s Rajarambapu Institute of Technology, Maharashtra, India',
-    journal: 'jeiml',
-    published: 'January 25, 2025',
-    doi: 'https://doi.org/10.58913/jeiml.2025.1.2',
-    views: '118',
-    pdfUrl: '#',
-    type: 'Research Article'
-  }
-];
+export const articles = [];
 
 export const editors = [
   {
@@ -161,7 +136,6 @@ export const editors = [
 ];
 
 export const indexing = [
-  { id: 'scopus', name: 'Scopus', description: 'Scopus is the largest abstract and citation database of peer-reviewed literature.' },
   { id: 'crossref', name: 'Crossref', description: 'Crossref makes research outputs easy to find, cite, link, assess, and reuse.' },
   { id: 'google-scholar', name: 'Google Scholar', description: 'Google Scholar provides a simple way to broadly search for scholarly literature.' }
 ];

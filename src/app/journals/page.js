@@ -47,7 +47,6 @@ export default function JournalsPage() {
                           <div className="flex-grow p-12 flex flex-col justify-between">
                              <div className="space-y-6">
                                 <h3 className="text-2xl font-sans font-bold text-[#1A1A1A] group-hover:text-[#4BA6B9] leading-tight uppercase tracking-tight">{j.title}</h3>
-                                <p className="text-[11px] font-bold text-[#888888] uppercase tracking-[0.2em]">{j.issn}</p>
                              </div>
                              <div className="space-y-6">
                                 <div className="space-y-2">

@@ -80,7 +80,7 @@ export default function JournalHero({ journal, activeTab = 'home' }) {
             {journal.title}
           </h1>
           <p className="text-sm font-bold" style={{ color: 'rgba(255,255,255,0.82)', textShadow: '0 1px 6px rgba(0,0,0,0.7)' }}>
-            ISSN: {journal.issn} | Publishing model:{' '}
+            Publishing model:{' '}
             <Link href="/policies/open-access" className="underline underline-offset-4 hover:text-[#4BA6B9]">
               Open access
             </Link>

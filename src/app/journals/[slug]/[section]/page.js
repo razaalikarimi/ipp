@@ -85,12 +85,9 @@ export default function JournalSectionPage() {
           <div className="space-y-12">
              <h2 className="text-3xl font-sans font-bold text-[#1A1A1A] border-b border-[#F1F5F9] pb-6 uppercase">Abstracting & Indexing</h2>
              <p className="text-base text-[#555555] leading-loose font-medium text-justify">{journal.indexing}</p>
-             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-8">
-                {(journal.indexingPartners || ['Crossref', 'Google Scholar', 'Portico']).map(idx => (
-                    <div key={idx} className="p-6 bg-[#FAFBFC] border border-[#E2E8F0] rounded-xl flex items-center justify-center text-center group hover:bg-white hover:shadow-xl transition-all">
-                       <span className="text-[10px] font-bold uppercase tracking-widest text-[#999999] group-hover:text-[#4BA6B9]">{idx}</span>
-                    </div>
-                ))}
+             <div className="flex flex-wrap items-center gap-12 pt-8">
+                <img src="/google-scholar.jpg" alt="Google Scholar" className="h-16 opacity-80 hover:opacity-100 transition-all" />
+                <img src="/crossref.png" alt="Crossref" className="h-10 opacity-80 hover:opacity-100 transition-all" />
              </div>
           </div>
         );
@@ -164,10 +161,7 @@ export default function JournalSectionPage() {
                 </div>
                 
                 <div className="p-8 space-y-8">
-                  <div className="space-y-4">
-                    <h4 className="text-[9px] font-bold uppercase tracking-[0.3em] text-[#BBBBBB]">Journal ISSN</h4>
-                    <p className="text-xs font-bold text-[#1A1A1A]">{journal.issn}</p>
-                  </div>
+
                   <Link href="/submission" className="w-full bg-[#1A1A1A] text-white py-4 text-[10px] font-bold uppercase tracking-[0.3em] flex items-center justify-center space-x-3 hover:bg-[#4BA6B9] transition-all rounded-xl">
                     <span>Submit Manuscript</span>
                     <ChevronRight size={14} />

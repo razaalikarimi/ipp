@@ -45,8 +45,8 @@ export default function JournalPage() {
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-8">
                       <div className="space-y-6">
                         <InfoRow label="Title" value={journal.title} />
-                        <InfoRow label="ISSN" value={journal.issn} />
-                        <InfoRow label="Doi Prefix" value={journal.doiPrefix} />
+
+
                         <InfoRow label="Publisher" value={journal.publisher} />
                         <InfoRow label="Organizer" value={journal.organizer} />
                         <div className="pt-2">
@@ -88,14 +88,16 @@ export default function JournalPage() {
               </div>
 
               {/* Latest Published Articles Section - Grid approach from screenshot */}
-              <div className="space-y-10 pt-4">
-                 <h2 className="text-xl font-bold text-[#1A1A1A]">Latest Published Articles</h2>
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {journalArticles.map(article => (
-                       <ArticleCard key={article.slug} article={article} />
-                    ))}
-                 </div>
-              </div>
+              {journalArticles.length > 0 && (
+                <div className="space-y-10 pt-4">
+                   <h2 className="text-xl font-bold text-[#1A1A1A]">Latest Published Articles</h2>
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      {journalArticles.map(article => (
+                         <ArticleCard key={article.slug} article={article} />
+                      ))}
+                   </div>
+                </div>
+              )}
 
            </div>
 
@@ -152,22 +154,9 @@ export default function JournalPage() {
                     <h4 className="text-[12px] font-black text-[#1A1A1A]">Indexing Partners</h4>
                     <div className="w-8 h-0.5 bg-[#4BA6B9] mx-auto opacity-40"></div>
                  </div>
-                 <div className="grid grid-cols-1 gap-12 group">
-                    <div className="flex flex-col items-center space-y-2 group/item">
-                        <div className="text-[14px] font-black text-[#1A1A1A] tracking-[0.2em] border-2 border-[#1A1A1A]/10 px-5 py-2.5 rounded-lg italic group-hover/item:border-[#FF6B00] group-hover/item:text-[#FF6B00] transition-all">Scopus</div>
-                    </div>
-                    <div className="flex flex-col items-center space-y-2 group/item">
-                        <div className="text-[14px] font-black text-[#1A1A1A] tracking-[0.2em] border-2 border-[#1A1A1A]/10 px-5 py-2.5 rounded-lg font-serif group-hover/item:border-[#004A99] group-hover/item:text-[#004A99] transition-all">Ebsco</div>
-                    </div>
-                    <div className="flex flex-col items-center space-y-2 text-[18px] font-black text-[#1A1A1A] tracking-tighter opacity-80 group-hover:text-black group-hover:scale-110 transition-all cursor-default">
-                        Crossref
-                    </div>
-                    <div className="flex flex-col items-center space-y-2 cursor-default group/item">
-                        <span className="text-[16px] font-bold text-[#1A1A1A] opacity-80 group-hover/item:opacity-100 transition-all">Google <span className="text-[#4BA6B9]">Scholar</span></span>
-                    </div>
-                    <div className="flex flex-col items-center space-y-2 text-[11px] font-black text-[#1A1A1A] opacity-40 group-hover:opacity-80 transition-all cursor-default">
-                        PORTICO
-                    </div>
+                 <div className="flex flex-col items-center gap-12 group">
+                    <img src="/google-scholar.jpg" alt="Google Scholar" className="w-32 h-auto opacity-80 group-hover:opacity-100 transition-all" />
+                    <img src="/crossref.png" alt="Crossref" className="w-40 h-auto opacity-80 group-hover:opacity-100 transition-all" />
                  </div>
               </div>
 
@@ -225,10 +214,12 @@ function ArticleCard({ article }) {
        </Link>
 
        <div className="space-y-5 pt-6 border-t border-[#F1F5F9]">
-          <div className="flex items-center space-x-2">
-              <span className="text-[11px] font-bold text-[#1A1A1A] whitespace-nowrap">Doi :</span>
-             <span className="text-[11px] font-bold text-[#4BA6B9] truncate hover:underline cursor-pointer tracking-tight">{article.doi}</span>
-          </div>
+          {article.doi && (
+            <div className="flex items-center space-x-2">
+                <span className="text-[11px] font-bold text-[#1A1A1A] whitespace-nowrap">Doi :</span>
+               <span className="text-[11px] font-bold text-[#4BA6B9] truncate hover:underline cursor-pointer tracking-tight">{article.doi}</span>
+            </div>
+          )}
            <div className="flex flex-wrap gap-2 text-[#1A1A1A] font-bold text-[10px] tracking-tight">
              {article.authors.join('   |   ')}
           </div>

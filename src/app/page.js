@@ -141,8 +141,9 @@ export default function Home() {
         <section className="bg-white py-24 border-t border-[#F1F1F1]">
            <div className="max-w-[1240px] mx-auto px-6 text-center space-y-12">
               <h2 className="text-3xl font-bold text-[#1A1A1A] tracking-tight">Indexed & Abstracted In</h2>
-              <div className="flex flex-wrap justify-center gap-12 pt-6 grayscale opacity-40 hover:grayscale-0 hover:opacity-100 transition-all">
-                 {/* Empty as requested */}
+              <div className="flex flex-wrap justify-center items-center gap-16 pt-6 opacity-80 hover:opacity-100 transition-all">
+                 <img src="/google-scholar.jpg" alt="Google Scholar" className="h-20 md:h-24 object-contain" />
+                 <img src="/crossref.png" alt="Crossref" className="h-12 md:h-16 object-contain" />
               </div>
            </div>
         </section>
@@ -159,7 +160,7 @@ export default function Home() {
                        <div className="flex-grow p-8 flex flex-col justify-between">
                           <div className="space-y-4">
                              <h3 className="text-xl font-bold text-[#4BA6B9] leading-tight group-hover:underline">{j.title}</h3>
-                             <p className="text-xs font-bold text-[#555555]">{j.issn}</p>
+
                           </div>
                           <div className="space-y-4">
                              <p className="text-sm font-bold text-[#1A1A1A]">Editor-in-Chief: {j.chief}</p>
