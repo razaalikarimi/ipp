@@ -19,6 +19,8 @@ const POLICY_LABELS = {
   'generative-ai-policy': 'Generative AI Policy',
   'plagiarism-policy':    'Plagiarism Policy',
   'archiving-policy':     'Archiving Policy',
+  'privacy':              'Privacy Statement',
+  'terms':                'Publication Terms',
 };
 
 export default function PolicyDetailPage() {
@@ -128,6 +130,7 @@ export default function PolicyDetailPage() {
                 <h3 className="text-xl font-sans font-bold border-b border-[#F1F5F9] pb-4 uppercase">{policyTitle} Content</h3>
                 <div className="text-sm font-medium text-[#555555] leading-loose whitespace-pre-line">
                   {journal.policies?.[slug.replace(/-/g, '')] ||
+                    journal[slug] ||
                     `The full ${policyTitle} content is defined to align with global COPE and metadata standards. This policy governs all journals under the EISR Scientific Research umbrella.`}
                 </div>
               </div>

@@ -41,7 +41,10 @@ export default function Footer() {
                  { name: 'Publication Ethics', path: '/policies/publication-ethics' },
                  { name: 'Peer Review Policy', path: '/policies/peer-review' },
                  { name: 'Generative AI Policy', path: '/policies/generative-ai' },
-                 { name: 'Plagiarism Policy', path: '/policies/plagiarism' }
+                 { name: 'Plagiarism Policy', path: '/policies/plagiarism' },
+                 { name: 'Archiving Policy', path: '/policies/archiving-policy' },
+                 { name: 'Privacy Statement', path: '/policies/privacy' },
+                 { name: 'Publication Terms', path: '/policies/terms' }
                ].map(link => (
                  <Link key={link.name} href={link.path} className="text-[13px] font-bold text-[#D1D5DB] hover:text-white transition-colors flex items-center gap-2 group">
                    <ChevronRight size={14} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all text-[#4BA6B9]" />
@@ -92,8 +95,8 @@ export default function Footer() {
               </div>
 
               <div className="flex items-center space-x-6">
-                 <Link href="/privacy" className="text-[12px] font-bold text-[#D1D5DB] hover:text-[#4BA6B9] transition-colors">Privacy Statement</Link>
-                 <Link href="/terms" className="text-[12px] font-bold text-[#D1D5DB] hover:text-[#4BA6B9] transition-colors">Publication Terms</Link>
+                 <Link href="/policies/privacy" className="text-[12px] font-bold text-[#D1D5DB] hover:text-[#4BA6B9] transition-colors">Privacy Statement</Link>
+                 <Link href="/policies/publication-ethics" className="text-[12px] font-bold text-[#D1D5DB] hover:text-[#4BA6B9] transition-colors">Publication Terms</Link>
                  <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-[#D1D5DB] hover:bg-[#1e78ff] hover:text-white transition-all">
                     <Linkedin size={18} />
                  </a>
