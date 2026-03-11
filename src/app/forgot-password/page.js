@@ -45,106 +45,79 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F8F9FA] font-sans selection:bg-[#4BA6B9]/10">
+    <div className="min-h-screen flex flex-col bg-slate-50 font-sans">
       <Header />
 
-      <main className="flex-grow flex items-center justify-center py-20 px-6 relative overflow-hidden">
-        {/* Background glows */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute -top-[10%] -right-[5%] w-[40%] h-[40%] bg-[#4BA6B9]/5 rounded-full blur-[120px]" />
-          <div className="absolute -bottom-[10%] -left-[5%] w-[30%] h-[30%] bg-[#6366f1]/5 rounded-full blur-[100px]" />
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
+      <main className="flex-grow flex items-center justify-center p-6 py-12">
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="w-full max-w-[520px] bg-white rounded-[32px] shadow-2xl overflow-hidden border border-[#F1F1F1] relative z-10"
+          className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-200 p-8 sm:p-10"
         >
-          <div className="p-12 lg:p-14 space-y-8">
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-bold text-slate-900 tracking-tight mb-2">Forgot Password?</h1>
+            <p className="text-[14px] text-slate-500">Enter your email and we'll send you a reset link</p>
+          </div>
 
-            {/* Header */}
-            <div className="space-y-2 text-center">
-              <div className="w-16 h-16 bg-[#4BA6B9]/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Mail size={28} className="text-[#4BA6B9]" />
-              </div>
-              <h1 className="text-2xl font-bold text-[#1A1A1A] tracking-tight">Forgot Password?</h1>
-              <p className="text-[#555555] text-[14px] font-semibold">
-                Enter your email and we'll send you a reset link.
-              </p>
-            </div>
-
-            <AnimatePresence mode="wait">
-              {/* Success state */}
-              {status === 'success' && (
-                <motion.div
-                  key="success"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="space-y-4"
-                >
-                  <div className="bg-green-50 border border-green-100 p-5 rounded-2xl flex items-start gap-3">
-                    <CheckCircle size={20} className="text-green-500 shrink-0 mt-0.5" />
-                    <p className="text-green-700 text-[13px] font-semibold">{message}</p>
+          <AnimatePresence mode="wait">
+            {status === 'success' ? (
+              <motion.div
+                key="success"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="space-y-6"
+              >
+                <div className="bg-emerald-50 border border-emerald-100 p-5 rounded-xl flex items-start gap-3">
+                  <CheckCircle size={20} className="text-emerald-600 shrink-0 mt-0.5" />
+                  <div>
+                    <h3 className="text-emerald-900 font-bold text-[14px] mb-0.5">Check your inbox</h3>
+                    <p className="text-emerald-700 text-[13px] leading-relaxed">{message}</p>
                   </div>
+                </div>
 
-                  {/* Dev mode: show link directly */}
-                  {devLink && (
-                    <div className="bg-amber-50 border border-amber-200 p-4 rounded-2xl space-y-2">
-                      <p className="text-amber-700 text-[11px] font-black uppercase tracking-wider">
-                        ⚙️ Dev Mode — No SMTP configured
-                      </p>
-                      <p className="text-amber-700 text-[11px] font-semibold break-all">
-                        Reset link (click to test):
-                      </p>
-                      <a
-                        href={devLink}
-                        className="block text-[#4BA6B9] text-[12px] font-bold underline break-all hover:text-[#005f96]"
-                      >
-                        {devLink}
-                      </a>
+                {devLink && (
+                  <div className="bg-amber-50 border border-amber-100 p-4 rounded-xl space-y-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] bg-amber-200/50 text-amber-800 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">Testing Link</span>
                     </div>
-                  )}
+                    <a href={devLink} className="block text-[#4BA6B9] text-[12px] font-medium underline break-all hover:text-[#3D8B9B]">
+                      {devLink}
+                    </a>
+                  </div>
+                )}
 
-                  <Link
-                    href="/login"
-                    className="flex items-center justify-center gap-2 w-full h-12 bg-[#1A1A1A] hover:bg-[#4BA6B9] text-white rounded-2xl font-black text-[14px] transition-all duration-300"
-                  >
-                    <ArrowLeft size={16} /> Back to Login
-                  </Link>
-                </motion.div>
-              )}
-
-              {/* Error state */}
-              {status === 'error' && (
-                <motion.div
-                  key="error"
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="bg-red-50 border border-red-100 p-4 rounded-2xl flex items-center gap-3"
+                <Link
+                  href="/login"
+                  className="flex items-center justify-center gap-2 w-full h-11 bg-slate-900 hover:bg-slate-800 text-white rounded-lg font-semibold text-[14px] transition-all"
                 >
-                  <AlertCircle size={18} className="text-red-500 shrink-0" />
-                  <p className="text-red-600 text-[13px] font-bold">{message}</p>
-                </motion.div>
-              )}
+                  <ArrowLeft size={16} /> Back to Sign in
+                </Link>
+              </motion.div>
+            ) : (
+              <motion.div key="form">
+                {status === 'error' && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    className="mb-6 p-3 bg-red-50 border border-red-100 rounded-lg text-red-600 text-[13px] font-medium flex items-center gap-2"
+                  >
+                    <AlertCircle size={16} className="shrink-0" />
+                    <p>{message}</p>
+                  </motion.div>
+                )}
 
-              {/* Form */}
-              {status !== 'success' && (
-                <motion.form key="form" onSubmit={handleSubmit} className="space-y-6">
-                  <div className="space-y-2 group">
-                    <label className="text-[13px] font-black text-[#1A1A1A] uppercase tracking-wider">
-                      Email Address
-                    </label>
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  <div className="space-y-1.5">
+                    <label className="text-[13px] font-semibold text-slate-700">Email Address</label>
                     <div className="relative">
-                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-[#CCCCCC] group-focus-within:text-[#4BA6B9] transition-colors" size={18} />
+                      <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                       <input
                         type="email"
                         required
                         value={email}
                         onChange={e => setEmail(e.target.value)}
-                        placeholder="Enter your registered email"
-                        className="w-full h-14 bg-[#F8F9FA] border border-[#F1F1F1] rounded-2xl pl-12 pr-4 text-[14px] font-bold text-[#1A1A1A] outline-none transition-all focus:border-[#4BA6B9] focus:bg-white focus:ring-4 focus:ring-[#4BA6B9]/5"
+                        placeholder="name@example.com"
+                        className="w-full h-11 bg-white border border-slate-300 rounded-lg pl-10 pr-3.5 text-[14px] text-slate-900 placeholder-slate-400 outline-none transition-all focus:border-[#4BA6B9] focus:ring-[3px] focus:ring-[#4BA6B9]/10 hover:border-slate-400"
                       />
                     </div>
                   </div>
@@ -152,27 +125,30 @@ export default function ForgotPasswordPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full h-14 bg-[#1A1A1A] hover:bg-[#4BA6B9] text-white rounded-2xl font-black text-[15px] transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full h-11 bg-[#0B1F3A] hover:opacity-90 text-white rounded-lg font-semibold text-[14px] transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm"
                   >
                     {loading ? (
                       <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     ) : (
-                      <><span>SEND RESET LINK</span><ArrowRight size={18} /></>
+                      <>
+                        Send Reset Link
+                        <ArrowRight size={16} />
+                      </>
                     )}
                   </button>
 
-                  <div className="text-center">
+                  <div className="text-center pt-6 border-t border-slate-100">
                     <Link
                       href="/login"
-                      className="inline-flex items-center gap-1.5 text-[13px] font-bold text-[#555555] hover:text-[#4BA6B9] transition-colors"
+                      className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-slate-600 hover:text-slate-900 transition-colors"
                     >
-                      <ArrowLeft size={14} /> Back to Login
+                      <ArrowLeft size={14} /> Back to Sign in
                     </Link>
                   </div>
-                </motion.form>
-              )}
-            </AnimatePresence>
-          </div>
+                </form>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
       </main>
 

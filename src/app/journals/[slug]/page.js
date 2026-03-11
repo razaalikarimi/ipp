@@ -1,4 +1,5 @@
 'use client';
+import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -6,7 +7,8 @@ import Link from 'next/link';
 import { journals, articles, journalMenuItems } from '@/lib/data';
 import { 
   Globe, ChevronRight, FileText, Info, Users, ShieldCheck, Mail, 
-  ChevronDown, LayoutGrid, Plus, Calendar, Linkedin, Instagram, Facebook 
+  ChevronDown, LayoutGrid, Plus, Calendar, Linkedin, Instagram, Facebook,
+  LayoutDashboard, User
 } from 'lucide-react';
 import JournalHero from '@/components/JournalHero';
 
@@ -16,7 +18,7 @@ export default function JournalPage() {
   const journalArticles = articles.filter(a => a.journal.toLowerCase() === journal.id.toLowerCase());
 
   return (
-    <div className="min-h-screen flex flex-col font-sans bg-white selection:bg-[#4BA6B9]/10">
+    <div className="min-h-screen flex flex-col font-sans bg-white selection:bg-[#4BA6B9]/10 relative">
       <Header />
       
       <JournalHero journal={journal} activeTab="home" />
@@ -113,7 +115,7 @@ export default function JournalPage() {
                     </div>
                     <p className="text-[11px] font-black text-[#1A1A1A] max-w-[200px] mx-auto opacity-40 leading-relaxed">Eye-Innovations Scientific Research</p>
                  </div>
-                 <Link href="/submission" className="block w-full bg-[#1A1A1A] text-white py-5 rounded-xl text-[12px] font-black hover:bg-[#4BA6B9] transition-all shadow-xl shadow-black/5">
+                 <Link href={`/dashboard/submit?journal=${journal.id}`} className="block w-full bg-[#1A1A1A] text-white py-5 rounded-xl text-[12px] font-black hover:bg-[#4BA6B9] transition-all shadow-xl shadow-black/5">
                     Submit Manuscript
                  </Link>
                  
@@ -228,3 +230,4 @@ function ArticleCard({ article }) {
     </div>
   );
 }
+

@@ -82,6 +82,7 @@ function SlidingBanner({ displayName }) {
 export default function DashboardPage() {
   const [profile, setProfile] = useState(null);
   const [submissions, setSubmissions] = useState([]);
+  const [assignments, setAssignments] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -90,15 +91,18 @@ export default function DashboardPage() {
         const token = localStorage.getItem('eisr_token');
         if (!token) return;
 
-        const [subRes, profRes] = await Promise.all([
-          fetch('/api/submissions', { headers: { 'Authorization': `Bearer ${token}` } }),
+        const [subRes, assRes, profRes] = await Promise.all([
+          fetch('/api/submissions?role=author', { headers: { 'Authorization': `Bearer ${token}` } }),
+          fetch('/api/submissions?role=reviewer', { headers: { 'Authorization': `Bearer ${token}` } }),
           fetch('/api/profile', { headers: { 'Authorization': `Bearer ${token}` } }),
         ]);
 
         const subData = await subRes.json();
+        const assData = await assRes.json();
         const profData = await profRes.json();
 
         if (subData.success) setSubmissions(subData.submissions);
+        if (assData.success) setAssignments(assData.submissions);
         if (profData.success) setProfile(profData.profile);
       } catch {}
       finally { setLoading(false); }
@@ -194,16 +198,21 @@ export default function DashboardPage() {
           </h2>
           <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 16px 0', fontSize: '13px' }}>
             {[
-              { href: '/dashboard/reviewer/action-required', label: 'Action Required by me' },
-              { href: '/dashboard/reviewer/all', label: 'All assignments' },
-              { href: '/dashboard/reviewer/completed', label: 'Completed' },
-              { href: '/dashboard/reviewer/declined', label: 'Declined' },
-              { href: '/dashboard/reviewer/published', label: 'Published' },
+              { href: '/dashboard/reviewer/action-required', label: 'Action Required by me', count: assignments.filter(a => ['Review', 'Submitted'].includes(a.status)).length },
+              { href: '/dashboard/reviewer/all', label: 'All assignments', count: assignments.length },
+              { href: '/dashboard/reviewer/completed', label: 'Completed', count: assignments.filter(a => a.status === 'Completed').length },
+              { href: '/dashboard/reviewer/declined', label: 'Declined', count: 0 },
+              { href: '/dashboard/reviewer/published', label: 'Published', count: 0 },
             ].map(item => (
-              <li key={item.href} style={{ marginBottom: '8px' }}>
+              <li key={item.href} style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Link href={item.href} style={{ color: '#005f96', textDecoration: 'none' }}>
                   → {item.label}
                 </Link>
+                {item.count !== null && !loading && (
+                  <span style={{ fontSize: '11px', fontWeight: '600', color: '#64748b', backgroundColor: '#f1f5f9', borderRadius: '10px', padding: '2px 8px' }}>
+                    {item.count}
+                  </span>
+                )}
               </li>
             ))}
           </ul>

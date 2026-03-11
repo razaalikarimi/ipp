@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { Search, ChevronUp, ChevronDown, X, SlidersHorizontal, MoreHorizontal, FileText } from 'lucide-react';
+import { Search, ChevronUp, ChevronDown, X, SlidersHorizontal, MoreHorizontal, FileText, ChevronsUpDown } from 'lucide-react';
 
 const STATUS_COLORS = {
   'Submitted':   { dot: '#9333ea', bg: '#faf5ff', text: '#7e22ce' },
@@ -23,78 +23,28 @@ function getStatusStyle(status) {
   return STATUS_COLORS['Unassigned'];
 }
 
-function FiltersPanel({ onClose, onApply }) {
-  const [days, setDays] = useState(0);
-  const [issue, setIssue] = useState('');
-  return (
-    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', fontFamily: '"Noto Sans", sans-serif' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '20px 24px', borderBottom: '1px solid #e2e8f0' }}>
-        <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#475569', padding: '4px', display: 'flex' }}>
-          <X size={18} />
-        </button>
-        <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '700', color: '#1e293b' }}>Filters</h3>
-      </div>
-
-      <div style={{ flex: 1, padding: '24px', overflowY: 'auto' }}>
-        <div style={{ marginBottom: '24px' }}>
-          <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#475569', marginBottom: '8px' }}>Issues</label>
-          <input
-            type="text"
-            value={issue}
-            onChange={e => setIssue(e.target.value)}
-            placeholder="Search by issue..."
-            style={{ width: '100%', border: '1px solid #cbd5e1', borderRadius: '4px', padding: '9px 12px', fontSize: '13px', outline: 'none', boxSizing: 'border-box', fontFamily: '"Noto Sans", sans-serif' }}
-          />
-        </div>
-
-        <div style={{ marginBottom: '32px' }}>
-          <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#475569', marginBottom: '8px' }}>Days since last activity</label>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <input
-              type="range" min="0" max="180" value={days}
-              onChange={e => setDays(Number(e.target.value))}
-              style={{ flex: 1, accentColor: '#005f96', height: '4px' }}
-            />
-            <input
-              type="number" value={days}
-              onChange={e => setDays(Math.max(0, Math.min(180, Number(e.target.value))))}
-              style={{ width: '64px', border: '1px solid #cbd5e1', borderRadius: '4px', padding: '6px 8px', fontSize: '13px', outline: 'none', textAlign: 'center', fontFamily: '"Noto Sans", sans-serif' }}
-            />
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#94a3b8', marginTop: '6px' }}>
-            <span>0 days</span><span>180 days</span>
-          </div>
-        </div>
-      </div>
-
-      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', borderTop: '1px solid #e2e8f0', padding: '16px 24px' }}>
-        <button onClick={() => { setDays(0); setIssue(''); }} style={{ background: 'none', border: '1px solid #cbd5e1', borderRadius: '4px', padding: '8px 16px', fontSize: '13px', cursor: 'pointer', color: '#475569', fontFamily: '"Noto Sans", sans-serif' }}>
-          Clear Filters
-        </button>
-        <button onClick={() => onApply({ days, issue })} style={{ backgroundColor: '#005f96', color: '#fff', border: 'none', borderRadius: '4px', padding: '8px 20px', fontSize: '13px', fontWeight: '700', cursor: 'pointer', fontFamily: '"Noto Sans", sans-serif' }}>
-          Apply Filters
-        </button>
-      </div>
-    </div>
-  );
-}
-
-export default function SubmissionsTable({ title, filterFn, columns = 'author', extraMenuItems }) {
+export default function SubmissionsTable({ title, filterFn, columns = 'reviewer', extraMenuItems }) {
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [search, setSearch] = useState('');
-  const [sortDir, setSortDir] = useState('desc');
+  const [sortDir, setSortDir] = useState('asc');
   const [showFilters, setShowFilters] = useState(false);
+  const [filterDays, setFilterDays] = useState(0);
+  const [filterIssue, setFilterIssue] = useState('');
   const [showMenu, setShowMenu] = useState(false);
-  const [activeFilters, setActiveFilters] = useState({ days: 0, issue: '' });
-  const menuRef = useRef(null);
 
   useEffect(() => {
     const fetchSubmissions = async () => {
       try {
         const token = localStorage.getItem('eisr_token');
-        const res = await fetch('/api/submissions', {
+        const searchParams = new URL(window.location.href).searchParams;
+        const journalId = searchParams.get('journal');
+        
+        let url = `/api/submissions?role=${columns}`;
+        if (journalId) url += `&journal=${journalId}`;
+        
+        const res = await fetch(url, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const data = await res.json();
@@ -112,14 +62,6 @@ export default function SubmissionsTable({ title, filterFn, columns = 'author', 
     fetchSubmissions();
   }, []);
 
-  useEffect(() => {
-    const handleClick = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) setShowMenu(false);
-    };
-    document.addEventListener('mousedown', handleClick);
-    return () => document.removeEventListener('mousedown', handleClick);
-  }, []);
-
   const filtered = submissions
     .filter(sub => filterFn ? filterFn(sub) : true)
     .filter(sub => {
@@ -134,206 +76,220 @@ export default function SubmissionsTable({ title, filterFn, columns = 'author', 
     .sort((a, b) => sortDir === 'asc' ? a.id - b.id : b.id - a.id);
 
   const isAuthor = columns === 'author';
-
-  const gridCols = isAuthor
-    ? '80px 1fr 160px 180px 160px 80px'
-    : '80px 1fr 200px 160px 80px';
+  const gridCols = isAuthor 
+    ? '80px 1.5fr 1fr 1fr 140px' 
+    : '80px 1.5fr 1fr 140px';
 
   return (
-    <div style={{ padding: '28px 36px', width: '100%', boxSizing: 'border-box', fontFamily: '"Noto Sans", sans-serif' }}>
-      {/* Filters Drawer */}
+    <div style={{ padding: '24px 20px', width: '100%', boxSizing: 'border-box', fontFamily: '"Noto Sans", sans-serif' }}>
+      
+      {/* Title Area */}
+      <h1 style={{ fontSize: '28px', fontWeight: '700', color: '#333', margin: '0 0 24px 0', display: 'flex', alignItems: 'center', gap: '12px' }}>
+        {title} ({loading ? '0' : filtered.length})
+        {loading && (
+          <div style={{ 
+            width: '20px', height: '20px', border: '2px solid #e2e8f0', 
+            borderTopColor: '#005f96', borderRadius: '50%', 
+            animation: 'spin 1s linear infinite'
+          }} />
+        )}
+      </h1>
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+      `}</style>
+
+      {/* Toolbar */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            style={{ 
+              background: '#fff', border: '1px solid #cbd5e1', color: '#005f96', 
+              fontSize: '13px', padding: '6px 14px', borderRadius: '4px', cursor: 'pointer',
+              fontWeight: '500'
+            }}
+          >
+            Filters
+          </button>
+          
+          {isAuthor && (title === 'Active submissions' || title === 'Incomplete submissions') && (
+            <div style={{ position: 'relative' }}>
+              <button 
+                onClick={() => setShowMenu(!showMenu)}
+                style={{ background: 'none', border: 'none', color: '#005f96', cursor: 'pointer', padding: '4px' }}
+              >
+                <MoreHorizontal size={20} />
+              </button>
+              {showMenu && (
+                <div style={{
+                  position: 'absolute', top: '30px', left: 0, backgroundColor: '#fff', 
+                  border: '1px solid #ddd', borderRadius: '4px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                  zIndex: 10, width: '220px', overflow: 'hidden'
+                }}>
+                  <button style={{ 
+                    width: '100%', padding: '10px 15px', textAlign: 'left', background: 'none', 
+                    border: 'none', fontSize: '13px', cursor: 'pointer', color: '#444',
+                    display: 'flex', alignItems: 'center', gap: '8px'
+                  }}>
+                    <X size={14} /> Delete Incomplete Submissions
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+          <div style={{ position: 'relative' }}>
+             <Search size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+             <input
+                type="text"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search submissions, ID, authors, k..."
+                style={{ 
+                  border: '1px solid #cbd5e1', borderRadius: '4px', 
+                  padding: '7px 12px 7px 32px', fontSize: '13px', outline: 'none', 
+                  width: '280px', backgroundColor: '#fff' 
+                }}
+              />
+          </div>
+        </div>
+      </div>
+
+      {/* Inline Filters Panel */}
       {showFilters && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 200 }}>
-          <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.25)' }} onClick={() => setShowFilters(false)} />
-          <div style={{ position: 'absolute', top: 0, left: 0, width: '420px', height: '100%', backgroundColor: '#fff', boxShadow: '4px 0 24px rgba(0,0,0,0.15)', zIndex: 201 }}>
-            <FiltersPanel onClose={() => setShowFilters(false)} onApply={(f) => { setActiveFilters(f); setShowFilters(false); }} />
+        <div style={{ 
+          backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '4px', 
+          marginBottom: '20px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)', overflow: 'hidden'
+        }}>
+          <div style={{ 
+            backgroundColor: '#f8fafc', padding: '12px 20px', borderBottom: '1px solid #e2e8f0',
+            display: 'flex', alignItems: 'center'
+          }}>
+            <button 
+              onClick={() => setShowFilters(false)}
+              style={{ background: 'none', border: 'none', color: '#005f96', fontSize: '18px', fontWeight: '400', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px' }}
+            >
+              <div style={{ border: '1px solid #005f96', borderRadius: '2px', display: 'flex', padding: '1px' }}><ChevronUp size={14} style={{ transform: 'rotate(-90deg)' }} /></div>
+              Filters
+            </button>
+          </div>
+          
+          <div style={{ padding: '24px' }}>
+            <div style={{ maxWidth: '800px' }}>
+              <div style={{ marginBottom: '24px' }}>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#333', marginBottom: '8px' }}>Issues</label>
+                <input 
+                  type="text" 
+                  value={filterIssue}
+                  onChange={e => setFilterIssue(e.target.value)}
+                  style={{ width: '100%', border: '1px solid #cbd5e1', borderRadius: '4px', padding: '8px 12px', fontSize: '13px' }}
+                />
+              </div>
+              <div style={{ marginBottom: '32px' }}>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#333', marginBottom: '8px' }}>Days since last activity</label>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                  <div style={{ flex: 1, position: 'relative', height: '20px', display: 'flex', alignItems: 'center' }}>
+                    <span style={{ position: 'absolute', left: 0, bottom: '-15px', fontSize: '10px', color: '#999' }}>0</span>
+                    <input 
+                      type="range" min="0" max="180" 
+                      value={filterDays}
+                      onChange={e => setFilterDays(Number(e.target.value))}
+                      style={{ width: '100%', accentColor: '#005f96' }} 
+                    />
+                    <span style={{ position: 'absolute', right: 0, bottom: '-15px', fontSize: '10px', color: '#999' }}>180</span>
+                  </div>
+                  <input 
+                    type="number" value={filterDays}
+                    onChange={e => setFilterDays(Number(e.target.value))}
+                    style={{ width: '120px', border: '1px solid #cbd5e1', borderRadius: '4px', padding: '6px 10px', textAlign: 'left', fontSize: '13px' }}
+                  />
+                </div>
+              </div>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '40px', borderTop: '1px solid #eee', paddingTop: '15px' }}>
+              <button 
+                onClick={() => { setFilterDays(0); setFilterIssue(''); }} 
+                style={{ background: '#fff', border: '1px solid #cbd5e1', color: '#333', padding: '7px 15px', borderRadius: '4px', fontSize: '13px', cursor: 'pointer' }}
+              >
+                Clear Filters
+              </button>
+              <button 
+                onClick={() => setShowFilters(false)}
+                style={{ backgroundColor: '#005f96', color: '#fff', border: 'none', borderRadius: '4px', padding: '7px 20px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}
+              >
+                Apply Filters
+              </button>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Page Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
-        <div>
-          <h1 style={{ fontSize: '22px', fontWeight: '400', color: '#1a1a1a', margin: '0 0 4px 0' }}>
-            {title}{' '}
-            <span style={{ fontSize: '18px', color: '#64748b' }}>
-              ({loading ? '—' : filtered.length})
-            </span>
-          </h1>
-          {(activeFilters.days > 0 || activeFilters.issue) && (
-            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '6px' }}>
-              {activeFilters.issue && (
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '2px 10px', backgroundColor: '#eff6ff', color: '#1d4ed8', borderRadius: '12px', fontSize: '12px', fontWeight: '500' }}>
-                  Issue: {activeFilters.issue}
-                  <button onClick={() => setActiveFilters(f => ({ ...f, issue: '' }))} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#1d4ed8', padding: 0, lineHeight: 1 }}>×</button>
-                </span>
-              )}
-              {activeFilters.days > 0 && (
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '2px 10px', backgroundColor: '#eff6ff', color: '#1d4ed8', borderRadius: '12px', fontSize: '12px', fontWeight: '500' }}>
-                  Last activity: {activeFilters.days} days
-                  <button onClick={() => setActiveFilters(f => ({ ...f, days: 0 }))} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#1d4ed8', padding: 0, lineHeight: 1 }}>×</button>
-                </span>
-              )}
-            </div>
-          )}
-        </div>
-        <Link href="/dashboard/submit" style={{
-          display: 'inline-flex', alignItems: 'center', gap: '6px',
-          backgroundColor: '#005f96', color: '#fff', padding: '8px 18px',
-          borderRadius: '4px', fontSize: '13px', fontWeight: '700', textDecoration: 'none',
-        }}>
-          + New Submission
-        </Link>
-      </div>
-
-      {/* Toolbar */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', position: 'relative' }} ref={menuRef}>
-          <button
-            onClick={() => setShowFilters(true)}
-            style={{ background: '#fff', border: '1px solid #cbd5e1', color: '#475569', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontSize: '13px', padding: '7px 14px', borderRadius: '4px', fontFamily: '"Noto Sans", sans-serif' }}
-          >
-            <SlidersHorizontal size={13} /> Filters
-          </button>
-          {(extraMenuItems || []).length > 0 && (
-            <>
-              <button
-                onClick={() => setShowMenu(v => !v)}
-                style={{ background: '#fff', border: '1px solid #cbd5e1', color: '#475569', cursor: 'pointer', padding: '7px 10px', borderRadius: '4px', display: 'flex', alignItems: 'center' }}
-              >
-                <MoreHorizontal size={16} />
-              </button>
-              {showMenu && (
-                <div style={{ position: 'absolute', top: '40px', left: '0', backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '6px', boxShadow: '0 8px 24px rgba(0,0,0,0.1)', zIndex: 50, minWidth: '240px', overflow: 'hidden' }}>
-                  {extraMenuItems.map((item, i) => (
-                    <button key={i} onClick={() => { item.onClick?.(); setShowMenu(false); }}
-                      style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '100%', padding: '10px 16px', background: 'none', border: 'none', cursor: 'pointer', fontSize: '13px', color: item.danger ? '#dc2626' : '#334155', textAlign: 'left', fontFamily: '"Noto Sans", sans-serif' }}>
-                      {item.label}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
-        </div>
-
-        <div style={{ position: 'relative' }}>
-          <Search size={14} style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', pointerEvents: 'none' }} />
-          <input
-            type="text"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="Search by ID, title, status..."
-            style={{ border: '1px solid #cbd5e1', borderRadius: '4px', padding: '8px 34px 8px 12px', fontSize: '13px', outline: 'none', width: '280px', fontFamily: '"Noto Sans", sans-serif', backgroundColor: '#fff' }}
-          />
-        </div>
-      </div>
-
       {/* Table */}
-      <div style={{ backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '4px', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', overflow: 'hidden' }}>
+      <div style={{ backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '2px', overflow: 'hidden' }}>
         {/* Header Row */}
-        <div style={{ display: 'grid', gridTemplateColumns: gridCols, backgroundColor: '#f8fafc', borderBottom: '2px solid #e2e8f0' }}>
-          <div onClick={() => setSortDir(d => d === 'asc' ? 'desc' : 'asc')} style={{ padding: '12px 16px', fontSize: '11px', fontWeight: '700', color: '#475569', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer', userSelect: 'none', letterSpacing: '0.06em' }}>
-            ID
-            <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 0, marginLeft: '2px' }}>
-              <ChevronUp size={9} style={{ color: sortDir === 'asc' ? '#005f96' : '#cbd5e1', marginBottom: '-1px' }} />
-              <ChevronDown size={9} style={{ color: sortDir === 'desc' ? '#005f96' : '#cbd5e1' }} />
-            </span>
+        <div style={{ display: 'grid', gridTemplateColumns: gridCols, backgroundColor: '#e9f1f7', borderBottom: '1px solid #cbd5e1' }}>
+          <div onClick={() => setSortDir(d => d === 'asc' ? 'desc' : 'asc')} style={{ padding: '12px 16px', fontSize: '11px', fontWeight: '700', color: '#005f96', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+            ID <ChevronsUpDown size={14} />
           </div>
-          <div style={{ padding: '12px 16px', fontSize: '11px', fontWeight: '700', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.06em' }}>SUBMISSIONS</div>
-          {isAuthor && <div style={{ padding: '12px 16px', fontSize: '11px', fontWeight: '700', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.06em' }}>STAGE</div>}
-          <div style={{ padding: '12px 16px', fontSize: '11px', fontWeight: '700', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.06em' }}>EDITORIAL ACTIVITY</div>
-          <div style={{ padding: '12px 16px', fontSize: '11px', fontWeight: '700', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.06em' }}>DATE SUBMITTED</div>
-          <div style={{ padding: '12px 16px', fontSize: '11px', fontWeight: '700', color: '#475569', textTransform: 'uppercase', letterSpacing: '0.06em', textAlign: 'right' }}>ACTIONS</div>
+          <div style={{ padding: '10px 16px', fontSize: '11px', fontWeight: '600', color: '#444', textTransform: 'uppercase' }}>SUBMISSIONS</div>
+          {isAuthor && <div style={{ padding: '10px 16px', fontSize: '11px', fontWeight: '600', color: '#444', textTransform: 'uppercase' }}>STAGE</div>}
+          <div style={{ padding: '10px 16px', fontSize: '11px', fontWeight: '600', color: '#444', textTransform: 'uppercase' }}>EDITORIAL ACTIVITY</div>
+          <div style={{ padding: '10px 16px', fontSize: '11px', fontWeight: '600', color: '#444', textTransform: 'uppercase', textAlign: 'right' }}>ACTIONS</div>
         </div>
 
         {/* Content */}
         {loading ? (
-          <div style={{ padding: '48px', textAlign: 'center' }}>
-            <div style={{ display: 'inline-block', width: '24px', height: '24px', border: '3px solid #e2e8f0', borderTopColor: '#005f96', borderRadius: '50%', animation: 'spin 0.7s linear infinite', marginBottom: '12px' }} />
-            <div style={{ fontSize: '13px', color: '#64748b' }}>Loading submissions...</div>
-          </div>
-        ) : error ? (
-          <div style={{ padding: '40px', textAlign: 'center', fontSize: '13px', color: '#dc2626' }}>
-            Error: {error}
-          </div>
+          <div style={{ borderBottom: '1px solid #eee', padding: '12px 16px', fontSize: '13px', color: '#666' }}>Loading</div>
         ) : filtered.length === 0 ? (
-          <div style={{ padding: '48px', textAlign: 'center' }}>
-            <FileText size={32} style={{ color: '#cbd5e1', display: 'block', margin: '0 auto 12px' }} />
-            <div style={{ fontSize: '14px', color: '#64748b', fontWeight: '500' }}>No submissions found</div>
-            <div style={{ fontSize: '13px', color: '#94a3b8', marginTop: '4px' }}>
-              {search ? 'Try adjusting your search' : 'Start a new submission to see it here'}
-            </div>
+          <div style={{ 
+            display: 'grid', gridTemplateColumns: gridCols, 
+            borderBottom: '1px solid #eee', alignItems: 'center'
+          }}>
+            <div style={{ padding: '12px 16px' }}></div>
+            <div style={{ padding: '12px 16px', fontSize: '13px', color: '#666' }}>No Items</div>
+            {isAuthor && <div style={{ padding: '12px 16px' }}></div>}
+            <div style={{ padding: '12px 16px' }}></div>
+            <div style={{ padding: '12px 16px' }}></div>
           </div>
         ) : filtered.map((sub, idx) => {
-          const style = getStatusStyle(sub.status);
+          const statusStyle = getStatusStyle(sub.status);
           return (
-            <div key={sub.id} style={{
-              display: 'grid', gridTemplateColumns: gridCols,
-              borderBottom: idx < filtered.length - 1 ? '1px solid #f1f5f9' : 'none',
-              alignItems: 'center',
-              backgroundColor: idx % 2 === 0 ? '#fff' : '#fafcff',
-              transition: 'background 0.15s',
+            <div key={sub.id} style={{ 
+              display: 'grid', gridTemplateColumns: gridCols, 
+              borderBottom: '1px solid #eee', alignItems: 'center'
             }}>
-              <div style={{ padding: '14px 16px', fontSize: '13px', color: '#64748b', fontWeight: '600' }}>
-                #{sub.id}
-              </div>
-              <div style={{ padding: '14px 16px' }}>
-                <Link href={`/dashboard/submissions/${sub.id}`} style={{ color: '#005f96', textDecoration: 'none', fontSize: '14px', fontWeight: '500', lineHeight: '1.5', display: 'block' }}>
+              <div style={{ padding: '12px 16px', fontSize: '13px', color: '#666' }}>{sub.id}</div>
+              <div style={{ padding: '12px 16px' }}>
+                <Link href={`/dashboard/submissions/${sub.id}`} style={{ color: '#005f96', textDecoration: 'none', fontSize: '13px' }}>
                   {sub.title}
                 </Link>
               </div>
               {isAuthor && (
-                <div style={{ padding: '14px 16px', display: 'flex', alignItems: 'center', gap: '7px' }}>
-                  <span style={{
-                    display: 'inline-flex', alignItems: 'center', gap: '6px',
-                    padding: '3px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '500',
-                    backgroundColor: style.bg, color: style.text,
-                  }}>
-                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: style.dot, display: 'inline-block', flexShrink: 0 }} />
-                    {sub.status || 'Submitted'}
-                  </span>
+                <div style={{ padding: '12px 16px', fontSize: '13px', color: '#333', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: statusStyle.dot }} />
+                  {sub.status || 'Submission'}
                 </div>
               )}
-              <div style={{ padding: '14px 16px', fontSize: '13px', color: '#64748b' }}>
-                {sub.activity || '—'}
-              </div>
-              <div style={{ padding: '14px 16px', fontSize: '12px', color: '#94a3b8' }}>
-                {sub.date || (sub.created_at ? new Date(sub.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '—')}
-              </div>
-              <div style={{ padding: '14px 16px', textAlign: 'right' }}>
-                <Link href={`/dashboard/submissions/${sub.id}`} style={{
-                  color: '#005f96', textDecoration: 'none', fontSize: '12px', fontWeight: '600',
-                  padding: '5px 12px', border: '1px solid #bfdbfe', borderRadius: '4px',
-                  backgroundColor: '#eff6ff', display: 'inline-block',
-                  transition: 'all 0.15s',
-                }}>
-                  View
-                </Link>
+              <div style={{ padding: '12px 16px', fontSize: '13px', color: '#666' }}>{sub.activity || '—'}</div>
+              <div style={{ padding: '12px 16px', textAlign: 'right', display: 'flex', justifyContent: 'flex-end', gap: '15px' }}>
+                {columns === 'reviewer' && (sub.status === 'Review' || sub.status === 'Submitted') && (
+                  <Link href={`/dashboard/reviewer/assignments/${sub.id}`} style={{ color: '#16a34a', textDecoration: 'none', fontSize: '13px', fontWeight: '700' }}>Review</Link>
+                )}
+                <Link href={`/dashboard/submissions/${sub.id}`} style={{ color: '#005f96', textDecoration: 'none', fontSize: '13px' }}>View</Link>
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* Footer */}
+      {/* Footer info */}
       {!loading && (
-        <div style={{ marginTop: '12px', fontSize: '13px', color: '#94a3b8', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span>
-            Showing <strong style={{ color: '#475569' }}>{filtered.length > 0 ? 1 : 0}</strong> – <strong style={{ color: '#475569' }}>{filtered.length}</strong> of <strong style={{ color: '#475569' }}>{filtered.length}</strong> submissions
-          </span>
-          {search && (
-            <button onClick={() => setSearch('')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#005f96', fontSize: '13px', fontFamily: '"Noto Sans", sans-serif', textDecoration: 'underline' }}>
-              Clear search
-            </button>
-          )}
+        <div style={{ marginTop: '12px', fontSize: '13px', color: '#666' }}>
+          Showing <strong style={{ fontWeight: '600' }}>{filtered.length > 0 ? '1' : '0'}</strong> to <strong style={{ fontWeight: '600' }}>{filtered.length}</strong> of <strong style={{ fontWeight: '600' }}>{filtered.length}</strong>
         </div>
       )}
-
-      <style>{`
-        @keyframes spin { to { transform: rotate(360deg); } }
-        a:hover { opacity: 0.85; }
-      `}</style>
     </div>
   );
 }

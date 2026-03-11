@@ -1,7 +1,7 @@
 
 'use client';
 import Link from 'next/link';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, LayoutDashboard, User } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { journalMenuItems, journalPolicyItems, journalAboutItems } from '@/lib/data';
 

@@ -21,8 +21,22 @@ export async function GET(req, { params }) {
 
     const submission = subRows[0];
     
-    // Auth check - user must own it or be admin (ignoring admin for now)
-    if (submission.user_id !== user.userId) {
+    // Auth check - user must own it or be assigned as a reviewer
+    let isAuthorized = (submission.user_id === user.userId);
+    let assignment = null;
+
+    if (!isAuthorized) {
+      const [assignmentRows] = await pool.query(
+        'SELECT id, assigned_at, status FROM reviewer_assignments WHERE submission_id = ? AND user_id = ?',
+        [id, user.userId]
+      );
+      if (assignmentRows.length > 0) {
+        isAuthorized = true;
+        assignment = assignmentRows[0];
+      }
+    }
+
+    if (!isAuthorized) {
       return unauthorizedResponse();
     }
 
@@ -64,7 +78,8 @@ export async function GET(req, { params }) {
           author: d.author,
           date: d.created_at,
           replies: 0
-        }))
+        })),
+        assignment: assignment
       }
     }, { status: 200 });
   } catch (error) {

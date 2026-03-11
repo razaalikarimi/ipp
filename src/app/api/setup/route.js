@@ -39,6 +39,77 @@ export async function GET() {
       )
     `);
 
+    // Submissions table
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS submissions (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        title TEXT NOT NULL,
+        status VARCHAR(50) DEFAULT 'Submitted',
+        activity VARCHAR(100) DEFAULT 'Unassigned',
+        journal_id VARCHAR(50) DEFAULT 'jcsra',
+        editor_comments TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_user (user_id),
+        INDEX idx_journal (journal_id)
+      )
+    `);
+
+    // Submission contributors
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS submission_contributors (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        submission_id INT NOT NULL,
+        name VARCHAR(255) NOT NULL,
+        email VARCHAR(255),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_submission (submission_id)
+      )
+    `);
+
+    // Submission files
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS submission_files (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        submission_id INT NOT NULL,
+        name VARCHAR(255) NOT NULL,
+        type VARCHAR(100),
+        path VARCHAR(512),
+        uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_submission (submission_id)
+      )
+    `);
+
+    // Reviewer assignments
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS reviewer_assignments (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        submission_id INT NOT NULL,
+        user_id INT NOT NULL,
+        status VARCHAR(50) DEFAULT 'Pending',
+        assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_submission (submission_id),
+        INDEX idx_user (user_id)
+      )
+    `);
+
+    // Submission reviews
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS submission_reviews (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        submission_id INT NOT NULL,
+        user_id INT NOT NULL,
+        checklist_json TEXT,
+        comments_authors TEXT,
+        comments_editors TEXT,
+        recommendation VARCHAR(50),
+        is_draft TINYINT(1) DEFAULT 1,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        UNIQUE KEY idx_sub_user (submission_id, user_id)
+      )
+    `);
+
     await connection.end();
 
     return NextResponse.json({

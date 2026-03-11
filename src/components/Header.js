@@ -82,6 +82,8 @@ export default function Header() {
     router.push('/login');
   };
 
+  const isJournalPage = pathname.startsWith('/journals/') && pathname.split('/').length >= 3;
+
   return (
     <header className={cn(
       "sticky top-0 z-50 w-full transition-all duration-300 bg-white border-b border-[#F1F1F1]",
@@ -100,7 +102,7 @@ export default function Header() {
 
         {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center space-x-10">
-          {navItems.map((item) => {
+          {(isJournalPage ? navItems.filter(item => ['Home', 'Journals', 'Articles'].includes(item.name)) : navItems).map((item) => {
             const active = pathname === item.path || (item.path !== '/' && pathname.startsWith(item.path));
             return (
               <Link
@@ -121,70 +123,67 @@ export default function Header() {
           })}
 
           {/* Auth Button */}
-          {loggedIn ? (
-            <div className="relative" ref={menuRef}>
-              <button
-                onClick={() => setShowUserMenu(v => !v)}
-                className="flex items-center gap-2.5 px-4 py-2 rounded-full border-2 border-[#4BA6B9] bg-white hover:bg-[#4BA6B9]/5 transition-all"
-              >
-                {/* Avatar */}
-                <div className="w-7 h-7 rounded-full bg-[#4BA6B9] text-white flex items-center justify-center text-[11px] font-black flex-shrink-0">
-                  {userInitials}
-                </div>
-                <span className="text-[13px] font-bold text-[#1A1A1A] max-w-[110px] truncate">
-                  {userName.split(' ')[0]}
-                </span>
-                <ChevronDown size={14} className={cn("text-[#555] transition-transform", showUserMenu && "rotate-180")} />
-              </button>
-
-              {/* Dropdown */}
-              {showUserMenu && (
-                <div className="absolute right-0 top-[calc(100%+8px)] w-52 bg-white border border-[#E5E7EB] rounded-xl shadow-xl overflow-hidden z-50">
-                  {/* User info */}
-                  <div className="px-4 py-3 border-b border-[#F1F1F1] bg-[#F8FAFC]">
-                    <p className="text-[12px] font-black text-[#1A1A1A] truncate">{userName}</p>
-                    <p className="text-[11px] text-[#9CA3AF] mt-0.5">Logged in</p>
+          {pathname !== '/' && (
+            loggedIn ? (
+              <div className="relative ml-8 pl-8 border-l border-[#F1F1F1]" ref={menuRef}>
+                <button
+                  onClick={() => setShowUserMenu(v => !v)}
+                  className="flex items-center gap-2.5 px-4 py-2 rounded-full border-2 border-[#4BA6B9] bg-white hover:bg-[#4BA6B9]/5 transition-all"
+                >
+                  {/* Avatar */}
+                  <div className="w-7 h-7 rounded-full bg-[#4BA6B9] text-white flex items-center justify-center text-[11px] font-black flex-shrink-0">
+                    {userInitials}
                   </div>
+                  <span className="text-[13px] font-bold text-[#1A1A1A] max-w-[110px] truncate">
+                    {userName.split(' ')[0]}
+                  </span>
+                  <ChevronDown size={14} className={cn("text-[#555] transition-transform", showUserMenu && "rotate-180")} />
+                </button>
 
-                  <Link
-                    href="/dashboard"
-                    onClick={() => setShowUserMenu(false)}
-                    className="flex items-center gap-3 px-4 py-3 text-[13px] font-bold text-[#1A1A1A] hover:bg-[#F1F8FF] hover:text-[#4BA6B9] transition-colors"
-                  >
-                    <LayoutDashboard size={15} /> My Dashboard
-                  </Link>
+                {/* Dropdown */}
+                {showUserMenu && (
+                  <div className="absolute right-0 top-[calc(100%+8px)] w-52 bg-white border border-[#E5E7EB] rounded-xl shadow-xl overflow-hidden z-50">
+                    {/* User info */}
+                    <div className="px-4 py-3 border-b border-[#F1F1F1] bg-[#F8FAFC]">
+                      <p className="text-[12px] font-black text-[#1A1A1A] truncate">{userName}</p>
+                      <p className="text-[11px] text-[#9CA3AF] mt-0.5">Logged in</p>
+                    </div>
 
-                  <Link
-                    href="/dashboard/profile"
-                    onClick={() => setShowUserMenu(false)}
-                    className="flex items-center gap-3 px-4 py-3 text-[13px] font-bold text-[#1A1A1A] hover:bg-[#F1F8FF] hover:text-[#4BA6B9] transition-colors"
-                  >
-                    <User size={15} /> Edit Profile
-                  </Link>
-
-                  <div className="border-t border-[#F1F1F1]">
-                    <button
-                      onClick={handleLogout}
-                      className="flex items-center gap-3 w-full px-4 py-3 text-[13px] font-bold text-[#DC2626] hover:bg-[#FEF2F2] transition-colors"
+                    <Link
+                      href="/dashboard"
+                      onClick={() => setShowUserMenu(false)}
+                      className="flex items-center gap-3 px-4 py-3 text-[13px] font-bold text-[#1A1A1A] hover:bg-[#F1F8FF] hover:text-[#4BA6B9] transition-colors"
                     >
-                      <LogOut size={15} /> Logout
-                    </button>
+                      <LayoutDashboard size={15} /> My Dashboard
+                    </Link>
+
+                    <div className="border-t border-[#F1F1F1]">
+                      <button
+                        onClick={handleLogout}
+                        className="flex items-center gap-3 w-full px-4 py-3 text-[13px] font-bold text-[#DC2626] hover:bg-[#FEF2F2] transition-colors"
+                      >
+                        <LogOut size={15} /> Logout
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
-          ) : (
-            <Link
-              href="/login"
-              className={cn(
-                "px-8 py-2.5 border-2 transition-all rounded-full font-black text-[14px] shadow-lg",
-                pathname === '/login'
-                  ? "bg-[#4BA6B9] border-[#4BA6B9] text-white"
-                  : "border-[#1A1A1A] text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white"
-              )}
-            >
-              Login
-            </Link>
+                )}
+              </div>
+            ) : (
+              <div className="flex items-center gap-8 ml-8 pl-8 border-l border-[#F1F1F1]">
+                <Link 
+                  href="/login"
+                  className="text-[14px] font-bold text-[#1A1A1A] hover:text-[#4BA6B9] transition-colors"
+                >
+                  Login
+                </Link>
+                <Link 
+                  href="/register"
+                  className="bg-[#1e78ff] text-white px-7 py-2.5 rounded-full text-[14px] font-bold hover:bg-[#005cff] transition-all shadow-lg shadow-blue-500/10 inline-flex items-center justify-center min-w-[120px]"
+                >
+                  Register
+                </Link>
+              </div>
+            )
           )}
         </nav>
 
@@ -203,7 +202,7 @@ export default function Header() {
         isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
       )}>
         <nav className="flex flex-col py-10 px-8 space-y-8">
-          {navItems.map((item) => {
+          {(isJournalPage ? navItems.filter(item => ['Home', 'Journals', 'Articles'].includes(item.name)) : navItems).map((item) => {
             const isHomePage = pathname === '/';
             const href = isHomePage ? `/#${item.id}` : item.path;
             return (
@@ -222,22 +221,37 @@ export default function Header() {
           })}
 
           {/* Mobile auth buttons */}
-          <div className="pt-4 border-t border-[#F1F1F1] space-y-4">
-            {loggedIn ? (
-              <>
-                <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 text-[15px] font-bold text-[#4BA6B9]">
-                  <LayoutDashboard size={18} /> My Dashboard
-                </Link>
-                <button onClick={handleLogout} className="flex items-center gap-3 text-[15px] font-bold text-[#DC2626]">
-                  <LogOut size={18} /> Logout
-                </button>
-              </>
-            ) : (
-              <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} className="text-[15px] font-bold text-[#4BA6B9]">
-                Login
-              </Link>
-            )}
-          </div>
+          {pathname !== '/' && (
+            <div className="pt-4 border-t border-[#F1F1F1] space-y-4">
+              {loggedIn ? (
+                <>
+                  <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 text-[15px] font-bold text-[#4BA6B9]">
+                    <LayoutDashboard size={18} /> My Dashboard
+                  </Link>
+                  <button onClick={handleLogout} className="flex items-center gap-3 text-[15px] font-bold text-[#DC2626]">
+                    <LogOut size={18} /> Logout
+                  </button>
+                </>
+              ) : (
+                <div className="flex flex-col gap-4">
+                  <Link 
+                    href="/login"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="text-lg font-bold text-[#1A1A1A]"
+                  >
+                    Login
+                  </Link>
+                  <Link 
+                    href="/register"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="bg-[#2563EB] text-white px-6 py-4 rounded-xl text-lg font-bold text-center tracking-tight shadow-xl shadow-blue-500/20"
+                  >
+                    Register
+                  </Link>
+                </div>
+              )}
+            </div>
+          )}
         </nav>
       </div>
     </header>
