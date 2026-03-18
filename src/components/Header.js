@@ -83,20 +83,21 @@ export default function Header() {
   };
 
   const isJournalPage = pathname.startsWith('/journals/') && pathname.split('/').length >= 3;
+  const currentJournalSlug = isJournalPage ? pathname.split('/')[2] : '';
+  const authQuery = currentJournalSlug ? `?journal=${currentJournalSlug}` : '';
 
   return (
     <header className={cn(
       "sticky top-0 z-50 w-full transition-all duration-300 bg-white border-b border-[#F1F1F1]",
-      isScrolled ? "h-20 shadow-md" : "h-24"
+       // Fixed height to h-24 as per user request (no motion on scroll)
+      "h-24", 
+      isScrolled ? "shadow-md" : "shadow-none"
     )}>
       <div className="max-w-[1240px] mx-auto px-6 h-full flex items-center justify-between">
         {/* Logo */}
         <div className="relative w-[220px] h-full flex items-center">
-          <Link href="/" className={cn(
-            "relative z-[100] transition-all duration-500 hover:scale-110 h-auto",
-            isScrolled ? "scale-90 -left-12" : "top-2 -left-10"
-          )}>
-            <Logo variant="full" scrolled={isScrolled} />
+          <Link href="/" className="relative z-[100] transition-all duration-500 hover:scale-110 h-auto">
+            <Logo variant="full" />
           </Link>
         </div>
 
@@ -123,34 +124,31 @@ export default function Header() {
           })}
 
           {/* Auth Button */}
-          {pathname !== '/' && (
+          {isJournalPage && (
             loggedIn ? (
               <div className="relative ml-8 pl-8 border-l border-[#F1F1F1]" ref={menuRef}>
                 <button
                   onClick={() => setShowUserMenu(v => !v)}
                   className="flex items-center gap-2.5 px-4 py-2 rounded-full border-2 border-[#4BA6B9] bg-white hover:bg-[#4BA6B9]/5 transition-all"
                 >
-                  {/* Avatar */}
                   <div className="w-7 h-7 rounded-full bg-[#4BA6B9] text-white flex items-center justify-center text-[11px] font-black flex-shrink-0">
                     {userInitials}
                   </div>
-                  <span className="text-[13px] font-bold text-[#1A1A1A] max-w-[110px] truncate">
+                   <span className="text-[13px] font-bold text-[#1A1A1A] max-w-[110px] truncate">
                     {userName.split(' ')[0]}
                   </span>
                   <ChevronDown size={14} className={cn("text-[#555] transition-transform", showUserMenu && "rotate-180")} />
                 </button>
 
-                {/* Dropdown */}
                 {showUserMenu && (
                   <div className="absolute right-0 top-[calc(100%+8px)] w-52 bg-white border border-[#E5E7EB] rounded-xl shadow-xl overflow-hidden z-50">
-                    {/* User info */}
                     <div className="px-4 py-3 border-b border-[#F1F1F1] bg-[#F8FAFC]">
                       <p className="text-[12px] font-black text-[#1A1A1A] truncate">{userName}</p>
                       <p className="text-[11px] text-[#9CA3AF] mt-0.5">Logged in</p>
                     </div>
 
                     <Link
-                      href="/dashboard"
+                      href={`/dashboard${authQuery}`}
                       onClick={() => setShowUserMenu(false)}
                       className="flex items-center gap-3 px-4 py-3 text-[13px] font-bold text-[#1A1A1A] hover:bg-[#F1F8FF] hover:text-[#4BA6B9] transition-colors"
                     >
@@ -171,13 +169,13 @@ export default function Header() {
             ) : (
               <div className="flex items-center gap-8 ml-8 pl-8 border-l border-[#F1F1F1]">
                 <Link 
-                  href="/login"
+                  href={`/login${authQuery}`}
                   className="text-[14px] font-bold text-[#1A1A1A] hover:text-[#4BA6B9] transition-colors"
                 >
                   Login
                 </Link>
                 <Link 
-                  href="/register"
+                  href={`/register${authQuery}`}
                   className="bg-[#1e78ff] text-white px-7 py-2.5 rounded-full text-[14px] font-bold hover:bg-[#005cff] transition-all shadow-lg shadow-blue-500/10 inline-flex items-center justify-center min-w-[120px]"
                 >
                   Register
@@ -187,7 +185,6 @@ export default function Header() {
           )}
         </nav>
 
-        {/* Mobile Menu Toggle */}
         <button
           className="lg:hidden p-2 text-[#555555] hover:text-[#4BA6B9] transition-colors"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -196,7 +193,7 @@ export default function Header() {
         </button>
       </div>
 
-      {/* Mobile Navigation Overlay */}
+       {/* Mobile component preserved */}
       <div className={cn(
         "lg:hidden fixed inset-0 top-24 bg-white z-40 transition-transform duration-500",
         isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
@@ -220,12 +217,11 @@ export default function Header() {
             );
           })}
 
-          {/* Mobile auth buttons */}
-          {pathname !== '/' && (
+          {isJournalPage && (
             <div className="pt-4 border-t border-[#F1F1F1] space-y-4">
               {loggedIn ? (
                 <>
-                  <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 text-[15px] font-bold text-[#4BA6B9]">
+                  <Link href={`/dashboard${authQuery}`} onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 text-[15px] font-bold text-[#4BA6B9]">
                     <LayoutDashboard size={18} /> My Dashboard
                   </Link>
                   <button onClick={handleLogout} className="flex items-center gap-3 text-[15px] font-bold text-[#DC2626]">
@@ -235,14 +231,14 @@ export default function Header() {
               ) : (
                 <div className="flex flex-col gap-4">
                   <Link 
-                    href="/login"
+                    href={`/login${authQuery}`}
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="text-lg font-bold text-[#1A1A1A]"
                   >
                     Login
                   </Link>
                   <Link 
-                    href="/register"
+                    href={`/register${authQuery}`}
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="bg-[#2563EB] text-white px-6 py-4 rounded-xl text-lg font-bold text-center tracking-tight shadow-xl shadow-blue-500/20"
                   >

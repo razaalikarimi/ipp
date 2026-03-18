@@ -82,9 +82,9 @@ export default function Footer() {
            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
               <div className="space-y-6">
                  <div className="flex items-center gap-6">
-                    <Link href="/" className="hover:scale-105 transition-transform duration-500">
-                      <Logo variant="full" scrolled={true} className="scale-100" />
-                    </Link>
+                     <Link href="/" className="hover:scale-105 transition-transform duration-500">
+                        <span className="text-3xl font-black tracking-tighter text-white">EISR</span>
+                     </Link>
                     <div className="h-10 w-px bg-white/10 hidden md:block" />
                     <div className="flex flex-col">
                        <p className="text-[13px] font-bold text-white/90">Eye-Innovations Scientific Research</p>

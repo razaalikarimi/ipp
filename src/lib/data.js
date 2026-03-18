@@ -6,7 +6,7 @@ export const journals = [
     issn: '',
     chief: 'Prof. Dr. M. Irfan Uddin',
     publishingModel: 'Open access',
-    frequency: 'Bi-annual',
+    frequency: 'Quarterly',
     reviewType: 'Double Blind Review',
     doiPrefix: '',
     publisher: 'Eye-Innovations Scientific Research (EISR)',
@@ -26,7 +26,13 @@ export const journals = [
     ],
     guidelines: `The Journal of Eye-Innovation in Machine Learning (JEIML) invites high-quality original research that presents significant advances in the field of artificial intelligence. All submissions must represent original work that has not been previously published or is currently under consideration elsewhere.\n\nManuscript Preparation:\nAuthors must adhere to the JEIML LaTeX/Word house style. Manuscripts should clearly articulate the research problem, methodology, experimental results, and theoretical implications. The abstract should be concise (max 250 words) and summarize the core contributions.\n\nPeer Review Process:\nJEIML employs a double-blind peer-review system. Each manuscript is evaluated by at least three independent experts for technical soundness, novelty, and clarity. The editorial board maintains a commitment to a rapid turnaround, aiming for a first decision within 45 days.\n\nOpen Access & Ethics:\nAs a Gold Open Access journal, all published work is immediately available to the global research community under the CC BY 4.0 license. Authors undergo rigorous plagiarism screening via CrossCheck. Ethical considerations regarding data privacy and AI safety must be explicitly addressed in the results section.`,
     editorialTeam: [
-      { id: 'Irfan Uddin', name: 'Prof. Dr. M. Irfan Uddin', affiliation: 'University of Guadalajara, Mexico', role: 'Editor-in-Chief' }
+      { id: 'irfan-uddin', name: 'Prof. Dr. M. Irfan Uddin', affiliation: 'Professor Department of Computer Science, University of Swabi Anbar Swabi 23540, KP, Pakistan', role: 'Editor in Chief', photo: '/prof_irfan_uddin_uploaded.png' },
+      { id: 'nesren-farhah', name: 'Dr. Nesren S. Farhah', affiliation: 'Saudi Electronic University: Riyadh, SA', email: 'N.FARHAH@seu.edu.sa', orcid: '0000-0002-2103-1282', role: 'Managing Editor', photo: '/dr_nesren_uploaded.png' },
+      { id: 'rajit-nair', name: 'Rajit Nair', affiliation: 'VIT Bhopal University, Bhopal, India', email: 'rajitnitbpl@gmail.com', orcid: '0000-0002-3796-7958', role: 'Editorial Board Member' },
+      { id: 'farooq-ahmed', name: 'Farooq Ahmed', affiliation: 'Manchester Metropolitan University', email: 'farooqahmed@hainanu.edu.cn', orcid: '0000-0002-4668-2882', role: 'Editorial Board Member' },
+      { id: 'manish-joshi', name: 'Dr. Manish Joshi', affiliation: 'School of Computer Sciences, North Maharashtra University, Jalgaon, India', role: 'Editorial Board Member' },
+      { id: 'furqan-aziz', name: 'Dr. Furqan Aziz', affiliation: 'Computing and Mathematical Sciences, School of', email: 'fa311@leicester.ac.uk', role: 'Editorial Board Member' },
+      { id: 'shahreen-kasim', name: 'Dr. Shahreen Kasim', affiliation: 'Faculty of Electrical and Electronic Engineering (FKEE), Universiti Tun Hussein Onn Malaysia, Batu Pahat Johor, Malaysia', orcid: '0000-0002-4180-4377', role: 'Editorial Board Member' }
     ],
     indexing: 'Journal of Eye-Innovation in Machine Learning (JEIML) is indexed and archived in leading scholarly platforms, ensuring global visibility and long-term accessibility of published research.',
     indexingPartners: ['Crossref', 'Google Scholar'],
@@ -89,7 +95,14 @@ export const journals = [
       'Cloud and IoT Security Assessments'
     ],
     editorialTeam: [
-      { id: 'rajit-nair', name: 'Prof. Ali Kashif Bashir', role: 'Editor in Chief', affiliation: 'VIT Bhopal University, Bhopal, India', photo: '/diego.jpg' }
+      { id: 'ali-kashif-bashir', name: 'Prof. Ali Kashif Bashir', role: 'Editor in Chief', affiliation: 'Manchester Metropolitan University: Manchester, England, GB - Professor of Networks and Cybersecurity, Computing and Mathematics', email: 'dr.alikashif.b@ieee.org', orcid: '0000-0003-2601-9327', photo: '/ali_kashif_bashir.png' },
+      { id: 'nadhem-ebrahim', name: 'Dr. Nadhem Ebrahim', role: 'Managing Editor', affiliation: 'University of Akron, Akron, United States', email: 'nebrahim@uakron.edu', orcid: '0000-0001-9975-589X', photo: '/nadhem_ebrahim.png' },
+      { id: 'sultan-ahmed', name: 'Dr. Sultan Ahmed', role: 'Editorial Board Member', affiliation: 'Prince Sattam Bin Abdulaziz University, Al-Kharj, Saudi Arabia', orcid: '0000-0002-3198-7974' },
+      { id: 'rizwan-ali-naqvi', name: 'Dr. Rizwan Ali NAQVI', role: 'Editorial Board Member', affiliation: 'Sejong University South Korea', orcid: '0000-0002-7473-8441' },
+      { id: 'osamah-ibrahim-khalaf', name: 'Dr. Osamah Ibrahim Khalaf', role: 'Editorial Board Member', affiliation: 'Al-Nahrain University, Al-Nahrain Nanorenewable Energy Research Center', email: 'Usama81818@nahrainuniv.edu.iq', orcid: '0000-0002-4750-8384' },
+      { id: 'eid-rehman', name: 'Dr. Eid Rehman', role: 'Editorial Board Member', affiliation: 'Department of Computer Science and information Technology, University of Mianwali, Pakistan', email: 'eid.rehman@umw.edu.pk' },
+      { id: 'zaheen-fatima', name: 'Dr. zaheen Fatima', role: 'Editorial Board Member', affiliation: 'Sir Syed University of Engineering and Technology Karachi', email: 'zaheen.fatima@ssuet.edu.pk' },
+      { id: 'h-jafari', name: 'Dr. H. Jafari', role: 'Editorial Board Member', affiliation: 'Professor Department of Mathematical Sciences, University of South Africa, South Africa', email: 'jafah@unisa.ac.za', orcid: '0000-0001-6807-6675' }
     ],
     indexing: 'Journal of Cyber Security and Risk Auditing (JCSRA) is currently indexed in Crossref and Google Scholar.',
     indexingPartners: ['Crossref', 'Google Scholar'],
@@ -122,7 +135,7 @@ export const editors = [
     affiliation: 'VIT Bhopal University, Bhopal, India',
     areas: ['Machine Learning', 'Computer Vision', 'Image Processing'],
     bio: 'Prof. Ali Kashif Bashir is an Associate Professor at VIT Bhopal University. His research focuses on the intersection of machine learning and healthcare diagnostics.',
-    photo: null
+    photo: '/ali_kashif_bashir.png'
   },
   {
      id: 'Irfan Uddin',
@@ -131,7 +144,7 @@ export const editors = [
      affiliation: 'University of Guadalajara, Mexico',
      areas: ['Swarm Intelligence', 'Image Processing', 'Optimization'],
      bio: 'Prof. Dr. M. Irfan Uddin is a renowned researcher in meta-heuristic optimization and its applications in image engineering.',
-     photo: null
+     photo: '/prof_irfan_uddin_uploaded.png'
   },
 ];
 

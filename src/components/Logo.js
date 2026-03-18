@@ -1,25 +1,29 @@
 'use client';
 import { cn } from '@/lib/utils';
+import { usePathname } from 'next/navigation';
 
-export default function Logo({ className, variant = 'full', scrolled = false }) {
+export default function Logo({ className, variant = 'full', src }) {
+  const pathname = usePathname();
+  
+  // Path-based logo routing
+  const isJEIML = pathname === '/journals/jeiml' || pathname.startsWith('/journals/jeiml/');
+  const isJCSRA = pathname === '/journals/jcsra' || pathname.startsWith('/journals/jcsra/');
+  
+  let finalSrc = src;
+  if (!finalSrc) {
+    if (isJEIML) finalSrc = '/jeiml_logo.png';
+    else if (isJCSRA) finalSrc = '/jcsra_logo.png';
+    else finalSrc = '/eisr_logo.png';
+  }
+
   return (
     <div className={cn("relative transition-all duration-300", className)}>
-      {/* Compact Logo Box - Dynamic size based on scroll state */}
-      <div className={cn(
-        "bg-white border transition-all duration-500 flex flex-col items-center",
-        scrolled 
-          ? "px-2 py-1.5 rounded-[10px] shadow-sm border-[#F1F1F1] min-w-[120px] scale-80" 
-          : "px-5 py-4 rounded-[20px] shadow-2xl border-[#E5E7EB] min-w-[190px]"
-      )}>
-         {/* Smaller exact image asset */}
-         <div className={cn(
-           "relative h-auto flex items-center justify-center transition-all duration-500",
-           scrolled ? "w-[90px]" : "w-[160px]"
-         )}>
+      <div className="flex flex-col items-center">
+         <div className="relative h-full flex items-center justify-center w-[160px]">
             <img 
-              src="/eisr_logo.png" 
-              alt="EISR Eye-Innovations Scientific Research" 
-              className="w-full h-auto object-contain"
+              src={finalSrc} 
+              alt="Journal Logo" 
+              className="w-full h-auto object-contain max-h-[70px]"
             />
          </div>
       </div>

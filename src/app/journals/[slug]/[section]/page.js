@@ -46,28 +46,63 @@ export default function JournalSectionPage() {
            </div>
         );
       case 'editorial-team':
+        // Dynamically extract unique roles
+        const allRoles = [...new Set(journal.editorialTeam.map(ed => ed.role))];
+
         return (
           <div className="space-y-12">
-            <h2 className="text-3xl font-sans font-bold text-[#1A1A1A] border-b border-[#F1F5F9] pb-6 uppercase">Editorial Team</h2>
-            <div className="grid grid-cols-1 gap-12">
-               {journal.editorialTeam.map((ed, i) => (
-                  <div key={ed.id} className="bg-white border border-[#E2E8F0] p-8 rounded-2xl shadow-sm flex flex-col md:flex-row gap-8 items-start hover:shadow-xl transition-all group">
-                     <div className="w-16 h-16 rounded-full bg-[#FAFBFC] border border-[#E2E8F0] flex items-center justify-center shrink-0 shadow-sm text-[#4BA6B9]">
-                        <Users size={24} />
-                     </div>
-                     <div className="space-y-4">
-                        <div className="space-y-1">
-                           <p className="text-[9px] font-bold uppercase tracking-widest text-[#4BA6B9]">{ed.role}</p>
-                           <h4 className="text-xl font-bold text-[#1A1A1A] group-hover:text-[#4BA6B9] transition-colors">{ed.name}</h4>
-                        </div>
-                        <p className="text-sm font-bold text-[#555555]">{ed.affiliation}</p>
-                        <div className="flex gap-6">
-                           <Link href={`/editors/${ed.id}`} className="text-[10px] font-bold uppercase tracking-widest text-[#4BA6B9] underline underline-offset-4">View Profile</Link>
-                           {ed.email && <span className="text-[10px] font-bold uppercase tracking-widest text-[#999999]">{ed.email}</span>}
-                        </div>
-                     </div>
-                  </div>
-               ))}
+            <h2 className="text-2xl md:text-3xl font-sans font-medium text-[#1A1A1A] border-b border-[#F1F5F9] pb-4 md:pb-6">Editorial Team</h2>
+            
+            <div className="space-y-8">
+               {allRoles.map(role => {
+                 const members = journal.editorialTeam.filter(ed => ed.role === role);
+                 if (members.length === 0) return null;
+                 
+                 const roleTitle = role === 'Editorial Board Member' && members.length > 1 ? 'Editorial Board Members' : role;
+                 const isCenterGrid = members.length === 1;
+
+                 return (
+                   <div key={role} className="bg-[#EBF5FC] border border-[#DCEEFB] rounded-2xl p-6 md:p-8">
+                      <div className="text-center font-medium text-[#4084B5] text-lg mb-6 tracking-wide">{roleTitle}</div>
+                      <div className={`grid grid-cols-1 ${!isCenterGrid ? 'md:grid-cols-2 gap-6' : 'gap-6 place-items-center'}`}>
+                         {members.map(ed => (
+                             <div key={ed.id} className="bg-white rounded-[16px] p-6 shadow-sm mx-auto w-full max-w-[340px] flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow duration-300">
+                                {ed.photo ? (
+                                   <img src={ed.photo} alt={ed.name} className="w-[88px] h-[88px] rounded-full object-cover mb-4 ring-4 ring-[#EAF6FF] bg-white p-0.5" />
+                                ) : (
+                                   <div className="w-[88px] h-[88px] rounded-full bg-[#FAFBFC] ring-4 ring-[#EAF6FF] flex items-center justify-center text-[#4BA6B9] mb-4">
+                                      <Users size={32} />
+                                   </div>
+                                )}
+                                <h4 className="text-[15px] font-medium text-[#1E293B] mb-1 leading-snug">{ed.name}</h4>
+                                <p className="text-[11px] font-medium text-[#2563EB]/80 leading-relaxed max-w-[240px] px-2">{ed.affiliation}</p>
+                                
+                                <div className="flex justify-center items-center gap-2.5 mt-5 h-6">
+                                  {ed.email && (
+                                    <a href={`mailto:${ed.email}`} title={ed.email} className="w-6 h-6 flex flex-col items-center justify-center">
+                                      <span className="text-red-500 font-bold font-sans text-sm tracking-tighter" style={{ fontFamily: 'Georgia, serif' }}>M</span>
+                                    </a>
+                                  )}
+                                  {ed.orcid && (
+                                    <a href={`https://orcid.org/${ed.orcid}`} target="_blank" rel="noopener noreferrer" title="ORCID iD" className="w-6 h-6 flex flex-col items-center justify-center bg-[#A6CE39] rounded-full text-white pt-0.5">
+                                      <span className="text-[9px] font-bold leading-none uppercase">ID</span>
+                                    </a>
+                                  )}
+                                  {/* Dummy Scopus icon as seen in screenshot */}
+                                  <a href="#" className="w-6 h-6 flex flex-col items-center justify-center text-[#1E419A] opacity-90 hover:opacity-100">
+                                    <Activity size={15} strokeWidth={2.5}/>
+                                  </a>
+                                  {/* Dummy WoS icon as seen in screenshot */}
+                                  <a href="#" className="w-6 h-6 flex flex-col items-center justify-center text-[#1D9975] opacity-90 hover:opacity-100">
+                                    <ShieldCheck size={16} strokeWidth={2}/>
+                                  </a>
+                                </div>
+                             </div>
+                         ))}
+                      </div>
+                   </div>
+                 );
+               })}
             </div>
           </div>
         );

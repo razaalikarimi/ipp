@@ -11,6 +11,7 @@ import {
   LayoutDashboard, User
 } from 'lucide-react';
 import JournalHero from '@/components/JournalHero';
+import Logo from '@/components/Logo';
 
 export default function JournalPage() {
   const { slug } = useParams();
@@ -64,7 +65,7 @@ export default function JournalPage() {
                       <div className="space-y-6">
                         <InfoRow label="Frequency" value={journal.frequency} color="text-[#1A1A1A]" />
                         <InfoRow label="Review Type" value={journal.reviewType} color="text-[#1A1A1A]" />
-                        <InfoRow label="Indexing" value={journal.indexing} color="text-[#1A1A1A]" />
+                        <InfoRow label="Targeting Indexing" value={journal.indexing} color="text-[#1A1A1A]" />
                         <InfoRow label="Archiving" value={journal.archiving || 'Portico'} color="text-[#1A1A1A]" />
                         <InfoRow label="Process Speed" value={journal.reviewSpeed} />
                         <InfoRow label="Submission" value="Open Journal System (OJS)" color="text-[#4BA6B9]" />
@@ -77,15 +78,15 @@ export default function JournalPage() {
               <div className="space-y-6">
                 <h2 className="text-xl font-bold text-[#1A1A1A]">Journal Statistics</h2>
                 <div className="bg-[#white] rounded-2xl p-10 border-2 border-[#E2E8F0] shadow-sm">
-                   <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-8 text-center divide-x divide-[#E2E8F0] overflow-hidden">
-                      <StatItem value={journal.stats.citationsScopus} label="Citations By Scopus" />
-                      <StatItem value={journal.stats.citationsGoogle} label="Citations By Google Scholar" />
-                      <StatItem value={journal.stats.articles} label="Articles" />
-                      <StatItem value={journal.stats.views} label="Total Views" />
-                      <StatItem value={journal.stats.authors} label="Authors" />
-                      <StatItem value={journal.stats.distribution} label="Authors Distribution" />
-                      <StatItem value={journal.stats.acceptance} label="Acceptance Rate" />
-                   </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-12 gap-x-8 text-center items-start">
+                       <StatItem value={journal.stats.citationsScopus} label="Citations By Scopus" />
+                       <StatItem value={journal.stats.citationsGoogle} label="Citations By Google Scholar" />
+                       <StatItem value={journal.stats.articles} label="Articles" />
+                       <StatItem value={journal.stats.views} label="Total Views" />
+                       <StatItem value={journal.stats.authors} label="Authors" />
+                       <StatItem value={journal.stats.distribution} label="Authors Distribution" />
+                       <StatItem value={journal.stats.acceptance} label="Acceptance Rate" />
+                    </div>
                 </div>
               </div>
 
@@ -110,10 +111,14 @@ export default function JournalPage() {
               <div className="bg-[#F8F9FB] rounded-2xl p-12 text-center space-y-10 border border-[#E2E8F0] shadow-sm relative overflow-hidden group">
                  <div className="absolute top-0 left-0 w-32 h-32 bg-[#1e78ff]/5 rounded-full -ml-16 -mt-16 group-hover:scale-110 transition-transform" />
                  <div className="space-y-4">
-                    <div className="flex items-center justify-center space-x-2">
-                       <span className="text-4xl font-black tracking-tighter text-[#1A1A1A]">EISR</span>
+                    <div className="flex items-center justify-center pt-4">
+                        <span className="text-2xl font-black tracking-tighter text-[#1A1A1A]">EISR</span>
                     </div>
-                    <p className="text-[11px] font-black text-[#1A1A1A] max-w-[200px] mx-auto opacity-40 leading-relaxed">Eye-Innovations Scientific Research</p>
+                    <p className="text-[11px] font-black text-[#1A1A1A] max-w-[200px] mx-auto opacity-40 leading-relaxed">
+                       {journal.id === 'jeiml' ? 'Journal of Eye-Innovation' : 
+                        journal.id === 'jcsra' ? 'Journal of Eye Innovation (Security)' : 
+                        'Eye-Innovations Scientific Research'}
+                    </p>
                  </div>
                  <Link href={`/dashboard/submit?journal=${journal.id}`} className="block w-full bg-[#1A1A1A] text-white py-5 rounded-xl text-[12px] font-black hover:bg-[#4BA6B9] transition-all shadow-xl shadow-black/5">
                     Submit Manuscript
@@ -182,9 +187,10 @@ function InfoRow({ label, value, color = "text-[#1A1A1A]" }) {
 
 function StatItem({ value, label }) {
   return (
-    <div className="space-y-2 px-6 text-center first:pl-0">
-       <p className="text-3xl font-bold text-[#1A1A1A] tracking-tighter">{value}</p>
-        <p className="text-[10px] font-bold text-[#1A1A1A] leading-tight break-words">{label}</p>
+    <div className="space-y-3 flex flex-col items-center">
+       <p className="text-3xl font-black text-[#1A1A1A] tracking-tighter">{value}</p>
+       <div className="w-8 h-1 bg-[#4BA6B9] rounded-full opacity-30 mx-auto" />
+       <p className="text-[11px] font-bold text-[#1A1A1A] uppercase tracking-tight leading-tight max-w-[140px] px-2">{label}</p>
     </div>
   );
 }
@@ -230,4 +236,3 @@ function ArticleCard({ article }) {
     </div>
   );
 }
-
