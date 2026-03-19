@@ -17,6 +17,10 @@ export const metadata = {
   description: "An academic platform dedicated to promoting and disseminating innovative research in the realm of sustainable technologies, AI, and multidisciplinary education.",
   keywords: ["EISR", "Scientific Research", "Academic Publishing", "AI Research", "Sustainability", "Innovation"],
   authors: [{ name: "EISR" }],
+  icons: {
+    icon: "/eisr_logo.png",
+    apple: "/eisr_logo.png",
+  },
   openGraph: {
     title: "Eye-Innovations Scientific Research (EISR)",
     description: "Academic platform dedicated to advancing global scientific research through peer-reviewed journals.",

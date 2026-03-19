@@ -3,6 +3,7 @@ const nextConfig = {
   output: 'standalone',
   devIndicators: {
     appIsrStatus: false,
+    buildActivity: false,
   },
 };
 
