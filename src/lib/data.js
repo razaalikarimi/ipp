@@ -36,7 +36,7 @@ export const journals = [
     ],
     indexing: 'Journal of Eye-Innovation in Machine Learning (JEIML) is indexed and archived in leading scholarly platforms, ensuring global visibility and long-term accessibility of published research.',
     indexingPartners: ['Crossref', 'Google Scholar'],
-    apc: 'No PC',
+    apc: 'No APC Charge',
     policies: {
       publicationethics: `Journal of Eye-Innovation in Machine Learning (JEIML) is committed to upholding the highest standards of publication ethics and academic integrity. The journal follows internationally accepted ethical guidelines to ensure transparency, fairness, and quality in scholarly publishing. All parties involved in the publication process — authors, reviewers, editors, and the publisher — are expected to adhere to these ethical principles.\n\n1. Duties of Authors\nAuthors submitting manuscripts to JEIML must ensure that:\n• The submitted work is original, unpublished, and not under consideration elsewhere.\n• All sources are properly cited, and plagiarism in any form is strictly prohibited.\n• Data presented in the manuscript is accurate, honest, and not fabricated or manipulated.\n• All listed authors have made significant contributions to the research.\n• Any conflicts of interest are clearly disclosed.\n• Ethical approval is obtained for studies involving human participants or animals, where applicable.\n\n2. Duties of Editors\nEditors are responsible for:\n• Making fair, unbiased, and timely publication decisions based solely on academic merit.\n• Maintaining the confidentiality of submitted manuscripts.\n• Ensuring a rigorous and transparent peer-review process.\n• Taking appropriate actions in cases of suspected misconduct, plagiarism, or ethical violations.\n• Preventing conflicts of interest and ensuring editorial independence.\n\n3. Duties of Reviewers\nReviewers are expected to:\n• Conduct reviews objectively, fairly, and confidentially.\n• Provide constructive feedback to improve the quality of manuscripts.\n• Report any suspected plagiarism, duplication, or ethical issues.\n• Declare any conflicts of interest and decline reviews when necessary.`,
       openaccess: 'JEIML is a fully open-access journal, providing immediate, free, and permanent access to all published content. Readers may read, download, copy, distribute, print, search, and link to full texts without restriction, ensuring global knowledge dissemination and increased research visibility.',
@@ -106,7 +106,7 @@ export const journals = [
     ],
     indexing: 'Journal of Cyber Security and Risk Auditing (JCSRA) is currently indexed in Crossref and Google Scholar.',
     indexingPartners: ['Crossref', 'Google Scholar'],
-    apc: 'No PC',
+    apc: 'No APC Charge',
     stats: {
       citationsScopus: '----',
       citationsGoogle: '----',

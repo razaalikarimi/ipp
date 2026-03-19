@@ -12,7 +12,6 @@ const checklistItems = [
   'All references have been checked for accuracy and completeness.',
   'All tables and figures have been numbered and labeled.',
   'Permission has been obtained to publish all photos, datasets and other material provided with this submission.',
-  'The author(s) acknowledge that the Article Processing Charge (APC) is USD 1,300 without taxes and is payable after acceptance.',
 ];
 
 export default function SubmitPage() {
