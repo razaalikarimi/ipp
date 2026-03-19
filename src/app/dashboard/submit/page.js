@@ -18,19 +18,15 @@ export default function SubmitPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [form, setForm] = useState({
-    title: 'ajsd',
+    title: '',
     checklistConfirmed: false,
     privacyConsent: false,
-    files: [
-      { id: 1, name: 'ubuntu_basic_20_commands_assignment.pdf', date: 'March 09, 2026', type: 'Article Text' }
-    ],
-    contributors: [
-      { id: 1, name: 'Shubham Salunke', email: 'shubham@example.com', role: 'Author', primary: true }
-    ],
+    files: [],
+    contributors: [],
     editorComments: '',
-    keywords: 'None provided',
-    abstract: 'ZXZ',
-    references: 'ZXZ',
+    keywords: '',
+    abstract: '',
+    references: '',
   });
   const [dragOver, setDragOver] = useState(false);
   const [contributorName, setContributorName] = useState('');
