@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import pool from '@/lib/db';
 import { verifyRequestUser, unauthorizedResponse } from '@/lib/auth';
+import { sendNotificationEmail } from '@/lib/mail';
 
 export async function GET(req) {
   const user = verifyRequestUser(req);
@@ -9,28 +10,38 @@ export async function GET(req) {
   try {
     const { searchParams } = new URL(req.url);
     const journalId = searchParams.get('journal');
-    const role = searchParams.get('role') || 'author'; 
+    const role = searchParams.get('role') || 'author';
 
     let query = '';
     let params = [];
 
     if (role === 'reviewer') {
-      query = `SELECT 
-          s.id, s.title, s.status, s.activity,
-          DATE_FORMAT(s.created_at, '%M %d, %Y') as date,
+      query = `
+        SELECT
+          s.id,
+          s.title,
+          s.status,
+          s.activity,
+          DATE_FORMAT(s.created_at, '%M %d, %Y') AS date,
           s.created_at
-         FROM submissions s
-         JOIN reviewer_assignments ra ON s.id = ra.submission_id
-         WHERE ra.user_id = ?`;
+        FROM submissions s
+        JOIN reviewer_assignments ra ON s.id = ra.submission_id
+        WHERE ra.user_id = ?
+      `;
       params.push(user.userId);
     } else {
-      query = `SELECT 
-          id, title, status, activity,
+      query = `
+        SELECT
+          id,
+          title,
+          status,
+          activity,
           editor_comments,
-          DATE_FORMAT(created_at, '%M %d, %Y') as date,
+          DATE_FORMAT(created_at, '%M %d, %Y') AS date,
           created_at
-         FROM submissions 
-         WHERE user_id = ?`;
+        FROM submissions
+        WHERE user_id = ?
+      `;
       params.push(user.userId);
     }
 
@@ -47,20 +58,26 @@ export async function GET(req) {
 
     const [rows] = await pool.query(query, params);
 
-    // Enrich with formatted data
-    const submissions = rows.map(row => ({
+    const submissions = rows.map((row) => ({
       id: row.id,
       title: row.title || 'Untitled Submission',
       status: row.status || 'Submitted',
       activity: row.activity || 'Unassigned',
       date: row.date,
       created_at: row.created_at,
+      editor_comments: row.editor_comments || '',
     }));
 
-    return NextResponse.json({ success: true, submissions }, { status: 200 });
+    return NextResponse.json(
+      { success: true, submissions },
+      { status: 200 }
+    );
   } catch (error) {
     console.error('Fetch submissions error:', error);
-    return NextResponse.json({ success: false, message: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { success: false, message: 'Internal server error', error: error.message },
+      { status: 500 }
+    );
   }
 }
 
@@ -70,45 +87,123 @@ export async function POST(req) {
 
   try {
     const body = await req.json();
-    const { title, editorComments, contributors, files, journalId } = body;
+    console.log('Submission body:', body);
+
+    const title =
+      body.title ||
+      body.details?.title ||
+      body.submissionTitle ||
+      '';
+
+    const editorComments =
+      body.editorComments ||
+      body.forEditors?.comments ||
+      body.comments ||
+      '';
+
+    const contributors = Array.isArray(body.contributors)
+      ? body.contributors
+      : [];
+
+    const files = Array.isArray(body.files)
+      ? body.files
+      : [];
+
+    const journalId = body.journalId || body.journal || 'jcsra';
 
     if (!title || !title.trim()) {
-      return NextResponse.json({ success: false, message: 'Title is required' }, { status: 400 });
+      return NextResponse.json(
+        { success: false, message: 'Title is required' },
+        { status: 400 }
+      );
     }
 
-    // Insert submission
     const [submissionResult] = await pool.query(
-      'INSERT INTO submissions (user_id, title, status, activity, editor_comments, journal_id) VALUES (?, ?, ?, ?, ?, ?)',
-      [user.userId, title.trim(), 'Submitted', 'Unassigned', editorComments || '', journalId || 'jcsra']
+      `
+      INSERT INTO submissions
+      (user_id, title, status, activity, editor_comments, journal_id)
+      VALUES (?, ?, ?, ?, ?, ?)
+      `,
+      [
+        user.userId,
+        title.trim(),
+        'Submitted',
+        'Unassigned',
+        editorComments,
+        journalId,
+      ]
     );
 
     const submissionId = submissionResult.insertId;
 
-    // Insert contributors
-    if (contributors && contributors.length > 0) {
-      const contributorValues = contributors.map(c => [submissionId, c.name, c.email]);
-      await pool.query(
-        'INSERT INTO submission_contributors (submission_id, name, email) VALUES ?',
-        [contributorValues]
+    if (contributors.length > 0) {
+      const contributorValues = contributors
+        .filter((c) => c?.name)
+        .map((c) => [submissionId, c.name, c.email || null]);
+
+      if (contributorValues.length > 0) {
+        await pool.query(
+          'INSERT INTO submission_contributors (submission_id, name, email) VALUES ?',
+          [contributorValues]
+        );
+      }
+    }
+
+    if (files.length > 0) {
+      const fileValues = files
+        .filter((f) => f?.name)
+        .map((f) => [
+          submissionId,
+          f.name,
+          f.type || 'Article Text',
+          f.path || `/uploads/${f.name}`,
+        ]);
+
+      if (fileValues.length > 0) {
+        await pool.query(
+          'INSERT INTO submission_files (submission_id, name, type, path) VALUES ?',
+          [fileValues]
+        );
+      }
+    }
+
+    const [userRows] = await pool.query(
+      'SELECT fullName, email FROM users WHERE id = ?',
+      [user.userId]
+    );
+
+    if (userRows.length > 0) {
+      const author = userRows[0];
+
+      await sendNotificationEmail(
+        process.env.SMTP_USER,
+        'New Submission Received - EISR Portal',
+        `New submission "${title}" received from ${author.fullName}`,
+        `
+          <h2>New Submission Received</h2>
+          <p><strong>Author:</strong> ${author.fullName}</p>
+          <p><strong>Author Email:</strong> ${author.email}</p>
+          <p><strong>Title:</strong> ${title}</p>
+          <p><strong>Submission ID:</strong> ${submissionId}</p>
+          <p><strong>Journal:</strong> ${journalId}</p>
+          <p><strong>Editor Comments:</strong> ${editorComments || 'N/A'}</p>
+        `
       );
     }
 
-    // Insert files metadata
-    if (files && files.length > 0) {
-      const fileValues = files.map(f => [submissionId, f.name, f.type || 'Article Text', f.path || '/uploads/' + f.name]);
-      await pool.query(
-        'INSERT INTO submission_files (submission_id, name, type, path) VALUES ?',
-        [fileValues]
-      );
-    }
-
-    return NextResponse.json({ 
-      success: true, 
-      message: 'Submission created successfully', 
-      submissionId 
-    }, { status: 201 });
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Submission created successfully',
+        submissionId,
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.error('Create submission error:', error);
-    return NextResponse.json({ success: false, message: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { success: false, message: 'Internal server error', error: error.message },
+      { status: 500 }
+    );
   }
 }
