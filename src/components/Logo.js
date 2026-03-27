@@ -1,14 +1,22 @@
 'use client';
+
 import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 
 export default function Logo({ className, variant = 'full', src }) {
   const pathname = usePathname();
-  
+
   // Path-based logo routing
-  const isJEIML = pathname === '/journals/jeiml' || pathname.startsWith('/journals/jeiml/');
-  const isJCSRA = pathname === '/journals/jcsra' || pathname.startsWith('/journals/jcsra/');
-  
+  const isJEIML =
+    pathname === '/journals/jeiml' ||
+    pathname.startsWith('/journals/jeiml/');
+
+  const isJCSRA =
+    pathname === '/journals/jcsra' ||
+    pathname.startsWith('/journals/jcsra/');
+
+  // Decide logo source
   let finalSrc = src;
   if (!finalSrc) {
     if (isJEIML) finalSrc = '/jeiml_logo.png';
@@ -17,15 +25,17 @@ export default function Logo({ className, variant = 'full', src }) {
   }
 
   return (
-    <div className={cn("relative transition-all duration-300", className)}>
+    <div className={cn('relative transition-all duration-300', className)}>
       <div className="flex flex-col items-center">
-         <div className="relative h-full flex items-center justify-center w-[160px]">
-            <img 
-              src={finalSrc} 
-              alt="Journal Logo" 
-              className="w-full h-auto object-contain max-h-[70px]"
-            />
-         </div>
+        <div className="relative flex items-center justify-center w-[160px] h-[70px]">
+          <Image
+            src={finalSrc}
+            alt="Journal Logo"
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
       </div>
     </div>
   );
