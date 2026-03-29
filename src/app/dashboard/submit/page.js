@@ -443,7 +443,7 @@ export default function SubmitPage() {
                 <div style={{ flex: 2 }}>
                   {[
                     {
-                      label: 'Details', items: [
+                      label: 'Details', stepId: 0, items: [
                         { k: 'Title', v: form.title },
                         { k: 'Keywords', v: form.keywords },
                         { k: 'Abstract', v: form.abstract },
@@ -451,10 +451,10 @@ export default function SubmitPage() {
                       ]
                     },
                     {
-                      label: 'Files', items: form.files.map(f => ({ k: f.name, v: <span style={{ backgroundColor: '#005f96', color: '#fff', fontSize: '10px', padding: '3px 12px', borderRadius: '15px' }}>{f.type}</span> }))
+                      label: 'Files', stepId: 1, items: form.files.map(f => ({ k: f.name, v: <span style={{ backgroundColor: '#005f96', color: '#fff', fontSize: '10px', padding: '3px 12px', borderRadius: '15px' }}>{f.type}</span> }))
                     },
                     {
-                      label: 'Contributors', items: form.contributors.map(c => ({ 
+                      label: 'Contributors', stepId: 2, items: form.contributors.map(c => ({ 
                         k: c.name, 
                         v: <div style={{ display: 'flex', gap: '8px' }}>
                           <span style={{ backgroundColor: '#005f96', color: '#fff', fontSize: '10px', padding: '3px 12px', borderRadius: '15px' }}>Primary Contact</span>
@@ -463,13 +463,13 @@ export default function SubmitPage() {
                       }))
                     },
                     {
-                      label: 'For the Editors', items: [{ k: 'Comments', v: form.editorComments || 'None' }]
+                      label: 'For the Editors', stepId: 3, items: [{ k: 'Comments', v: form.editorComments || 'None' }]
                     },
                   ].map(section => (
                     <div key={section.label} style={{ border: '1px solid #e2e8f0', borderRadius: '4px', overflow: 'hidden', marginBottom: '24px' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', borderBottom: '1px solid #e2e8f0', backgroundColor: '#f8fafc' }}>
                         <span style={{ fontSize: '15px', fontWeight: '700' }}>{section.label}</span>
-                        <button style={{ background: '#fff', border: '1px solid #cbd5e1', borderRadius: '4px', padding: '6px 16px', fontSize: '12px', color: '#333' }}>Edit</button>
+                        <button onClick={() => setStep(section.stepId)} style={{ background: '#fff', border: '1px solid #cbd5e1', borderRadius: '4px', padding: '6px 16px', fontSize: '12px', color: '#333', cursor: 'pointer' }}>Edit</button>
                       </div>
                       <div style={{ padding: '20px' }}>
                         {section.items.map((item, i) => (

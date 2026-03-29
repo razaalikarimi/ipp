@@ -40,6 +40,7 @@ export async function GET(req, { params }) {
       return unauthorizedResponse();
     }
 
+
     // 2. Get files
     const [fileRows] = await pool.query(
       'SELECT id, name, type, uploaded_at FROM submission_files WHERE submission_id = ?',

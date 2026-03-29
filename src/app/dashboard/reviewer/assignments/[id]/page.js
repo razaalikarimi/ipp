@@ -30,6 +30,7 @@ export default function ReviewerEvaluationPage() {
     const fetchEverything = async () => {
       try {
         const token = localStorage.getItem('eisr_token');
+
         const subRes = await fetch(`/api/submissions/${id}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });

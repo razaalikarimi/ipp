@@ -3,6 +3,7 @@ import pool from '@/lib/db';
 import { verifyRequestUser, unauthorizedResponse } from '@/lib/auth';
 import { sendReviewerInvitation } from '@/lib/mail';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key-123';
 
@@ -47,9 +48,10 @@ export async function POST(req) {
       } else {
         // Create user
         const tempPassword = 'ReviewerPassword123!'; 
+        const hashedPassword = await bcrypt.hash(tempPassword, 10);
         const [insertUser] = await pool.query(
           'INSERT INTO users (fullName, email, password, username) VALUES (?, ?, ?, ?)',
-          [reviewerName, reviewerEmail, tempPassword, reviewerEmail.split('@')[0]]
+          [reviewerName, reviewerEmail, hashedPassword, reviewerEmail.split('@')[0]]
         );
         realReviewerId = insertUser.insertId;
       }
