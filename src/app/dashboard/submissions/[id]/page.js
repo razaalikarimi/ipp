@@ -26,6 +26,12 @@ export default function SubmissionWorkflowPage({ params }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
+  // Reviewer Assignment State
+  const [assigningLoading, setAssigningLoading] = useState(false);
+  const [reviewerEmail, setReviewerEmail] = useState('');
+  const [reviewerName, setReviewerName] = useState('');
+  const [assignments, setAssignments] = useState([]);
+  
   const [activeMenu, setActiveMenu] = useState('Workflow');
   const [activeStep, setActiveStep] = useState('Submission');
   const [workflowOpen, setWorkflowOpen] = useState(true);
@@ -46,6 +52,16 @@ export default function SubmissionWorkflowPage({ params }) {
         } else {
           setError(data.message || 'Failed to load submission');
         }
+
+        // Fetch existing assignments for this submission
+        const assignRes = await fetch(`/api/reviewer/assignments?submissionId=${id}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const assignData = await assignRes.json();
+        if (assignData.success) {
+          setAssignments(assignData.assignments || []);
+        }
+
       } catch (err) {
         setError(err.message);
       } finally {
@@ -54,6 +70,45 @@ export default function SubmissionWorkflowPage({ params }) {
     };
     fetchSubmission();
   }, [id]);
+
+  const handleAssignReviewer = async () => {
+    if (!reviewerEmail || !reviewerName) return alert('Enter reviewer name and email');
+    setAssigningLoading(true);
+    try {
+      const token = localStorage.getItem('eisr_token');
+      const res = await fetch('/api/reviewer/assignments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          submissionId: parseInt(id),
+          reviewerId: 999, // Fallback placeholder ID since we are inviting by email directly
+          reviewerEmail,
+          reviewerName,
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert('Reviewer Assigned and Email Sent successfully!');
+        setReviewerEmail('');
+        setReviewerName('');
+        // Refresh assignments list
+        const assignRes = await fetch(`/api/reviewer/assignments?submissionId=${id}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const assignData = await assignRes.json();
+        if (assignData.success) setAssignments(assignData.assignments || []);
+      } else {
+        alert('Failed: ' + data.message);
+      }
+    } catch (error) {
+      alert('Network Error assigning reviewer');
+    } finally {
+      setAssigningLoading(false);
+    }
+  };
 
   if (loading) {
     return <div style={{ padding: '40px', textAlign: 'center', color: '#64748b', fontFamily: '"Noto Sans", sans-serif' }}>Loading submission details...</div>;
@@ -390,11 +445,69 @@ export default function SubmissionWorkflowPage({ params }) {
               )}
 
               {/* ── Workflow Stage Placeholders ── */}
-              {activeMenu === 'Workflow' && activeStep !== 'Submission' && (
+              {activeMenu === 'Workflow' && activeStep !== 'Submission' && activeStep !== 'Review' && (
                 <div style={{ padding: '40px', textAlign: 'center', color: '#64748b', fontSize: '14px' }}>
                   <div style={{ border: '1px solid #e2e8f0', padding: '20px', borderRadius: '2px', backgroundColor: '#f8fafc', marginBottom: '20px', textAlign: 'left' }}>
                     <div style={{ fontSize: '11px', fontWeight: '700', color: '#475569', marginBottom: '8px' }}>Status</div>
                     <div>The {activeStep} stage has not yet been initiated.</div>
+                  </div>
+                </div>
+              )}
+
+              {/* ── WORKFLOW: Review Stage ── */}
+              {activeMenu === 'Workflow' && activeStep === 'Review' && (
+                <div>
+                  <div style={{ border: '1px solid #e2e8f0', padding: '20px', borderRadius: '4px', backgroundColor: '#fff', marginBottom: '20px' }}>
+                    <h3 style={{ fontSize: '14px', fontWeight: '700', color: '#1e293b', marginTop: 0 }}>Reviewers</h3>
+                    <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '16px' }}>Assign reviewers to evaluate this submission. An automatic invitation email will be sent upon assignment containing personalized secure Accept/Decline links.</p>
+                    
+                    {/* Existing Assignments Table */}
+                    {assignments.length > 0 && (
+                      <table style={{ width: '100%', marginBottom: '20px', borderCollapse: 'collapse', fontSize: '13px' }}>
+                        <thead>
+                          <tr style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0', textAlign: 'left' }}>
+                            <th style={{ padding: '10px', fontWeight: 'bold', color: '#475569' }}>Name</th>
+                            <th style={{ padding: '10px', fontWeight: 'bold', color: '#475569' }}>Status</th>
+                            <th style={{ padding: '10px', fontWeight: 'bold', color: '#475569' }}>Date Assigned</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {assignments.map(a => (
+                            <tr key={a.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                              <td style={{ padding: '10px', color: '#005f96', fontWeight: '600' }}>{a.reviewerName || a.reviewerEmail}</td>
+                              <td style={{ padding: '10px' }}>
+                                <span style={{ 
+                                  padding: '2px 8px', borderRadius: '12px', fontSize: '11px', fontWeight: '600',
+                                  backgroundColor: a.status === 'Accepted' ? '#dcfce3' : a.status === 'Declined' ? '#fee2e2' : '#f1f5f9',
+                                  color: a.status === 'Accepted' ? '#166534' : a.status === 'Declined' ? '#991b1b' : '#475569'
+                                }}>
+                                  {a.status}
+                                </span>
+                              </td>
+                              <td style={{ padding: '10px', color: '#64748b' }}>{new Date(a.assigned_at).toLocaleDateString()}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
+
+                    {/* Assign New Reviewer Form */}
+                    <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '16px' }}>
+                      <h4 style={{ fontSize: '13px', fontWeight: '700', marginBottom: '12px', color: '#1e293b' }}>Assign New Reviewer</h4>
+                      <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+                        <div style={{ flex: 1 }}>
+                          <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#475569', marginBottom: '4px' }}>Reviewer Name</label>
+                          <input type="text" placeholder="Dr. John Doe" value={reviewerName} onChange={e => setReviewerName(e.target.value)} style={{ width: '100%', border: '1px solid #cbd5e1', borderRadius: '4px', padding: '8px 12px', fontSize: '13px', outline: 'none' }} />
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#475569', marginBottom: '4px' }}>Reviewer Email</label>
+                          <input type="email" placeholder="john.doe@university.edu" value={reviewerEmail} onChange={e => setReviewerEmail(e.target.value)} style={{ width: '100%', border: '1px solid #cbd5e1', borderRadius: '4px', padding: '8px 12px', fontSize: '13px', outline: 'none' }} />
+                        </div>
+                      </div>
+                      <button onClick={handleAssignReviewer} disabled={assigningLoading} style={{ backgroundColor: '#005f96', color: '#fff', border: 'none', borderRadius: '4px', padding: '8px 16px', fontSize: '13px', fontWeight: '700', cursor: assigningLoading ? 'not-allowed' : 'pointer', opacity: assigningLoading ? 0.7 : 1 }}>
+                        {assigningLoading ? 'Sending Invitation...' : 'Assign & Send Email'}
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}

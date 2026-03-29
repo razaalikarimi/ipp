@@ -87,9 +87,12 @@ export async function GET() {
         submission_id INT NOT NULL,
         user_id INT NOT NULL,
         status VARCHAR(50) DEFAULT 'Pending',
+        token VARCHAR(512) DEFAULT NULL,
+        deadline DATETIME DEFAULT NULL,
         assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         INDEX idx_submission (submission_id),
-        INDEX idx_user (user_id)
+        INDEX idx_user (user_id),
+        INDEX idx_token (token)
       )
     `);
 
@@ -103,6 +106,8 @@ export async function GET() {
         comments_authors TEXT,
         comments_editors TEXT,
         recommendation VARCHAR(50),
+        rating INT DEFAULT NULL,
+        file_url VARCHAR(512) DEFAULT NULL,
         is_draft TINYINT(1) DEFAULT 1,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

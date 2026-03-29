@@ -29,6 +29,8 @@ export const sendReviewerInvitation = async ({
   reviewDueDate,
   submissionId,
   editorName = 'Editorial Team',
+  acceptLink,
+  declineLink
 }) => {
   try {
     if (!transporter) {
@@ -49,6 +51,8 @@ export const sendReviewerInvitation = async ({
       reviewDueDate,
       dashboardUrl,
       editorName,
+      acceptLink,
+      declineLink
     });
 
     const mailOptions = {

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import pool from '@/lib/db';
 import { verifyRequestUser, unauthorizedResponse } from '@/lib/auth';
 import { sendNotificationEmail } from '@/lib/mail';
+import { getSubmissionNotificationTemplate } from '@/lib/email-templates';
 
 export async function GET(req) {
   const user = verifyRequestUser(req);
@@ -29,6 +30,19 @@ export async function GET(req) {
         WHERE ra.user_id = ?
       `;
       params.push(user.userId);
+    } else if (role === 'editor' || role === 'admin') {
+      query = `
+        SELECT
+          id,
+          title,
+          status,
+          activity,
+          editor_comments,
+          DATE_FORMAT(created_at, '%M %d, %Y') AS date,
+          created_at
+        FROM submissions
+      `;
+      // No WHERE user_id filter applied so Editors can see all submissions
     } else {
       query = `
         SELECT
@@ -174,20 +188,25 @@ export async function POST(req) {
 
     if (userRows.length > 0) {
       const author = userRows[0];
+      const portalUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+      const submissionDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+      const htmlBody = getSubmissionNotificationTemplate({
+        authorName: author.fullName,
+        authorEmail: author.email,
+        articleTitle: title,
+        submissionId,
+        journalName: journalId,
+        editorComments,
+        submissionDate,
+        portalUrl,
+      });
 
       await sendNotificationEmail(
         process.env.SMTP_USER,
-        'New Submission Received - EISR Portal',
-        `New submission "${title}" received from ${author.fullName}`,
-        `
-          <h2>New Submission Received</h2>
-          <p><strong>Author:</strong> ${author.fullName}</p>
-          <p><strong>Author Email:</strong> ${author.email}</p>
-          <p><strong>Title:</strong> ${title}</p>
-          <p><strong>Submission ID:</strong> ${submissionId}</p>
-          <p><strong>Journal:</strong> ${journalId}</p>
-          <p><strong>Editor Comments:</strong> ${editorComments || 'N/A'}</p>
-        `
+        `New Submission Received — EISR Portal (#${submissionId})`,
+        `New submission "${title}" received from ${author.fullName} (ID: ${submissionId})`,
+        htmlBody
       );
     }
 

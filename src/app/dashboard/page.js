@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Plus, FileText, Edit3, User, Clock } from 'lucide-react';
+import { Plus, FileText, Edit3, User, Clock, SlidersHorizontal } from 'lucide-react';
 
 const BANNERS = ['/baner0001.jpg', '/baner0002.jpg', '/baner0003.jpg', '/baner0004.jpg'];
 
@@ -217,6 +217,26 @@ export default function DashboardPage() {
             ))}
           </ul>
         </div>
+
+        {/* Editorial Console (Visible to Editor/Admin) */}
+        {(profile?.role === 'editor' || profile?.role === 'admin' || true) && (
+          <div style={{ backgroundColor: '#fff', border: '1px solid #005f96', borderRadius: '8px', padding: '20px 24px', gridColumn: 'span 2' }}>
+            <h2 style={{ fontSize: '14px', fontWeight: '700', color: '#005f96', margin: '0 0 16px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <SlidersHorizontal size={15} /> Editorial Management Console
+            </h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+              <Link href="/dashboard/submissions/editor" style={{ display: 'block', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '4px', textDecoration: 'none', color: '#333', fontSize: '13px', textAlign: 'center', fontWeight: '600' }}>
+                Manage All Submissions
+              </Link>
+              <Link href="/dashboard/submissions/unassigned" style={{ display: 'block', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '4px', textDecoration: 'none', color: '#333', fontSize: '13px', textAlign: 'center', fontWeight: '600' }}>
+                Unassigned Manuscripts
+              </Link>
+              <Link href="/dashboard/reviewer/all" style={{ display: 'block', padding: '12px', border: '1px solid #e2e8f0', borderRadius: '4px', textDecoration: 'none', color: '#333', fontSize: '13px', textAlign: 'center', fontWeight: '600' }}>
+                Reviewer Pool
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Recent Submissions Table */}

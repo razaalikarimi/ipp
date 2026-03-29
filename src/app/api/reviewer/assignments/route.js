@@ -2,6 +2,10 @@ import { NextResponse } from 'next/server';
 import pool from '@/lib/db';
 import { verifyRequestUser, unauthorizedResponse } from '@/lib/auth';
 import { sendReviewerInvitation } from '@/lib/mail';
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key-123';
+
 
 /**
  * POST /api/reviewer/assignments
@@ -14,8 +18,8 @@ export async function POST(req) {
   try {
     const { submissionId, reviewerId, reviewerEmail, reviewerName, responseDueDate, reviewDueDate } = await req.json();
 
-    if (!submissionId || !reviewerId) {
-      return NextResponse.json({ success: false, message: 'Submission ID and Reviewer ID are required' }, { status: 400 });
+    if (!submissionId || !reviewerEmail || !reviewerName) {
+      return NextResponse.json({ success: false, message: 'Submission ID, Reviewer Email and Reviewer Name are required' }, { status: 400 });
     }
 
     // 1. Fetch submission details for the email
@@ -30,33 +34,63 @@ export async function POST(req) {
     
     const submission = subRows[0];
     
-    // Abstract check (fallback if not stored in root submissions table)
-    // For now we assume title is sufficient or abstract is passed in body
+    // Abstract check
     const articleTitle = submission.title;
     const abstract = submission.abstract || 'Original submission abstract not available. Follow link below to view details.';
 
-    // 2. Insert into reviewer_assignments table
+    // 2. Ensure reviewer exists in the users table, otherwise create a placeholder user
+    let realReviewerId = reviewerId;
+    if (!realReviewerId || realReviewerId === 999) {
+      const [userRows] = await pool.query('SELECT id FROM users WHERE email = ?', [reviewerEmail]);
+      if (userRows.length > 0) {
+        realReviewerId = userRows[0].id;
+      } else {
+        // Create user
+        const tempPassword = 'ReviewerPassword123!'; 
+        const [insertUser] = await pool.query(
+          'INSERT INTO users (fullName, email, password, username) VALUES (?, ?, ?, ?)',
+          [reviewerName, reviewerEmail, tempPassword, reviewerEmail.split('@')[0]]
+        );
+        realReviewerId = insertUser.insertId;
+      }
+    }
+
+    // 3. Generate secure token for Accept/Decline link (valid for 7 days)
+    const tokenPayload = { reviewerId: realReviewerId, submissionId };
+    const acceptToken = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '7d' });
+    
+    // Parse deadline
+    const deadlineDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); 
+
+    // 4. Insert into reviewer_assignments table
     const [result] = await pool.query(
-      'INSERT INTO reviewer_assignments (submission_id, user_id, status) VALUES (?, ?, ?)',
-      [submissionId, reviewerId, 'Pending']
+      'INSERT INTO reviewer_assignments (submission_id, user_id, status, token, deadline) VALUES (?, ?, ?, ?, ?)',
+      [submissionId, realReviewerId, 'Pending', acceptToken, deadlineDate]
     );
 
-    // 3. Update submission activity
+    // Prepare Accept/Decline Links
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const acceptLink = `${baseUrl}/api/review/accept?token=${acceptToken}`;
+    const declineLink = `${baseUrl}/api/review/decline?token=${acceptToken}`;
+
+    // 4. Update submission activity
     await pool.query(
       'UPDATE submissions SET activity = ? WHERE id = ?',
       ['Assignment Pending', submissionId]
     );
 
-    // 4. Send Professional Invitation Email (Image 1-3)
+    // 5. Send Professional Invitation Email
     const emailResult = await sendReviewerInvitation({
       to: reviewerEmail,
       reviewerName: reviewerName,
       articleTitle: articleTitle,
       abstract: abstract,
-      responseDueDate: responseDueDate || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString(),
+      responseDueDate: responseDueDate || deadlineDate.toLocaleDateString(),
       reviewDueDate: reviewDueDate || new Date(Date.now() + 21 * 24 * 60 * 60 * 1000).toLocaleDateString(),
       submissionId: submissionId,
-      editorName: user.username || 'Managing Editor'
+      editorName: user.username || 'Managing Editor',
+      acceptLink: acceptLink,
+      declineLink: declineLink,
     });
 
     return NextResponse.json({

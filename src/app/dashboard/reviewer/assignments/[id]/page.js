@@ -22,6 +22,8 @@ export default function ReviewerEvaluationPage() {
     commentsForAuthors: '',
     commentsForEditors: '',
     recommendation: '',
+    rating: '',
+    fileUrl: '',
   });
 
   useEffect(() => {
@@ -35,9 +37,10 @@ export default function ReviewerEvaluationPage() {
         
         if (subData.success) {
           setSubmission(subData.submission);
-          if (subData.submission.assignment?.status === 'accepted') {
+          const status = subData.submission.assignment?.status?.toLowerCase();
+          if (status === 'accepted') {
             setCurrentStep(3);
-          } else if (subData.submission.assignment?.status === 'completed') {
+          } else if (status === 'completed') {
             setCurrentStep(4);
           }
         }
@@ -52,6 +55,8 @@ export default function ReviewerEvaluationPage() {
             commentsForAuthors: r.comments_authors || '',
             commentsForEditors: r.comments_editors || '',
             recommendation: r.recommendation || '',
+            rating: r.rating ? String(r.rating) : '',
+            fileUrl: r.file_url || '',
           });
         }
       } catch (err) {
@@ -64,18 +69,21 @@ export default function ReviewerEvaluationPage() {
   }, [id]);
 
   const handleAcceptDecline = async (action) => {
+    if (!submission?.assignment?.id) return alert('Assignment info missing');
     setSaving(true);
     try {
       const token = localStorage.getItem('eisr_token');
-      const res = await fetch(`/api/reviewer/assignments/${id}`, {
+      const res = await fetch(`/api/reviewer/assignments/${submission.assignment.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ status: action === 'accept' ? 'accepted' : 'declined' })
+        body: JSON.stringify({ status: action === 'accept' ? 'Accepted' : 'Declined' })
       });
       const data = await res.json();
       if (data.success) {
         if (action === 'accept') setCurrentStep(2);
-        else router.push('/dashboard/reviewer/declined');
+        else router.push('/dashboard/reviewer/all');
+      } else {
+        alert(data.message || 'Error updating assignment');
       }
     } catch (err) { alert('Network error'); } finally { setSaving(false); }
   };
@@ -92,6 +100,8 @@ export default function ReviewerEvaluationPage() {
           commentsAuthors: evaluation.commentsForAuthors,
           commentsEditors: evaluation.commentsForEditors,
           recommendation: evaluation.recommendation,
+          rating: evaluation.rating ? parseInt(evaluation.rating) : null,
+          fileUrl: evaluation.fileUrl,
           isDraft
         })
       });
@@ -291,15 +301,34 @@ export default function ReviewerEvaluationPage() {
               </div>
 
               <div style={{ marginBottom: '20px' }}>
-                <h4 style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '10px' }}>Recommendation</h4>
-                <p style={{ fontSize: '12px', color: '#666', marginBottom: '10px' }}>Select a recommendation and submit the review to complete the process. You must enter a review or upload a file before selecting a recommendation.</p>
-                <select value={evaluation.recommendation} onChange={e => setEvaluation({...evaluation, recommendation: e.target.value})} style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '13px' }}>
-                  <option value="">Choose One</option>
-                  <option value="accept">Accept</option>
-                  <option value="major">Major Revision</option>
-                  <option value="minor">Minor Revision</option>
-                  <option value="rejected">Rejected</option>
-                </select>
+                <h4 style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '10px' }}>Attachment (Optional)</h4>
+                <p style={{ fontSize: '12px', color: '#666', marginBottom: '10px' }}>You may upload a marked-up copy of the manuscript or an external review document.</p>
+                <div style={{ padding: '15px', border: '1px dashed #ccc', borderRadius: '4px', backgroundColor: '#f9f9f9', textAlign: 'center' }}>
+                  <input type="file" onChange={(e) => alert('File upload will be processed to S3/Cloud storage.')} style={{ fontSize: '12px' }}/>
+                </div>
+              </div>
+
+              <div style={{ marginBottom: '20px', display: 'flex', gap: '20px' }}>
+                <div style={{ flex: 1 }}>
+                  <h4 style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '10px' }}>Rating (1-10)</h4>
+                  <select value={evaluation.rating} onChange={e => setEvaluation({...evaluation, rating: e.target.value})} style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '13px' }}>
+                    <option value="">Select Rating</option>
+                    {[...Array(10)].map((_, i) => (
+                      <option key={i+1} value={i+1}>{i+1}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div style={{ flex: 1 }}>
+                  <h4 style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '10px' }}>Recommendation</h4>
+                  <select value={evaluation.recommendation} onChange={e => setEvaluation({...evaluation, recommendation: e.target.value})} style={{ width: '100%', padding: '10px', border: '1px solid #ccc', borderRadius: '4px', fontSize: '13px' }}>
+                    <option value="">Choose One</option>
+                    <option value="accept">Accept</option>
+                    <option value="major">Major Revision</option>
+                    <option value="minor">Minor Revision</option>
+                    <option value="rejected">Rejected</option>
+                  </select>
+                </div>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', borderTop: '1px solid #eee', paddingTop: '20px' }}>

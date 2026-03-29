@@ -16,7 +16,7 @@ export async function GET(req) {
 
   try {
     const [rows] = await pool.query(
-      'SELECT checklist_json, comments_authors, comments_editors, recommendation, is_draft FROM submission_reviews WHERE submission_id = ? AND user_id = ?',
+      'SELECT checklist_json, comments_authors, comments_editors, recommendation, rating, file_url, is_draft FROM submission_reviews WHERE submission_id = ? AND user_id = ?',
       [subId, user.userId]
     );
 
@@ -38,7 +38,7 @@ export async function POST(req) {
 
   try {
     const body = await req.json();
-    const { submissionId, checklist, commentsAuthors, commentsEditors, recommendation, isDraft } = body;
+    const { submissionId, checklist, commentsAuthors, commentsEditors, recommendation, rating, fileUrl, isDraft } = body;
 
     if (!submissionId) {
       return NextResponse.json({ success: false, message: 'Submission ID is required' }, { status: 400 });
@@ -56,13 +56,15 @@ export async function POST(req) {
 
     // Upsert review
     await pool.query(`
-      INSERT INTO submission_reviews (submission_id, user_id, checklist_json, comments_authors, comments_editors, recommendation, is_draft)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO submission_reviews (submission_id, user_id, checklist_json, comments_authors, comments_editors, recommendation, rating, file_url, is_draft)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       ON DUPLICATE KEY UPDATE 
         checklist_json = VALUES(checklist_json),
         comments_authors = VALUES(comments_authors),
         comments_editors = VALUES(comments_editors),
         recommendation = VALUES(recommendation),
+        rating = VALUES(rating),
+        file_url = VALUES(file_url),
         is_draft = VALUES(is_draft)
     `, [
       submissionId, 
@@ -70,7 +72,9 @@ export async function POST(req) {
       JSON.stringify(checklist || {}), 
       commentsAuthors || '', 
       commentsEditors || '', 
-      recommendation || '', 
+      recommendation || '',
+      rating || null,
+      fileUrl || null,
       isDraft ? 1 : 0
     ]);
 
