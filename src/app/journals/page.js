@@ -26,10 +26,13 @@ export default function JournalsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                  {journals.map((j) => (
                     <Link href={`/journals/${j.slug}`} key={j.id}>
-                       <div className="bg-white rounded-3xl shadow-sm border border-[#E2E8F0] overflow-hidden flex h-[350px] group hover:shadow-2xl hover:border-[#4BA6B9] transition-all duration-500 cursor-pointer">
-                          <div className="w-56 bg-[#0B1F3A] flex flex-col justify-center items-center relative overflow-hidden shrink-0 border-r border-[#E2E8F0]">
+                       <div className="bg-white rounded-3xl shadow-sm border border-[#E2E8F0] overflow-hidden flex flex-col md:flex-row h-auto min-h-[380px] transition-all duration-500 cursor-pointer">
+                          <div className="w-full md:w-64 h-72 md:h-auto flex flex-col justify-center items-center relative overflow-hidden shrink-0 border-b md:border-b-0 md:border-r border-[#E2E8F0]">
                              {j.cover ? (
-                               <img src={j.cover} alt={j.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                                <>
+                                  <img src={j.cover} alt="" className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-30 scale-110" />
+                                  <img src={j.cover} alt={j.title} className="relative z-10 w-full h-full object-contain p-4" />
+                                </>
                              ) : (
                                <>
                                  <div className="absolute inset-0 opacity-20 pointer-events-none">
@@ -44,7 +47,7 @@ export default function JournalsPage() {
                                 <span className="text-[9px] font-bold uppercase tracking-widest text-white/40 bg-black/40 backdrop-blur px-3 py-1 rounded-full">Academic Press</span>
                              </div>
                           </div>
-                          <div className="flex-grow p-12 flex flex-col justify-between">
+                          <div className="flex-grow p-6 md:p-12 flex flex-col justify-between">
                              <div className="space-y-6">
                                 <h3 className="text-2xl font-sans font-bold text-[#1A1A1A] group-hover:text-[#4BA6B9] leading-tight uppercase tracking-tight">{j.title}</h3>
                              </div>

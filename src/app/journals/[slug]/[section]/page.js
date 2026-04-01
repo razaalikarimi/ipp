@@ -39,7 +39,22 @@ export default function JournalSectionPage() {
       case 'author-guidelines':
         return (
            <div className="space-y-12">
-              <h2 className="text-3xl font-sans font-bold text-[#1A1A1A] border-b border-[#F1F5F9] pb-6 uppercase">Author Guidelines</h2>
+              <div className="space-y-8">
+                <h2 className="text-3xl font-sans font-bold text-[#1A1A1A] border-b border-[#F1F5F9] pb-6 uppercase">Author Guidelines</h2>
+                
+                {/* Download Template Link */}
+                <a 
+                  href={journal.id === 'jeiml' ? '/JEIMT-Template.docx' : '/JEISA-Template.docx'} 
+                  download
+                  className="inline-flex items-center space-x-3 bg-[#1e78ff] hover:bg-[#4BA6B9] text-white px-5 py-3 rounded-lg transition-all shadow-md hover:shadow-lg group"
+                >
+                  <div className="p-1 px-2 border-r-2 border-white/20 mr-1">
+                     <BookOpen size={18} fill="currentColor" stroke="none" />
+                  </div>
+                  <span className="text-[13px] font-bold uppercase tracking-wider">Download Journal Template</span>
+                </a>
+              </div>
+
               <div className="text-base text-[#555555] leading-loose font-medium whitespace-pre-line text-justify">
                 {journal.guidelines}
               </div>
@@ -77,26 +92,7 @@ export default function JournalSectionPage() {
                                 <h4 className="text-[15px] font-medium text-[#1E293B] mb-1 leading-snug">{ed.name}</h4>
                                 <p className="text-[11px] font-medium text-[#2563EB]/80 leading-relaxed max-w-[240px] px-2">{ed.affiliation}</p>
                                 
-                                <div className="flex justify-center items-center gap-2.5 mt-5 h-6">
-                                  {ed.email && (
-                                    <a href={`mailto:${ed.email}`} title={ed.email} className="w-6 h-6 flex flex-col items-center justify-center">
-                                      <span className="text-red-500 font-bold font-sans text-sm tracking-tighter" style={{ fontFamily: 'Georgia, serif' }}>M</span>
-                                    </a>
-                                  )}
-                                  {ed.orcid && (
-                                    <a href={`https://orcid.org/${ed.orcid}`} target="_blank" rel="noopener noreferrer" title="ORCID iD" className="w-6 h-6 flex flex-col items-center justify-center bg-[#A6CE39] rounded-full text-white pt-0.5">
-                                      <span className="text-[9px] font-bold leading-none uppercase">ID</span>
-                                    </a>
-                                  )}
-                                  {/* Dummy Scopus icon as seen in screenshot */}
-                                  <a href="#" className="w-6 h-6 flex flex-col items-center justify-center text-[#1E419A] opacity-90 hover:opacity-100">
-                                    <Activity size={15} strokeWidth={2.5}/>
-                                  </a>
-                                  {/* Dummy WoS icon as seen in screenshot */}
-                                  <a href="#" className="w-6 h-6 flex flex-col items-center justify-center text-[#1D9975] opacity-90 hover:opacity-100">
-                                    <ShieldCheck size={16} strokeWidth={2}/>
-                                  </a>
-                                </div>
+
                              </div>
                          ))}
                       </div>
@@ -120,20 +116,40 @@ export default function JournalSectionPage() {
           <div className="space-y-12">
              <h2 className="text-3xl font-sans font-bold text-[#1A1A1A] border-b border-[#F1F5F9] pb-6 uppercase">Abstracting & Indexing</h2>
              <p className="text-base text-[#555555] leading-loose font-medium text-justify">{journal.indexing}</p>
-             <div className="flex flex-wrap items-center gap-12 pt-8">
-                <img src="/google-scholar.jpg" alt="Google Scholar" className="h-16 opacity-80 hover:opacity-100 transition-all" />
-                <img src="/crossref.png" alt="Crossref" className="h-10 opacity-80 hover:opacity-100 transition-all" />
+             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-8">
+                <div className="bg-white border border-[#E2E8F0] p-8 rounded-2xl flex flex-col items-center justify-center space-y-4 hover:shadow-xl hover:border-[#4BA6B9] transition-all group h-40">
+                   <img src="/google-scholar.jpg" alt="Google Scholar" className="h-16 object-contain opacity-80 group-hover:opacity-100 transition-all group-hover:scale-105 duration-500" />
+                   <span className="text-[10px] font-bold text-[#999999] uppercase tracking-widest">Global Indexing</span>
+                </div>
+                <div className="bg-white border border-[#E2E8F0] p-8 rounded-2xl flex flex-col items-center justify-center space-y-4 hover:shadow-xl hover:border-[#4BA6B9] transition-all group h-40">
+                   <img src="/crossref.png" alt="Crossref" className="h-12 object-contain opacity-80 group-hover:opacity-100 transition-all group-hover:scale-105 duration-500" />
+                   <span className="text-[10px] font-bold text-[#999999] uppercase tracking-widest">Digital Identification</span>
+                </div>
              </div>
           </div>
         );
       case 'apc':
         return (
-          <div className="space-y-12">
-             <h2 className="text-3xl font-sans font-bold text-[#1A1A1A] border-b border-[#F1F5F9] pb-6 uppercase">Article Publishing Charges</h2>
-             <div className="p-12 bg-[#F0FBFC] border border-[#4BA6B9]/20 rounded-3xl relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-40 h-40 bg-[#4BA6B9]/5 rounded-full -mr-20 -mt-20 group-hover:scale-150 transition-transform duration-700" />
-                <h3 className="text-4xl font-bold text-[#1A1A1A] tracking-tighter mb-4">{journal.apc}</h3>
-                <p className="text-base text-[#555555] font-medium leading-relaxed max-w-xl">There are no publication fees or article processing charges (APCs) for the 2024-2025 period. EISR Scientific Research supports open knowledge dissemination without financial barriers for authors.</p>
+          <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+             <h2 className="text-3xl font-sans font-bold text-[#1A1A1A] border-b border-[#F1F5F9] pb-6 uppercase tracking-tight">Article Publishing Charges</h2>
+             
+             <div className="relative p-12 bg-white border border-[#E2E8F0] shadow-[0_20px_50px_rgba(0,0,0,0.05)] rounded-[2.5rem] overflow-hidden group">
+                <div className="absolute -top-24 -right-24 w-64 h-64 bg-[#4BA6B9]/5 rounded-full blur-3xl transition-all duration-1000 group-hover:bg-[#4BA6B9]/10" />
+                <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-[#1e78ff]/5 rounded-full blur-3xl transition-all duration-1000 group-hover:bg-[#1e78ff]/10" />
+                
+                <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center gap-10">
+                   <div className="w-20 h-20 bg-[#4BA6B9]/10 rounded-3xl flex items-center justify-center text-[#4BA6B9] shrink-0 shadow-inner">
+                      <ShieldCheck size={40} strokeWidth={1.5} />
+                   </div>
+                   
+                   <div className="space-y-4">
+                      <div className="h-0.5 w-12 bg-[#4BA6B9]/20" />
+                      <h3 className="text-4xl md:text-5xl font-sans font-black text-[#1A1A1A] tracking-tighter leading-none">{journal.apc}</h3>
+                      <p className="text-base text-[#555555] font-medium leading-loose text-justify max-w-2xl border-t border-[#F1F5F9] pt-6 italic grayscale-[0.5]">
+                        "There are no publication fees or article processing charges (APCs) for the 2024-2025 period. EISR Scientific Research supports open knowledge dissemination without financial barriers for authors."
+                      </p>
+                   </div>
+                </div>
              </div>
           </div>
         );
@@ -141,7 +157,7 @@ export default function JournalSectionPage() {
         return (
           <div className="space-y-12">
              <h2 className="text-3xl font-sans font-bold text-[#1A1A1A] border-b border-[#F1F5F9] pb-6 uppercase">Journal Partnerships</h2>
-             <p className="text-base text-[#555555] leading-loose font-medium text-justify">EISR Scientific Research collaborates with leading academic institutions, research groups, and scientific societies globally. Our partnerships foster the exchange of scientific ideas and strengthen the international multidisciplinary research community.</p>
+             <p className="text-base text-[#555555] leading-loose font-medium text-justify">{journal.acronym} collaborates with leading academic institutions, research groups, and scientific societies globally. Our partnerships foster the exchange of scientific ideas and strengthen the international multidisciplinary research community.</p>
              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8">
                 {['Global Research Council', 'World Scientific Informatics Society', 'International Cybersecurity Forum', 'IEEE Multidisciplinary Council'].map(p => (
                    <div key={p} className="p-10 border border-[#E2E8F0] rounded-2xl bg-[#FAFBFC] hover:shadow-xl hover:border-[#4BA6B9] transition-all group">
@@ -149,7 +165,7 @@ export default function JournalSectionPage() {
                          <Globe size={24} />
                       </div>
                       <h4 className="text-sm font-bold text-[#1A1A1A] uppercase tracking-tighter">{p}</h4>
-                      <p className="text-[10px] font-bold text-[#4BA6B9] uppercase mt-2 tracking-widest">Active Partner</p>
+                      <p className="text-[10px] font-bold text-[#94A3B8] uppercase mt-2 tracking-widest">Work in Progress</p>
                    </div>
                 ))}
              </div>
@@ -189,17 +205,17 @@ export default function JournalSectionPage() {
            
            {/* Sidebar Info Card */}
            <div className="lg:col-span-3 space-y-10">
-              <div className="bg-white border border-[#E2E8F0] shadow-sm rounded-2xl overflow-hidden group">
-                <div className="w-full aspect-[3/4] bg-[#0B1F3A] flex flex-col items-center justify-center relative overflow-hidden">
-                   <img src={journal.cover} alt={journal.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                   <div className="absolute bottom-0 inset-x-0 bg-black/40 backdrop-blur py-4 text-[9px] font-bold tracking-[0.3em] uppercase text-white/60 text-center z-10">Repository Visual</div>
+               <div className="bg-white border border-[#E2E8F0] shadow-sm rounded-2xl overflow-hidden group">
+                <div className="w-full aspect-[2/3] flex flex-col items-center justify-center relative overflow-hidden">
+                   <img src={journal.cover} alt="" className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-30 scale-110" />
+                   <img src={journal.cover} alt={journal.title} className="relative z-10 w-full h-full object-contain p-6 transition-transform duration-700 drop-shadow-2xl" />
+                   <div className="absolute bottom-0 inset-x-0 bg-black/60 backdrop-blur-sm py-4 text-[9px] font-bold tracking-[0.2em] uppercase text-white text-center z-20 border-t border-white/10">Repository Visual</div>
                 </div>
                 
-                <div className="p-8 space-y-8">
-
-                  <Link href="/submission" className="w-full bg-[#1A1A1A] text-white py-4 text-[10px] font-bold uppercase tracking-[0.3em] flex items-center justify-center space-x-3 hover:bg-[#4BA6B9] transition-all rounded-xl">
+                <div className="p-6 space-y-6">
+                   <Link href={`/dashboard/submit?journal=${journal.id}`} className="w-full bg-[#1A1A1A] text-white py-4 text-[11px] font-bold uppercase tracking-widest flex items-center justify-center space-x-3 hover:bg-[#4BA6B9] transition-all rounded-xl shadow-lg shadow-black/10 hover:shadow-[#4BA6B9]/20 hover:-translate-y-0.5 whitespace-nowrap">
                     <span>Submit Manuscript</span>
-                    <ChevronRight size={14} />
+                    <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </div>
               </div>

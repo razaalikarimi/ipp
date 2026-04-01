@@ -3,6 +3,7 @@ import pool from '@/lib/db';
 import { verifyRequestUser, unauthorizedResponse } from '@/lib/auth';
 import { sendNotificationEmail } from '@/lib/mail';
 import { getSubmissionNotificationTemplate } from '@/lib/email-templates';
+import { journals } from '@/lib/data';
 
 export async function GET(req) {
   const user = verifyRequestUser(req);
@@ -190,12 +191,14 @@ export async function POST(req) {
       const portalUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
       const submissionDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
+      const targetJournal = journals.find(j => j.id === journalId) || journals[0];
+
       const htmlBody = getSubmissionNotificationTemplate({
         authorName: author.fullName,
         authorEmail: author.email,
         articleTitle: title,
         submissionId,
-        journalName: journalId,
+        journalName: targetJournal.title,
         editorComments,
         submissionDate,
         portalUrl,

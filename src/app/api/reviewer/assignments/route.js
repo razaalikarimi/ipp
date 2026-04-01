@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import pool from '@/lib/db';
 import { verifyRequestUser, unauthorizedResponse } from '@/lib/auth';
 import { sendReviewerInvitation } from '@/lib/mail';
+import { journals } from '@/lib/data';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
@@ -25,7 +26,7 @@ export async function POST(req) {
 
     // 1. Fetch submission details for the email
     const [subRows] = await pool.query(
-      'SELECT title, editor_comments FROM submissions WHERE id = ?',
+      'SELECT title, editor_comments, journal_id FROM submissions WHERE id = ?',
       [submissionId]
     );
     
@@ -38,6 +39,10 @@ export async function POST(req) {
     // Abstract check
     const articleTitle = submission.title;
     const abstract = submission.abstract || 'Original submission abstract not available. Follow link below to view details.';
+
+    // Look up journal branding
+    const targetJournal = journals.find(j => j.id === submission.journal_id) || journals[0];
+    const journalName = targetJournal.title;
 
     // 2. Ensure reviewer exists in the users table, otherwise create a placeholder user
     let realReviewerId = reviewerId;
@@ -85,6 +90,7 @@ export async function POST(req) {
     const emailResult = await sendReviewerInvitation({
       to: reviewerEmail,
       reviewerName: reviewerName,
+      journalName: journalName,
       articleTitle: articleTitle,
       abstract: abstract,
       responseDueDate: responseDueDate || deadlineDate.toLocaleDateString(),

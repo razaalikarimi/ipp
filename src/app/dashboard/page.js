@@ -42,7 +42,7 @@ function SlidingBanner({ displayName }) {
           <span style={{ color: '#4BA6B9' }}>{displayName || 'Researcher'}</span>!
         </h1>
         <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.75)', margin: 0, fontFamily: '"Noto Sans", sans-serif', fontWeight: '400' }}>
-          Journal of Cyber Security and Risk Auditing — Eye-Innovations Scientific Research
+          Journal of Eye Innovation in Security Analysis — Eye-Innovations Scientific Research
         </p>
 
         {/* Quick action button */}

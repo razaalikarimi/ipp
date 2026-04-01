@@ -1,7 +1,7 @@
 
 'use client';
-import { useParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useParams, useSearchParams } from 'next/navigation';
+import { useState, useEffect, Suspense } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
@@ -23,9 +23,13 @@ const POLICY_LABELS = {
   'terms':                'Publication Terms',
 };
 
-export default function PolicyDetailPage() {
+function PolicyContent() {
   const { slug } = useParams();
-  const journal = journals[0];
+  const searchParams = useSearchParams();
+  const journalId = searchParams.get('journal');
+  
+  // Use specific journal if ID provided, otherwise default to first
+  const journal = journals.find(j => j.id === journalId) || journals[0];
 
   const policyTitle =
     POLICY_LABELS[slug] ||
@@ -40,6 +44,15 @@ export default function PolicyDetailPage() {
     const t = setInterval(() => setCurrent(p => (p + 1) % BANNERS.length), 5000);
     return () => clearInterval(t);
   }, []);
+
+  const rawPolicyText = journal.policies?.[slug.replace(/-/g, '')] ||
+    journal[slug] ||
+    `The full ${policyTitle} content is defined to align with global COPE and metadata standards. This policy governs all journals under the EISR Scientific Research umbrella.`;
+
+  // Replace placeholders
+  const policyContent = rawPolicyText
+    .replace(/{{JOURNAL_NAME}}/g, journal.title)
+    .replace(/{{JOURNAL_ACRONYM}}/g, journal.acronym);
 
   return (
     <div className="min-h-screen flex flex-col font-sans bg-white selection:bg-[#4BA6B9]/10">
@@ -129,9 +142,7 @@ export default function PolicyDetailPage() {
               <div className="bg-[#F8FAFC] border border-[#E2E8F0] p-10 rounded-2xl shadow-sm space-y-8">
                 <h3 className="text-xl font-sans font-bold border-b border-[#F1F5F9] pb-4 uppercase">{policyTitle} Content</h3>
                 <div className="text-sm font-medium text-[#555555] leading-loose whitespace-pre-line">
-                  {journal.policies?.[slug.replace(/-/g, '')] ||
-                    journal[slug] ||
-                    `The full ${policyTitle} content is defined to align with global COPE and metadata standards. This policy governs all journals under the EISR Scientific Research umbrella.`}
+                  {policyContent}
                 </div>
               </div>
             </div>
@@ -151,7 +162,7 @@ export default function PolicyDetailPage() {
                 ].map(([label, href]) => (
                   <Link
                     key={href}
-                    href={`/policies/${href}`}
+                    href={`/policies/${href}?journal=${journal.id}`}
                     className={`block text-[11px] font-bold uppercase tracking-widest pb-3 border-b border-white/5 last:border-0 transition-all ${
                       slug === href ? 'text-[#4BA6B9]' : 'text-white/60 hover:text-[#4BA6B9]'
                     }`}
@@ -174,5 +185,12 @@ export default function PolicyDetailPage() {
 
       <Footer />
     </div>
+  );
+}
+export default function PolicyDetailPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-white"></div>}>
+      <PolicyContent />
+    </Suspense>
   );
 }

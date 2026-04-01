@@ -8,6 +8,7 @@ import {
   BookOpen, Target, Microscope, ArrowRight, Linkedin, ShieldCheck 
 } from 'lucide-react';
 import { journals, articles, leaders } from '@/lib/data';
+import { submitContactForm } from './actions/contact';
 
 function ScopeCluster({ title, topics }) {
   return (
@@ -28,6 +29,25 @@ function ScopeCluster({ title, topics }) {
 export default function Home() {
   const [currentBanner, setCurrentBanner] = useState(0);
   const banners = ['/baner0001.jpg', '/baner0002.jpg', '/baner0003.jpg', '/baner0004.jpg'];
+  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleOnSubmit = async (e) => {
+     e.preventDefault();
+     setLoading(true);
+     
+     const formData = new FormData(e.target);
+     const result = await submitContactForm(formData);
+     
+     if (result.success) {
+        setSubmitted(true);
+        setTimeout(() => setSubmitted(false), 5000);
+     } else {
+        alert(result.error || 'Failed to send message. Please try again.');
+     }
+     
+     setLoading(false);
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -67,8 +87,8 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[950px] px-6 z-50">
-             <div className="bg-white rounded-xl shadow-xl py-8 px-12 lg:px-20 grid grid-cols-3 gap-4 lg:gap-8 border border-[#F1F1F1]">
+          <div className="absolute -bottom-24 md:-bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[950px] px-4 md:px-6 z-50">
+             <div className="bg-white rounded-xl shadow-xl py-6 px-6 lg:py-8 lg:px-20 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-4 lg:gap-8 border border-[#F1F1F1]">
                 <div className="flex items-start space-x-4">
                    <div className="w-[1.5px] h-12 bg-[#4BA6B9] shrink-0"></div>
                    <div className="flex flex-col">
@@ -97,7 +117,7 @@ export default function Home() {
         </section>
 
         {/* Foundations Section */}
-        <section id="about" className="pt-48 pb-20 px-6 bg-white relative z-0">
+        <section id="about" className="pt-32 md:pt-48 pb-16 md:pb-20 px-6 bg-white relative z-0">
            <div className="max-w-[1240px] mx-auto space-y-24">
               
               <div className="max-w-4xl mx-auto">
@@ -152,7 +172,7 @@ export default function Home() {
                   </div>
 
                   {/* Indexing Targets Footer */}
-                  <div className="mt-20 pt-12 border-t border-[#F1F1F1] flex flex-col md:flex-row justify-between items-center gap-8 px-2">
+                  <div className="mt-20 pt-12 border-t border-[#F1F1F1] flex flex-col md:flex-row justify-between items-center gap-8 px-2 md:px-4">
                     <div className="flex flex-col items-center md:items-start space-y-1">
                        <span className="text-[11px] font-black text-[#1A1A1A] opacity-40 uppercase tracking-widest">Indexing Targets</span>
                        <p className="text-[12px] font-bold text-[#555555]">Global Standard Compliance</p>
@@ -174,17 +194,26 @@ export default function Home() {
         </section>
 
         {/* Journals Grid */}
-        <section id="journals" className="bg-white py-32 border-t border-[#F1F1F1]">
+        <section id="journals" className="bg-white py-16 lg:py-32 border-t border-[#F1F1F1]">
            <div className="max-w-[1240px] mx-auto px-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                  {journals.map((j) => (
-                    <Link key={j.slug} href={`/journals/${j.slug}`} className="bg-white rounded-2xl shadow-lg border border-[#F1F1F1] overflow-hidden flex h-[280px] group hover:shadow-2xl transition-all duration-500">
-                       <div className="w-48 bg-[#0B1F3A] p-2 flex flex-col justify-center items-center relative overflow-hidden shrink-0">
-                          <img src={j.cover} alt={j.title} className="w-full h-full object-cover rounded-md border border-white/10" />
+                    <Link key={j.slug} href={`/journals/${j.slug}`} className="bg-white rounded-2xl shadow-lg border border-[#F1F1F1] overflow-hidden flex flex-col md:flex-row h-auto md:h-[300px] transition-all duration-500">
+                       <div className="w-full md:w-60 h-72 md:h-auto flex flex-col justify-center items-center relative overflow-hidden shrink-0">
+                          {j.cover ? (
+                             <>
+                               <img src={j.cover} alt="" className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-20 scale-110" />
+                               <img src={j.cover} alt={j.title} className="relative z-10 w-full h-full object-contain p-4 transition-transform duration-700" />
+                             </>
+                          ) : (
+                             <div className="bg-[#0B1F3A] w-full h-full flex items-center justify-center">
+                                <span className="text-white text-[10px] font-bold">EISR PRESS</span>
+                             </div>
+                          )}
                        </div>
                        <div className="flex-grow p-8 flex flex-col justify-between">
                           <div className="space-y-4">
-                             <h3 className="text-xl font-bold text-[#1e78ff] leading-tight group-hover:text-[#4BA6B9] transition-colors">{j.title}</h3>
+                             <h3 className="text-xl font-bold text-[#1e78ff] leading-tight transition-colors">{j.title}</h3>
                           </div>
                           <div className="space-y-4">
                              <p className="text-sm font-bold text-[#1A1A1A]">Editor-in-Chief: {j.chief}</p>
@@ -201,7 +230,7 @@ export default function Home() {
         </section>
 
         {/* Leadership Team Section */}
-        <section id="leadership" className="bg-white py-32 border-t border-[#F1F1F1]">
+        <section id="leadership" className="bg-white py-16 lg:py-32 border-t border-[#F1F1F1]">
            <div className="max-w-[1240px] mx-auto px-6 space-y-16 text-center">
               <div className="space-y-4">
                  <h2 className="text-4xl font-medium text-[#1A1A1A] tracking-tight">Leadership Team</h2>
@@ -235,10 +264,10 @@ export default function Home() {
         </section>
 
         {/* APC Table Section */}
-        <section id="apc" className="bg-white py-32 border-t border-[#F1F1F1]">
+        <section id="apc" className="bg-white py-16 lg:py-32 border-t border-[#F1F1F1]">
            <div className="max-w-[1240px] mx-auto px-6 space-y-12">
               <h2 className="text-3xl font-bold text-[#1A1A1A] tracking-tight text-center">Article Publishing Charges (APCs)</h2>
-              <div className="max-w-[800px] mx-auto bg-[#F8F9FB] rounded-2xl border border-[#EEEEEE] overflow-hidden">
+              <div className="max-w-[800px] mx-auto bg-[#F8F9FB] rounded-2xl border border-[#EEEEEE] overflow-x-auto">
                  <table className="w-full text-left text-sm">
                     <thead>
                        <tr className="bg-[#F1F5F9] border-b border-gray-200">
@@ -260,9 +289,9 @@ export default function Home() {
         </section>
 
         {/* Contact Form Section */}
-        <section id="contact" className="bg-[#F8F9FB] py-32 border-t border-[#F1F1F1]">
+        <section id="contact" className="bg-[#F8F9FB] py-16 lg:py-32 border-t border-[#F1F1F1]">
            <div className="max-w-[1240px] mx-auto px-6">
-              <div className="grid lg:grid-cols-2 gap-20">
+              <div className="grid lg:grid-cols-2 gap-10 lg:gap-20">
                  <div className="space-y-8">
                     <h2 className="text-3xl font-bold text-[#1A1A1A] tracking-tight">Get in Touch</h2>
                      <p className="text-[#1A1A1A] leading-relaxed font-bold">Have questions about submissions or peer-review? Our editorial team is ready to assist you.</p>
@@ -283,12 +312,30 @@ export default function Home() {
                        </div>
                     </div>
                  </div>
-                 <form className="bg-white p-10 rounded-3xl shadow-xl border border-gray-100 space-y-6">
-                    <input type="text" placeholder="Full Name" className="w-full bg-[#F8F9FB] border-none rounded-lg p-5 text-sm font-bold" />
-                    <input type="email" placeholder="Email Address" className="w-full bg-[#F8F9FB] border-none rounded-lg p-5 text-sm font-bold" />
-                    <textarea placeholder="Your Message" rows={4} className="w-full bg-[#F8F9FB] border-none rounded-lg p-5 text-sm font-bold" />
-                    <button className="w-full bg-[#1A1A1A] text-white py-5 rounded-xl font-bold hover:bg-[#4BA6B9] transition-all">Send Message</button>
-                 </form>
+                  {submitted ? (
+                     <div className="bg-white p-16 rounded-3xl shadow-xl border border-[#EEEEEE] flex flex-col items-center justify-center space-y-6 animate-in fade-in zoom-in duration-500">
+                        <div className="w-20 h-20 bg-[#4BA6B9]/10 rounded-full flex items-center justify-center text-[#4BA6B9]">
+                           <ShieldCheck size={40} />
+                        </div>
+                        <div className="text-center space-y-2">
+                           <h3 className="text-xl font-bold text-[#1A1A1A]">Message Sent!</h3>
+                           <p className="text-sm font-medium text-[#555555]">Thank you for reaching out. Our team will get back to you shortly.</p>
+                        </div>
+                     </div>
+                  ) : (
+                    <form onSubmit={handleOnSubmit} className="bg-white p-10 rounded-3xl shadow-xl border border-gray-100 space-y-6">
+                        <input required name="name" type="text" placeholder="Full Name" className="w-full bg-[#F8F9FB] border-none rounded-lg p-5 text-sm font-bold focus:ring-2 focus:ring-[#4BA6B9]/20 transition-all outline-none" />
+                        <input required name="email" type="email" placeholder="Email Address" className="w-full bg-[#F8F9FB] border-none rounded-lg p-5 text-sm font-bold focus:ring-2 focus:ring-[#4BA6B9]/20 transition-all outline-none" />
+                        <textarea required name="message" placeholder="Your Message" rows={4} className="w-full bg-[#F8F9FB] border-none rounded-lg p-5 text-sm font-bold focus:ring-2 focus:ring-[#4BA6B9]/20 transition-all outline-none" />
+                        <button 
+                           type="submit" 
+                           disabled={loading}
+                           className="w-full bg-[#1A1A1A] text-white py-5 rounded-xl font-bold hover:bg-[#4BA6B9] transition-all shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                           {loading ? 'Sending...' : 'Send Message'}
+                        </button>
+                    </form>
+                  )}
               </div>
            </div>
         </section>

@@ -95,8 +95,8 @@ export default function Header() {
     )}>
       <div className="max-w-[1240px] mx-auto px-6 h-full flex items-center justify-between">
         {/* Logo */}
-        <div className="relative w-[220px] h-full flex items-center">
-          <Link href="/" className="relative z-[100] transition-all duration-500 hover:scale-110 h-auto">
+        <div className="relative w-[200px] lg:w-[260px] h-full flex items-center shrink-0">
+          <Link href="/" className="relative z-[100] transition-all duration-500 hover:scale-105 h-auto w-full flex items-center">
             <Logo variant="full" />
           </Link>
         </div>

@@ -60,7 +60,7 @@ export default function IndexingProviderPage() {
                     </div>
                     <div className="flex items-center justify-between p-6 bg-white rounded-xl border border-[#E2E8F0] shadow-sm opacity-60">
                        <div className="space-y-1">
-                          <p className="text-xs font-bold text-[#1A1A1A] uppercase">Journal of Cyber Security and Risk Auditing</p>
+                          <p className="text-xs font-bold text-[#1A1A1A] uppercase">Journal of Eye Innovation in Security Analysis</p>
                           <p className="text-[10px] font-bold text-[#999999] uppercase">Under Evaluation</p>
                        </div>
                        <Clock className="text-[#999999]" />

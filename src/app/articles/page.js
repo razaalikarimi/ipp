@@ -28,7 +28,7 @@ export default function ArticlesPage() {
                    {articles.map((art) => {
                      const journal = journals.find(j => j.id.toLowerCase() === art.journal.toLowerCase());
                      return (
-                        <Link key={art.slug} href={`/articles/${art.slug}`} className="bg-white rounded-3xl p-10 lg:p-14 border border-[#E2E8F0] shadow-sm hover:shadow-2xl transition-all duration-500 group block relative overflow-hidden">
+                        <Link key={art.slug} href={`/articles/${art.slug}`} className="bg-white rounded-3xl p-6 md:p-10 lg:p-14 border border-[#E2E8F0] shadow-sm hover:shadow-2xl transition-all duration-500 group block relative overflow-hidden">
                            <div className="absolute top-0 right-0 w-4 h-full bg-[#4BA6B9] opacity-0 group-hover:opacity-100 transition-opacity" />
                            <div className="space-y-8">
                              <div className="space-y-4">

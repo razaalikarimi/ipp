@@ -2,6 +2,7 @@ export const journals = [
   {
     id: 'jeiml',
     slug: 'jeiml',
+    acronym: 'JEIML',
     title: 'Journal of Eye-Innovation in Machine Learning',
     issn: '',
     chief: 'Prof. Dr. M. Irfan Uddin',
@@ -24,31 +25,41 @@ export const journals = [
       'Intelligent Systems and Robotics',
       'Smart Cities and IoT Applications'
     ],
-    guidelines: `The Journal of Eye-Innovation in Machine Learning (JEIML) invites high-quality original research that presents significant advances in the field of artificial intelligence. All submissions must represent original work that has not been previously published or is currently under consideration elsewhere.\n\nManuscript Preparation:\nAuthors must adhere to the JEIML LaTeX/Word house style. Manuscripts should clearly articulate the research problem, methodology, experimental results, and theoretical implications. The abstract should be concise (max 250 words) and summarize the core contributions.\n\nPeer Review Process:\nJEIML employs a double-blind peer-review system. Each manuscript is evaluated by at least three independent experts for technical soundness, novelty, and clarity. The editorial board maintains a commitment to a rapid turnaround, aiming for a first decision within 45 days.\n\nOpen Access & Ethics:\nAs a Gold Open Access journal, all published work is immediately available to the global research community under the CC BY 4.0 license. Authors undergo rigorous plagiarism screening via CrossCheck. Ethical considerations regarding data privacy and AI safety must be explicitly addressed in the results section.`,
+    guidelines: `Journal of Eye-Innovation in Machine Learning is an international, peer-reviewed, open-access academic journal dedicated to publishing high-quality research in machine learning, artificial intelligence, deep learning, computer vision, data science, and related emerging technologies. The journal engages both established and emerging researchers from around the world and upholds the highest standards of academic integrity and scholarly excellence.
+
+Authors are required to prepare their manuscripts using the JEIML Word Template and submit them through the online submission system. Only manuscripts that strictly follow the journal’s formatting and submission guidelines will be considered for peer review.
+
+Submitted manuscripts must be original, unpublished, and not under consideration by any other journal or conference.
+
+All submissions undergo a rigorous peer-review process conducted by experts in the relevant fields. Manuscripts are evaluated based on originality, technical quality, clarity of presentation, methodological soundness, and scientific contribution.
+
+In line with our commitment to timely dissemination of research, the journal aims to complete the peer-review process within four weeks. If authors do not receive any updates within this period, they are encouraged to contact the editorial office via email.
+
+Journal of Eye-Innovation in Machine Learning (JEIML) is an open-access international journal, ensuring free and unrestricted access to published research for the global academic and professional community.`,
     editorialTeam: [
       { id: 'irfan-uddin', name: 'Prof. Dr. M. Irfan Uddin', affiliation: 'Professor Department of Computer Science, University of Swabi Anbar Swabi 23540, KP, Pakistan', role: 'Editor in Chief', photo: '/prof_irfan_uddin_uploaded.png' },
       { id: 'nesren-farhah', name: 'Dr. Nesren S. Farhah', affiliation: 'Saudi Electronic University: Riyadh, SA', email: 'N.FARHAH@seu.edu.sa', orcid: '0000-0002-2103-1282', role: 'Managing Editor', photo: '/dr_nesren_uploaded.png' },
       { id: 'rajit-nair', name: 'Rajit Nair', affiliation: 'VIT Bhopal University, Bhopal, India', email: 'rajitnitbpl@gmail.com', orcid: '0000-0002-3796-7958', role: 'Editorial Board Member' },
       { id: 'farooq-ahmed', name: 'Farooq Ahmed', affiliation: 'Manchester Metropolitan University', email: 'farooqahmed@hainanu.edu.cn', orcid: '0000-0002-4668-2882', role: 'Editorial Board Member' },
       { id: 'manish-joshi', name: 'Dr. Manish Joshi', affiliation: 'School of Computer Sciences, North Maharashtra University, Jalgaon, India', role: 'Editorial Board Member' },
-      { id: 'furqan-aziz', name: 'Dr. Furqan Aziz', affiliation: 'Computing and Mathematical Sciences, School of', email: 'fa311@leicester.ac.uk', role: 'Editorial Board Member' },
+      { id: 'furqan-aziz', name: 'Dr. Furqan Aziz', affiliation: 'School of Computing and Mathematical Sciences, The University of Leicester, Leicester, United Kingdom', email: 'fa311@leicester.ac.uk', role: 'Editorial Board Member' },
       { id: 'shahreen-kasim', name: 'Dr. Shahreen Kasim', affiliation: 'Faculty of Electrical and Electronic Engineering (FKEE), Universiti Tun Hussein Onn Malaysia, Batu Pahat Johor, Malaysia', orcid: '0000-0002-4180-4377', role: 'Editorial Board Member' }
     ],
     indexing: 'Journal of Eye-Innovation in Machine Learning (JEIML) is indexed and archived in leading scholarly platforms, ensuring global visibility and long-term accessibility of published research.',
     indexingPartners: ['Crossref', 'Google Scholar'],
     apc: 'No APC Charge',
     policies: {
-      publicationethics: `Journal of Eye-Innovation in Machine Learning (JEIML) is committed to upholding the highest standards of publication ethics and academic integrity. The journal follows internationally accepted ethical guidelines to ensure transparency, fairness, and quality in scholarly publishing. All parties involved in the publication process — authors, reviewers, editors, and the publisher — are expected to adhere to these ethical principles.\n\n1. Duties of Authors\nAuthors submitting manuscripts to JEIML must ensure that:\n• The submitted work is original, unpublished, and not under consideration elsewhere.\n• All sources are properly cited, and plagiarism in any form is strictly prohibited.\n• Data presented in the manuscript is accurate, honest, and not fabricated or manipulated.\n• All listed authors have made significant contributions to the research.\n• Any conflicts of interest are clearly disclosed.\n• Ethical approval is obtained for studies involving human participants or animals, where applicable.\n\n2. Duties of Editors\nEditors are responsible for:\n• Making fair, unbiased, and timely publication decisions based solely on academic merit.\n• Maintaining the confidentiality of submitted manuscripts.\n• Ensuring a rigorous and transparent peer-review process.\n• Taking appropriate actions in cases of suspected misconduct, plagiarism, or ethical violations.\n• Preventing conflicts of interest and ensuring editorial independence.\n\n3. Duties of Reviewers\nReviewers are expected to:\n• Conduct reviews objectively, fairly, and confidentially.\n• Provide constructive feedback to improve the quality of manuscripts.\n• Report any suspected plagiarism, duplication, or ethical issues.\n• Declare any conflicts of interest and decline reviews when necessary.`,
-      openaccess: 'JEIML is a fully open-access journal, providing immediate, free, and permanent access to all published content. Readers may read, download, copy, distribute, print, search, and link to full texts without restriction, ensuring global knowledge dissemination and increased research visibility.',
-      peerreview: 'JEIML adopts a double-blind peer review process. Each submission is reviewed by at least two independent expert reviewers. Editors make publication decisions based on originality, quality, clarity, relevance, and technical soundness. Reviewers remain anonymous, and manuscripts are treated confidentially.',
-      archiving: 'JEIML ensures long-term digital preservation of all published content using secure electronic archiving systems. Published articles are permanently stored on journal servers and third-party repositories to ensure content availability, accessibility, and integrity.',
+      publicationethics: `{{JOURNAL_NAME}} ({{JOURNAL_ACRONYM}}) is committed to upholding the highest standards of publication ethics and academic integrity. The journal follows internationally accepted ethical guidelines to ensure transparency, fairness, and quality in scholarly publishing. All parties involved in the publication process — authors, reviewers, editors, and the publisher — are expected to adhere to these ethical principles.\n\n1. Duties of Authors\nAuthors submitting manuscripts to {{JOURNAL_ACRONYM}} must ensure that:\n• The submitted work is original, unpublished, and not under consideration elsewhere.\n• All sources are properly cited, and plagiarism in any form is strictly prohibited.\n• Data presented in the manuscript is accurate, honest, and not fabricated or manipulated.\n• All listed authors have made significant contributions to the research.\n• Any conflicts of interest are clearly disclosed.\n• Ethical approval is obtained for studies involving human participants or animals, where applicable.\n\n2. Duties of Editors\nEditors are responsible for:\n• Making fair, unbiased, and timely publication decisions based solely on academic merit.\n• Maintaining the confidentiality of submitted manuscripts.\n• Ensuring a rigorous and transparent peer-review process.\n• Taking appropriate actions in cases of suspected misconduct, plagiarism, or ethical violations.\n• Preventing conflicts of interest and ensuring editorial independence.\n\n3. Duties of Reviewers\nReviewers are expected to:\n• Conduct reviews objectively, fairly, and confidentially.\n• Provide constructive feedback to improve the quality of manuscripts.\n• Report any suspected plagiarism, duplication, or ethical issues.\n• Declare any conflicts of interest and decline reviews when necessary.`,
+      openaccess: `{{JOURNAL_ACRONYM}} is a fully open-access journal, providing immediate, free, and permanent access to all published content. Readers may read, download, copy, distribute, print, search, and link to full texts without restriction, ensuring global knowledge dissemination and increased research visibility.`,
+      peerreview: `{{JOURNAL_ACRONYM}} adopts a double-blind peer review process. Each submission is reviewed by at least two independent expert reviewers. Editors make publication decisions based on originality, quality, clarity, relevance, and technical soundness. Reviewers remain anonymous, and manuscripts are treated confidentially.`,
+      archiving: `{{JOURNAL_ACRONYM}} ensures long-term digital preservation of all published content using secure electronic archiving systems. Published articles are permanently stored on journal servers and third-party repositories to ensure content availability, accessibility, and integrity.`,
       generativeai: 'Authors may use generative AI tools strictly for language editing, grammar checking, and formatting improvements. Authors must fully disclose the use of AI tools in manuscript preparation. AI tools must not be listed as authors, and responsibility for the accuracy, originality, and ethics of the content remains solely with human authors.',
-      copyright: 'All articles published in JEIML are licensed under the Creative Commons Attribution (CC BY 4.0) license. Authors retain full copyright of their work, allowing readers to copy, distribute, and adapt the content with proper attribution.',
-      plagiarism: 'All manuscripts submitted to JEIML are screened using professional plagiarism detection software. Manuscripts exceeding 15–20% similarity index (excluding references) will be rejected or returned for revision. Zero tolerance is applied to intentional plagiarism.',
+      copyright: `All articles published in {{JOURNAL_ACRONYM}} are licensed under the Creative Commons Attribution (CC BY 4.0) license. Authors retain full copyright of their work, allowing readers to copy, distribute, and adapt the content with proper attribution.`,
+      plagiarism: `All manuscripts submitted to {{JOURNAL_ACRONYM}} are screened using professional plagiarism detection software. Manuscripts exceeding 15–20% similarity index (excluding references) will be rejected or returned for revision. Zero tolerance is applied to intentional plagiarism.`,
       misconduct: 'Scientific misconduct includes: \n• Plagiarism \n• Fabrication or falsification of data \n• Duplicate submission \n• Authorship manipulation \n• Citation manipulation \nConfirmed misconduct results in rejection, retraction, notification of institutions, and banning from future submissions.',
-      retractions: 'JEIML publishes retractions when major errors, ethical breaches, or scientific misconduct are confirmed. Retracted articles remain online but are clearly marked as Retracted, preserving the scholarly record.',
+      retractions: `{{JOURNAL_ACRONYM}} publishes retractions when major errors, ethical breaches, or scientific misconduct are confirmed. Retracted articles remain online but are clearly marked as Retracted, preserving the scholarly record.`,
       misbehavior: 'Unethical actions such as submission manipulation, peer-review interference, citation gaming, and identity falsification are treated as serious violations and lead to strict disciplinary action.',
-      corrections: 'JEIML allows: \n• Corrections (Errata) for minor errors not affecting conclusions. \n• Withdrawals for early-stage submissions before peer review. \nPost-publication withdrawals are permitted only in exceptional circumstances.'
+      corrections: `{{JOURNAL_ACRONYM}} allows: \n• Corrections (Errata) for minor errors not affecting conclusions. \n• Withdrawals for early-stage submissions before peer review. \nPost-publication withdrawals are permitted only in exceptional circumstances.`
     },
     stats: {
       citationsScopus: '----',
@@ -77,7 +88,8 @@ export const journals = [
   {
     id: 'jcsra',
     slug: 'jcsra',
-    title: 'Journal of Cyber Security and Risk Auditing',
+    acronym: 'JEISA',
+    title: 'Journal of Eye Innovation in Security Analysis',
     issn: '',
     chief: 'Prof. Ali Kashif Bashir',
     publishingModel: 'Open access',
@@ -86,7 +98,7 @@ export const journals = [
     doiPrefix: '',
     publisher: 'Eye-Innovations Scientific Research (EISR)',
     reviewSpeed: '60 days',
-    aims: 'JCSRA aims to provide a leading platform for researchers and practitioners to discuss challenges and innovations in protecting critical information infrastructures.',
+    aims: 'JEISA aims to provide a leading platform for researchers and practitioners to discuss challenges and innovations in protecting critical information infrastructures.',
     scope: [
       'Cybersecurity Risk Management',
       'Information Security Auditing',
@@ -95,16 +107,81 @@ export const journals = [
       'Cloud and IoT Security Assessments'
     ],
     editorialTeam: [
-      { id: 'ali-kashif-bashir', name: 'Prof. Ali Kashif Bashir', role: 'Editor in Chief', affiliation: 'Manchester Metropolitan University: Manchester, England, GB - Professor of Networks and Cybersecurity, Computing and Mathematics', email: 'dr.alikashif.b@ieee.org', orcid: '0000-0003-2601-9327', photo: '/ali_kashif_bashir.png' },
-      { id: 'nadhem-ebrahim', name: 'Dr. Nadhem Ebrahim', role: 'Managing Editor', affiliation: 'University of Akron, Akron, United States', email: 'nebrahim@uakron.edu', orcid: '0000-0001-9975-589X', photo: '/nadhem_ebrahim.png' },
-      { id: 'sultan-ahmed', name: 'Dr. Sultan Ahmed', role: 'Editorial Board Member', affiliation: 'Prince Sattam Bin Abdulaziz University, Al-Kharj, Saudi Arabia', orcid: '0000-0002-3198-7974' },
-      { id: 'rizwan-ali-naqvi', name: 'Dr. Rizwan Ali NAQVI', role: 'Editorial Board Member', affiliation: 'Sejong University South Korea', orcid: '0000-0002-7473-8441' },
-      { id: 'osamah-ibrahim-khalaf', name: 'Dr. Osamah Ibrahim Khalaf', role: 'Editorial Board Member', affiliation: 'Al-Nahrain University, Al-Nahrain Nanorenewable Energy Research Center', email: 'Usama81818@nahrainuniv.edu.iq', orcid: '0000-0002-4750-8384' },
-      { id: 'eid-rehman', name: 'Dr. Eid Rehman', role: 'Editorial Board Member', affiliation: 'Department of Computer Science and information Technology, University of Mianwali, Pakistan', email: 'eid.rehman@umw.edu.pk' },
-      { id: 'zaheen-fatima', name: 'Dr. zaheen Fatima', role: 'Editorial Board Member', affiliation: 'Sir Syed University of Engineering and Technology Karachi', email: 'zaheen.fatima@ssuet.edu.pk' },
-      { id: 'h-jafari', name: 'Dr. H. Jafari', role: 'Editorial Board Member', affiliation: 'Professor Department of Mathematical Sciences, University of South Africa, South Africa', email: 'jafah@unisa.ac.za', orcid: '0000-0001-6807-6675' }
+      { 
+        id: 'ali-kashif-bashir', 
+        name: 'Ali Kashif Bashir', 
+        role: 'Editor in Chief', 
+        affiliation: 'Manchester Metropolitan University: Manchester, England, GB - Professor of Networks and Cybersecurity, Computing and Mathematics', 
+        email: 'dr.alikashif.b@ieee.org', 
+        orcid: '0000-0003-2601-9327', 
+        photo: '/ali_kashif_bashir.png' 
+      },
+      { 
+        id: 'nadhem-ebrahim', 
+        name: 'Dr. Nadhem Ebrahim', 
+        role: 'Managing Editor', 
+        affiliation: 'University of Akron, Akron, United States', 
+        email: 'nebrahim@uakron.edu', 
+        orcid: '0000-0001-9975-589X', 
+        photo: '/nadhem_ebrahim.png' 
+      },
+      { 
+        id: 'sultan-ahmed', 
+        name: 'Dr. Sultan Ahmed', 
+        role: 'Editorial Board Member', 
+        affiliation: 'Prince Sattam Bin Abdulaziz University, Al-Kharj, Saudi Arabia', 
+        orcid: '0000-0002-3198-7974' 
+      },
+      { 
+        id: 'rizwan-ali-naqvi', 
+        name: 'Dr. Rizwan Ali NAQVI', 
+        role: 'Editorial Board Member', 
+        affiliation: 'Sejong University South Korea', 
+        orcid: '0000-0002-7473-8441' 
+      },
+      { 
+        id: 'osamah-ibrahim-khalaf', 
+        name: 'Dr. Osamah Ibrahim Khalaf', 
+        role: 'Editorial Board Member', 
+        affiliation: 'Al-Nahrain University, Al-Nahrain Nanorenewable Energy Research Center', 
+        email: 'Usama81818@nahrainuniv.edu.iq', 
+        orcid: '0000-0002-4750-8384' 
+      },
+      { 
+        id: 'eid-rehman', 
+        name: 'Dr. Eid Rehman', 
+        role: 'Editorial Board Member', 
+        affiliation: 'Department of Computer Science and information Technology, University of Mianwali, Pakistan', 
+        email: 'eid.rehman@umw.edu.pk' 
+      },
+      { 
+        id: 'zaheen-fatima', 
+        name: 'Dr. zaheen Fatima', 
+        role: 'Editorial Board Member', 
+        affiliation: 'Sir Syed University of Engineering and Technology Karachi', 
+        email: 'zaheen.fatima@ssuet.edu.pk' 
+      },
+      { 
+        id: 'h-jafari', 
+        name: 'Dr. H. Jafari', 
+        role: 'Editorial Board Member', 
+        affiliation: 'Professor Department of Mathematical Sciences, University of South Africa, South Africa', 
+        email: 'jafah@unisa.ac.za', 
+        orcid: '0000-0001-6807-6675' 
+      }
     ],
-    indexing: 'Journal of Cyber Security and Risk Auditing (JCSRA) is currently indexed in Crossref and Google Scholar.',
+    guidelines: `Journal of Eye Innovation in Security Analysis is an international, peer-reviewed, open-access academic journal dedicated to publishing high-quality research in cybersecurity, information security, risk auditing, data privacy, network security, and related emerging technologies. The journal engages both established and emerging researchers from around the world and upholds the highest standards of academic integrity and scholarly excellence.
+
+Authors are required to prepare their manuscripts using the JEISA Word Template and submit them through the online submission system. Only manuscripts that strictly follow the journal’s formatting and submission guidelines will be considered for peer review.
+
+Submitted manuscripts must be original, unpublished, and not under consideration by any other journal or conference.
+
+All submissions undergo a rigorous peer-review process conducted by experts in the relevant fields. Manuscripts are evaluated based on originality, technical quality, clarity of presentation, methodological soundness, and scientific contribution.
+
+In line with our commitment to timely dissemination of research, the journal aims to complete the peer-review process within four weeks. If authors do not receive any updates within this period, they are encouraged to contact the editorial office via email.
+
+Journal of Eye Innovation in Security Analysis (JEISA) is an open-access international journal, ensuring free and unrestricted access to published research for the global academic and professional community.`,
+    indexing: 'Journal of Eye Innovation in Security Analysis (JEISA) is currently indexed in Crossref and Google Scholar.',
     indexingPartners: ['Crossref', 'Google Scholar'],
     apc: 'No APC Charge',
     stats: {
@@ -121,6 +198,19 @@ export const journals = [
       { name: 'Email', icon: 'Mail', url: 'mailto:info@eisr.com' },
       { name: 'LinkedIn', icon: 'Linkedin', url: '#' }
     ],
+    policies: {
+      publicationethics: `{{JOURNAL_NAME}} ({{JOURNAL_ACRONYM}}) is committed to upholding the highest standards of publication ethics and academic integrity. The journal follows internationally accepted ethical guidelines to ensure transparency, fairness, and quality in scholarly publishing. All parties involved in the publication process — authors, reviewers, editors, and the publisher — are expected to adhere to these ethical principles.\n\n1. Duties of Authors\nAuthors submitting manuscripts to {{JOURNAL_ACRONYM}} must ensure that:\n• The submitted work is original, unpublished, and not under consideration elsewhere.\n• All sources are properly cited, and plagiarism in any form is strictly prohibited.\n• Data presented in the manuscript is accurate, honest, and not fabricated or manipulated.\n• All listed authors have made significant contributions to the research.\n• Any conflicts of interest are clearly disclosed.\n• Ethical approval is obtained for studies involving human participants or animals, where applicable.\n\n2. Duties of Editors\nEditors are responsible for:\n• Making fair, unbiased, and timely publication decisions based solely on academic merit.\n• Maintaining the confidentiality of submitted manuscripts.\n• Ensuring a rigorous and transparent peer-review process.\n• Taking appropriate actions in cases of suspected misconduct, plagiarism, or ethical violations.\n• Preventing conflicts of interest and ensuring editorial independence.\n\n3. Duties of Reviewers\nReviewers are expected to:\n• Conduct reviews objectively, fairly, and confidentially.\n• Provide constructive feedback to improve the quality of manuscripts.\n• Report any suspected plagiarism, duplication, or ethical issues.\n• Declare any conflicts of interest and decline reviews when necessary.`,
+      openaccess: `{{JOURNAL_ACRONYM}} is a fully open-access journal, providing immediate, free, and permanent access to all published content. Readers may read, download, copy, distribute, print, search, and link to full texts without restriction, ensuring global knowledge dissemination and increased research visibility.`,
+      peerreview: `{{JOURNAL_ACRONYM}} adopts a double-blind peer review process. Each submission is reviewed by at least two independent expert reviewers. Editors make publication decisions based on originality, quality, clarity, relevance, and technical soundness. Reviewers remain anonymous, and manuscripts are treated confidentially.`,
+      archiving: `{{JOURNAL_ACRONYM}} ensures long-term digital preservation of all published content using secure electronic archiving systems. Published articles are permanently stored on journal servers and third-party repositories to ensure content availability, accessibility, and integrity.`,
+      generativeai: 'Authors may use generative AI tools strictly for language editing, grammar checking, and formatting improvements. Authors must fully disclose the use of AI tools in manuscript preparation. AI tools must not be listed as authors, and responsibility for the accuracy, originality, and ethics of the content remains solely with human authors.',
+      copyright: `All articles published in {{JOURNAL_ACRONYM}} are licensed under the Creative Commons Attribution (CC BY 4.0) license. Authors retain full copyright of their work, allowing readers to copy, distribute, and adapt the content with proper attribution.`,
+      plagiarism: `All manuscripts submitted to {{JOURNAL_ACRONYM}} are screened using professional plagiarism detection software. Manuscripts exceeding 15–20% similarity index (excluding references) will be rejected or returned for revision. Zero tolerance is applied to intentional plagiarism.`,
+      misconduct: 'Scientific misconduct includes: \n• Plagiarism \n• Fabrication or falsification of data \n• Duplicate submission \n• Authorship manipulation \n• Citation manipulation \nConfirmed misconduct results in rejection, retraction, notification of institutions, and banning from future submissions.',
+      retractions: `{{JOURNAL_ACRONYM}} publishes retractions when major errors, ethical breaches, or scientific misconduct are confirmed. Retracted articles remain online but are clearly marked as Retracted, preserving the scholarly record.`,
+      misbehavior: 'Unethical actions such as submission manipulation, peer-review interference, citation gaming, and identity falsification are treated as serious violations and lead to strict disciplinary action.',
+      corrections: `{{JOURNAL_ACRONYM}} allows: \n• Corrections (Errata) for minor errors not affecting conclusions. \n• Withdrawals for early-stage submissions before peer review. \nPost-publication withdrawals are permitted only in exceptional circumstances.`
+    },
     cover: '/jeisa_cover.jpg'
   }
 ];

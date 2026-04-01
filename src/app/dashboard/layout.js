@@ -139,7 +139,7 @@ export default function DashboardLayout({ children }) {
         justifyContent: 'space-between', height: '40px',
       }}>
         <div style={{ fontWeight: '600', fontSize: '14px', letterSpacing: '0.02em' }}>
-          {currentJournal === 'jeiml' ? 'Journal of Eye-Innovation in Machine Learning' : 'Journal of Cyber Security and Risk Auditing'}
+          {currentJournal === 'jeiml' ? 'Journal of Eye-Innovation in Machine Learning' : 'Journal of Eye Innovation in Security Analysis'}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
           <button style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', padding: 0 }}><Info size={18} /></button>

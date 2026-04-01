@@ -64,7 +64,7 @@ export default function JournalHero({ journal, activeTab = 'home' }) {
 
       {/* ── Content ── */}
       <div className="max-w-[1240px] mx-auto relative z-[100] space-y-10">
-        <div className="space-y-4" style={{ maxWidth: '55%' }}>
+        <div className="space-y-4 max-w-full md:max-w-[55%]">
           <span className="text-[11px] font-bold text-[#4BA6B9] tracking-widest uppercase">
             Scientific Journal Gateway
           </span>
@@ -88,7 +88,7 @@ export default function JournalHero({ journal, activeTab = 'home' }) {
         </div>
 
         {/* Navigation Bar */}
-        <div className="flex flex-wrap gap-x-10 border-b border-white/5 pb-0 text-[13px] font-bold">
+        <div className="flex flex-wrap gap-x-4 md:gap-x-10 gap-y-4 border-b border-white/5 pb-0 text-[13px] font-bold">
           <Link
             href={`/journals/${journal.slug}`}
             className={`pb-4 border-b-2 transition-all ${isActive('home') ? 'border-[#4BA6B9] text-[#4BA6B9]' : 'border-transparent hover:border-white'}`}
@@ -143,7 +143,7 @@ export default function JournalHero({ journal, activeTab = 'home' }) {
               {journalPolicyItems.map(item => (
                 <Link
                   key={item.name}
-                  href={`/policies/${item.slug}`}
+                  href={`/policies/${item.slug}?journal=${journal.id}`}
                   className="block px-8 py-5 text-[13px] font-bold text-[#1A1A1A] hover:bg-[#F8FBFF] hover:text-[#4BA6B9] transition-all border-b border-[#F1F5F9] last:border-0"
                 >
                   {item.name}

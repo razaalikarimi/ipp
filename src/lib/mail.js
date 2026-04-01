@@ -22,7 +22,7 @@ const transporter = isSMTPConfigured
 export const sendReviewerInvitation = async ({
   to,
   reviewerName,
-  journalName = 'Journal of Cyber Security and Risk Auditing',
+  journalName = 'Journal of Eye Innovation in Security Analysis',
   articleTitle,
   abstract,
   responseDueDate,

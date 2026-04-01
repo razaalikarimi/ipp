@@ -27,7 +27,7 @@ export default function Logo({ className, variant = 'full', src }) {
   return (
     <div className={cn('relative transition-all duration-300', className)}>
       <div className="flex flex-col items-center">
-        <div className="relative flex items-center justify-center w-[160px] h-[70px]">
+        <div className="relative flex items-center justify-center w-[200px] lg:w-[240px] h-[80px] lg:h-[90px]">
           <Image
             src={finalSrc}
             alt="Journal Logo"

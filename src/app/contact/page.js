@@ -1,6 +1,7 @@
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Mail, Globe, Search } from 'lucide-react';
+import Link from 'next/link';
 import { journals } from '@/lib/data';
 
 export const metadata = {
@@ -30,7 +31,7 @@ export default function ContactPage() {
                  <p className="text-3xl font-bold text-[#1A1A1A] tracking-tight">info@eisr.com</p>
               </div>
               <div className="flex items-center space-x-4">
-                 <a href="mailto:info@eisr.com" className="px-10 py-4 bg-[#1A1A1A] rounded-2xl text-[12px] font-bold text-white shadow-xl hover:bg-[#4BA6B9] transition-all">Send Email Invitation</a>
+                 <Link href="/#contact" className="px-10 py-4 bg-[#1A1A1A] rounded-2xl text-[12px] font-bold text-white shadow-xl hover:bg-[#4BA6B9] transition-all">Send Email Invitation</Link>
               </div>
            </div>
         </section>
@@ -57,9 +58,9 @@ export default function ContactPage() {
                     </div>
                     <div className="flex items-center justify-between pt-8 border-t border-[#F1F5F9]">
                        <span className="text-[11px] font-bold text-[#BBBBBB]">Journal contact inbox</span>
-                       <a href={`mailto:editor.${j.slug}@eisr.com`} className="text-[12px] font-bold text-[#1A1A1A] hover:text-[#4BA6B9] transition-all flex items-center group/btn">
+                       <Link href="/#contact" className="text-[12px] font-bold text-[#1A1A1A] hover:text-[#4BA6B9] transition-all flex items-center group/btn">
                           Compose email <Globe size={14} className="ml-3 transition-transform group-hover/btn:rotate-12" />
-                       </a>
+                       </Link>
                     </div>
                  </div>
               ))}

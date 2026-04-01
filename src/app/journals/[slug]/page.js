@@ -44,7 +44,7 @@ export default function JournalPage() {
               {/* Journal Information Box */}
               <div className="space-y-8">
                 <h2 className="text-xl font-bold text-[#1A1A1A]">Journal Information</h2>
-                <div className="bg-white border-2 border-[#E2E8F0] rounded-2xl p-10 shadow-sm">
+                <div className="bg-white border-2 border-[#E2E8F0] rounded-2xl p-6 md:p-10 shadow-sm">
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-8">
                       <div className="space-y-6">
                         <InfoRow label="Title" value={journal.title} />
@@ -77,7 +77,7 @@ export default function JournalPage() {
               {/* Journal Statistics Bar */}
               <div className="space-y-6">
                 <h2 className="text-xl font-bold text-[#1A1A1A]">Journal Statistics</h2>
-                <div className="bg-[#white] rounded-2xl p-10 border-2 border-[#E2E8F0] shadow-sm">
+                <div className="bg-[#white] rounded-2xl p-6 md:p-10 border-2 border-[#E2E8F0] shadow-sm">
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-12 gap-x-8 text-center items-start">
                        <StatItem value={journal.stats.citationsScopus} label="Citations By Scopus" />
                        <StatItem value={journal.stats.citationsGoogle} label="Citations By Google Scholar" />
@@ -108,21 +108,19 @@ export default function JournalPage() {
            <aside className="lg:col-span-4 space-y-12">
               
               {/* Publisher Sidebar Box */}
-              <div className="bg-[#F8F9FB] rounded-2xl p-12 text-center space-y-10 border border-[#E2E8F0] shadow-sm relative overflow-hidden group">
+              <div className="bg-[#F8F9FB] rounded-2xl p-8 md:p-12 text-center space-y-10 border border-[#E2E8F0] shadow-sm relative overflow-hidden group">
                  <div className="absolute top-0 left-0 w-32 h-32 bg-[#1e78ff]/5 rounded-full -ml-16 -mt-16 group-hover:scale-110 transition-transform" />
-                 <div className="space-y-4">
-                    <div className="flex items-center justify-center pt-4">
-                        <span className="text-2xl font-black tracking-tighter text-[#1A1A1A]">EISR</span>
-                    </div>
-                    <p className="text-[11px] font-black text-[#1A1A1A] max-w-[200px] mx-auto opacity-40 leading-relaxed">
-                       {journal.id === 'jeiml' ? 'Journal of Eye-Innovation' : 
-                        journal.id === 'jcsra' ? 'Journal of Eye Innovation (Security)' : 
-                        'Eye-Innovations Scientific Research'}
-                    </p>
-                 </div>
-                 <Link href={`/dashboard/submit?journal=${journal.id}`} className="block w-full bg-[#1A1A1A] text-white py-5 rounded-xl text-[12px] font-black hover:bg-[#4BA6B9] transition-all shadow-xl shadow-black/5">
-                    Submit Manuscript
-                 </Link>
+                  <div className="space-y-4">
+                     <p className="text-[11px] font-black text-[#1A1A1A] max-w-[200px] mx-auto opacity-40 leading-relaxed uppercase tracking-tighter pt-8">
+                        {journal.id === 'jeiml' ? 'Journal of Eye-Innovation' : 
+                         journal.id === 'jcsra' ? 'Journal of Eye Innovation (Security)' : 
+                         'Eye-Innovations Scientific Research'}
+                     </p>
+                  </div>
+                  <Link href={`/dashboard/submit?journal=${journal.id}`} className="w-full bg-[#1A1A1A] text-white py-5 rounded-xl text-[12px] font-bold uppercase tracking-widest flex items-center justify-center space-x-3 hover:bg-[#4BA6B9] transition-all shadow-xl shadow-black/10 hover:shadow-[#4BA6B9]/20 hover:-translate-y-0.5">
+                    <span>Submit Manuscript</span>
+                    <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                  </Link>
                  
                  <div className="space-y-8 pt-6">
                     {journal.editorialTeam.slice(0, 3).map(editor => (
@@ -162,8 +160,8 @@ export default function JournalPage() {
                     <div className="w-8 h-0.5 bg-[#4BA6B9] mx-auto opacity-40"></div>
                  </div>
                  <div className="flex flex-col items-center gap-12 group">
-                    <img src="/google-scholar.jpg" alt="Google Scholar" className="w-32 h-auto opacity-80 group-hover:opacity-100 transition-all" />
-                    <img src="/crossref.png" alt="Crossref" className="w-40 h-auto opacity-80 group-hover:opacity-100 transition-all" />
+                    <img src="/google-scholar.jpg" alt="Google Scholar" className="w-36 h-auto opacity-80 group-hover:opacity-100 transition-all group-hover:scale-105 duration-500" />
+                    <img src="/crossref.png" alt="Crossref" className="w-44 h-auto opacity-80 group-hover:opacity-100 transition-all group-hover:scale-105 duration-500" />
                  </div>
               </div>
 
