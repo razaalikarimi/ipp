@@ -35,11 +35,11 @@ export default function JournalPage() {
          </div>
       </div>
 
-      <main className="flex-grow pb-40 px-6">
-        <div className="max-w-[1240px] mx-auto mt-16 grid lg:grid-cols-12 gap-12 items-start">
+      <main className="flex-grow pb-24 px-6">
+        <div className="max-w-[1240px] mx-auto mt-12 grid lg:grid-cols-12 gap-12 items-start">
            
            {/* Primary Content */}
-           <div className="lg:col-span-8 space-y-16">
+           <div className="lg:col-span-8 space-y-10">
               
               {/* Journal Information Box */}
               <div className="space-y-8">
@@ -104,38 +104,43 @@ export default function JournalPage() {
 
            </div>
 
-           {/* Sidebar */}
+            {/* Sidebar */}
            <aside className="lg:col-span-4 space-y-12">
               
-              {/* Publisher Sidebar Box */}
-              <div className="bg-[#F8F9FB] rounded-2xl p-8 md:p-12 text-center space-y-10 border border-[#E2E8F0] shadow-sm relative overflow-hidden group">
-                 <div className="absolute top-0 left-0 w-32 h-32 bg-[#1e78ff]/5 rounded-full -ml-16 -mt-16 group-hover:scale-110 transition-transform" />
-                  <div className="space-y-4">
-                     <p className="text-[11px] font-black text-[#1A1A1A] max-w-[200px] mx-auto opacity-40 leading-relaxed uppercase tracking-tighter pt-8">
-                        {journal.id === 'jeiml' ? 'Journal of Eye-Innovation' : 
-                         journal.id === 'jcsra' ? 'Journal of Eye Innovation (Security)' : 
-                         'Eye-Innovations Scientific Research'}
-                     </p>
+               {/* Sidebar Info Card */}
+               <div className="bg-[#F8F9FB] rounded-2xl p-8 md:p-12 text-center space-y-10 border border-[#E2E8F0] shadow-sm relative overflow-hidden group">
+                  <div className="absolute top-0 left-0 w-32 h-32 bg-[#1e78ff]/5 rounded-full -ml-16 -mt-16 group-hover:scale-110 transition-transform" />
+                   <div className="space-y-4">
+                      <p className="text-[11px] font-black text-[#1A1A1A] max-w-[200px] mx-auto opacity-40 leading-relaxed uppercase tracking-tighter pt-8">
+                         {journal.id === 'jeiml' ? 'Journal of Eye-Innovation' : 
+                          journal.id === 'jcsra' ? 'Journal of Eye Innovation (Security)' : 
+                          'Eye-Innovations Scientific Research'}
+                      </p>
+                   </div>
+
+                   <Link href={`/dashboard/submit?journal=${journal.id}`} className="w-full bg-[#1A1A1A] text-white py-5 rounded-xl text-[12px] font-bold uppercase tracking-widest flex items-center justify-center space-x-3 hover:bg-[#4BA6B9] transition-all shadow-xl shadow-black/10 hover:shadow-[#4BA6B9]/20 hover:-translate-y-0.5 whitespace-nowrap">
+                     <span>Submit Manuscript</span>
+                     <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                   </Link>
+                  
+                   <div className="space-y-4 pt-4">
+                     {journal.editorialTeam.slice(0, 3).map(editor => (
+                        <Link 
+                          key={editor.id} 
+                          href={`/journals/${journal.slug}/editorial-team`}
+                          className="flex items-center space-x-5 text-left group cursor-pointer hover:bg-black/5 p-2 -m-2 rounded-xl transition-all"
+                        >
+                           <div className="w-14 h-14 rounded-full bg-white border border-[#E2E8F0] overflow-hidden flex items-center justify-center shrink-0 shadow-sm group-hover:border-[#4BA6B9] transition-colors">
+                              {editor.photo ? <img src={editor.photo} className="w-full h-full object-cover" /> : <Users size={24} className="text-[#BBBBBB]" />}
+                           </div>
+                           <div className="space-y-0.5">
+                              <h4 className="text-[13px] font-bold text-[#1A1A1A] group-hover:text-[#4BA6B9] transition-colors">{editor.name}</h4>
+                              <p className="text-[11px] font-medium text-[#999999] tracking-wider">{editor.role}</p>
+                           </div>
+                        </Link>
+                     ))}
                   </div>
-                  <Link href={`/dashboard/submit?journal=${journal.id}`} className="w-full bg-[#1A1A1A] text-white py-5 rounded-xl text-[12px] font-bold uppercase tracking-widest flex items-center justify-center space-x-3 hover:bg-[#4BA6B9] transition-all shadow-xl shadow-black/10 hover:shadow-[#4BA6B9]/20 hover:-translate-y-0.5">
-                    <span>Submit Manuscript</span>
-                    <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                 
-                 <div className="space-y-8 pt-6">
-                    {journal.editorialTeam.slice(0, 3).map(editor => (
-                       <div key={editor.id} className="flex items-center space-x-5 text-left group/ed cursor-pointer">
-                          <div className="w-14 h-14 rounded-full bg-white border border-[#E2E8F0] overflow-hidden flex items-center justify-center shrink-0 shadow-sm">
-                             {editor.photo ? <img src={editor.photo} className="w-full h-full object-cover" /> : <Users size={24} className="text-[#BBBBBB]" />}
-                          </div>
-                          <div className="space-y-0.5">
-                             <h4 className="text-[13px] font-bold text-[#1A1A1A] group-hover/ed:text-[#4BA6B9] transition-colors">{editor.name}</h4>
-                             <p className="text-[11px] font-medium text-[#999999] tracking-wider">{editor.role}</p>
-                          </div>
-                       </div>
-                    ))}
-                 </div>
-              </div>
+               </div>
 
               {/* Journal Menu Sidebar Box */}
               <div className="border border-[#E2E8F0] rounded-2xl overflow-hidden bg-white shadow-sm">

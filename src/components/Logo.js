@@ -32,6 +32,7 @@ export default function Logo({ className, variant = 'full', src }) {
             src={finalSrc}
             alt="Journal Logo"
             fill
+            sizes="(max-width: 768px) 200px, 240px"
             className="object-contain"
             priority
           />

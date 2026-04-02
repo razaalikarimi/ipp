@@ -83,13 +83,13 @@ Journal of Eye-Innovation in Machine Learning (JEIML) is an open-access internat
     ],
     about: 'The Journal of Eye-Innovation in Machine Learning (JEIML) serves as an authoritative worldwide platform for the communication of breakthrough research in computational intelligence. By focusing on both the mathematical foundations and the disruptive applications of AI, JEIML provides researchers with a peer-reviewed ecosystem that prioritizes technical depth, methodological rigor, and societal impact. Our community-driven editorial board ensures that every paper contributes meaningfully to the global body of knowledge.',
     privacy: 'The names and email addresses entered in this journal site will be used exclusively for the stated purposes of this journal and will not be made available for any other purpose or to any other party.',
-    cover: '/jeiml_cover.jpg'
+    cover: '/jeiml_cover_new.png'
   },
   {
     id: 'jcsra',
     slug: 'jcsra',
     acronym: 'JEISA',
-    title: 'Journal of Eye Innovation in Security Analysis',
+    title: 'Journal of Eye-Innovation in Security Analysis',
     issn: '',
     chief: 'Prof. Ali Kashif Bashir',
     publishingModel: 'Open access',
@@ -107,68 +107,14 @@ Journal of Eye-Innovation in Machine Learning (JEIML) is an open-access internat
       'Cloud and IoT Security Assessments'
     ],
     editorialTeam: [
-      { 
-        id: 'ali-kashif-bashir', 
-        name: 'Ali Kashif Bashir', 
-        role: 'Editor in Chief', 
-        affiliation: 'Manchester Metropolitan University: Manchester, England, GB - Professor of Networks and Cybersecurity, Computing and Mathematics', 
-        email: 'dr.alikashif.b@ieee.org', 
-        orcid: '0000-0003-2601-9327', 
-        photo: '/ali_kashif_bashir.png' 
-      },
-      { 
-        id: 'nadhem-ebrahim', 
-        name: 'Dr. Nadhem Ebrahim', 
-        role: 'Managing Editor', 
-        affiliation: 'University of Akron, Akron, United States', 
-        email: 'nebrahim@uakron.edu', 
-        orcid: '0000-0001-9975-589X', 
-        photo: '/nadhem_ebrahim.png' 
-      },
-      { 
-        id: 'sultan-ahmed', 
-        name: 'Dr. Sultan Ahmed', 
-        role: 'Editorial Board Member', 
-        affiliation: 'Prince Sattam Bin Abdulaziz University, Al-Kharj, Saudi Arabia', 
-        orcid: '0000-0002-3198-7974' 
-      },
-      { 
-        id: 'rizwan-ali-naqvi', 
-        name: 'Dr. Rizwan Ali NAQVI', 
-        role: 'Editorial Board Member', 
-        affiliation: 'Sejong University South Korea', 
-        orcid: '0000-0002-7473-8441' 
-      },
-      { 
-        id: 'osamah-ibrahim-khalaf', 
-        name: 'Dr. Osamah Ibrahim Khalaf', 
-        role: 'Editorial Board Member', 
-        affiliation: 'Al-Nahrain University, Al-Nahrain Nanorenewable Energy Research Center', 
-        email: 'Usama81818@nahrainuniv.edu.iq', 
-        orcid: '0000-0002-4750-8384' 
-      },
-      { 
-        id: 'eid-rehman', 
-        name: 'Dr. Eid Rehman', 
-        role: 'Editorial Board Member', 
-        affiliation: 'Department of Computer Science and information Technology, University of Mianwali, Pakistan', 
-        email: 'eid.rehman@umw.edu.pk' 
-      },
-      { 
-        id: 'zaheen-fatima', 
-        name: 'Dr. zaheen Fatima', 
-        role: 'Editorial Board Member', 
-        affiliation: 'Sir Syed University of Engineering and Technology Karachi', 
-        email: 'zaheen.fatima@ssuet.edu.pk' 
-      },
-      { 
-        id: 'h-jafari', 
-        name: 'Dr. H. Jafari', 
-        role: 'Editorial Board Member', 
-        affiliation: 'Professor Department of Mathematical Sciences, University of South Africa, South Africa', 
-        email: 'jafah@unisa.ac.za', 
-        orcid: '0000-0001-6807-6675' 
-      }
+      { id: 'ali-kashif-bashir', name: 'Ali Kashif Bashir', role: 'Editor in Chief', affiliation: 'Manchester Metropolitan University: Manchester, England, GB - Professor of Networks and Cybersecurity, Computing and Mathematics', email: 'dr.alikashif.b@ieee.org', orcid: '0000-0003-2601-9327', photo: '/ali_kashif_bashir.png' },
+      { id: 'nadhem-ebrahim', name: 'Dr. Nadhem Ebrahim', role: 'Managing Editor', affiliation: 'University of Akron, Akron, United States', orcid: '0000-0001-9975-589X', photo: '/nadhem_ebrahim.png' },
+      { id: 'sultan-ahmed', name: 'Dr. Sultan Ahmed', role: 'Editorial Board Member', affiliation: 'Prince Sattam Bin Abdulaziz University, Al-Kharj, Saudi Arabia', orcid: '0000-0002-3198-7974' },
+      { id: 'rizwan-ali-naqvi', name: 'Dr. Rizwan Ali Naqvi', role: 'Editorial Board Member', affiliation: 'Sejong University, South Korea', orcid: '0000-0002-7473-8441' },
+      { id: 'osamah-ibrahim-khalaf', name: 'Dr. Osamah Ibrahim Khalaf', role: 'Editorial Board Member', affiliation: 'Al-Nahrain University, Baghdad, Iraq', orcid: '0000-0002-4750-8384' },
+      { id: 'eid-rehman', name: 'Dr. Eid Rehman', role: 'Editorial Board Member', affiliation: 'University of Mianwali, Pakistan', orcid: '' },
+      { id: 'zaheen-fatima', name: 'Dr. Zaheen Fatima', role: 'Editorial Board Member', affiliation: 'Sir Syed University of Engineering and Technology, Karachi, Pakistan', orcid: '' },
+      { id: 'h-jafari', name: 'Dr. H. Jafari', role: 'Editorial Board Member', affiliation: 'Professor, Department of Mathematical Sciences, University of South Africa, South Africa', orcid: '0000-0001-6807-6675' }
     ],
     guidelines: `Journal of Eye Innovation in Security Analysis is an international, peer-reviewed, open-access academic journal dedicated to publishing high-quality research in cybersecurity, information security, risk auditing, data privacy, network security, and related emerging technologies. The journal engages both established and emerging researchers from around the world and upholds the highest standards of academic integrity and scholarly excellence.
 
@@ -211,7 +157,7 @@ Journal of Eye Innovation in Security Analysis (JEISA) is an open-access interna
       misbehavior: 'Unethical actions such as submission manipulation, peer-review interference, citation gaming, and identity falsification are treated as serious violations and lead to strict disciplinary action.',
       corrections: `{{JOURNAL_ACRONYM}} allows: \n• Corrections (Errata) for minor errors not affecting conclusions. \n• Withdrawals for early-stage submissions before peer review. \nPost-publication withdrawals are permitted only in exceptional circumstances.`
     },
-    cover: '/jeisa_cover.jpg'
+    cover: '/jeisa_cover_new.png'
   }
 ];
 
@@ -219,21 +165,21 @@ export const articles = [];
 
 export const editors = [
   {
-    id: 'rajit-nair',
+    id: 'ali-kashif-bashir',
     name: 'Prof. Ali Kashif Bashir',
     role: 'Editor-in-Chief',
-    affiliation: 'VIT Bhopal University, Bhopal, India',
-    areas: ['Machine Learning', 'Computer Vision', 'Image Processing'],
-    bio: 'Prof. Ali Kashif Bashir is an Associate Professor at VIT Bhopal University. His research focuses on the intersection of machine learning and healthcare diagnostics.',
+    affiliation: 'Manchester Metropolitan University, Manchester, United Kingdom',
+    areas: ['Cybersecurity', 'Network Systems', 'Security Analysis'],
+    bio: 'Prof. Ali Kashif Bashir is a Professor at Manchester Metropolitan University. His research focuses on the intersection of cybersecurity, network management, and future internet technologies.',
     photo: '/ali_kashif_bashir.png'
   },
   {
-     id: 'Irfan Uddin',
+     id: 'irfan-uddin',
      name: 'Prof. Dr. M. Irfan Uddin',
      role: 'Editor-in-Chief',
-     affiliation: 'University of Guadalajara, Mexico',
-     areas: ['Swarm Intelligence', 'Image Processing', 'Optimization'],
-     bio: 'Prof. Dr. M. Irfan Uddin is a renowned researcher in meta-heuristic optimization and its applications in image engineering.',
+     affiliation: 'University of Swabi, Pakistan',
+     areas: ['Machine Learning', 'Artificial Intelligence', 'Computational Intelligence'],
+     bio: 'Prof. Dr. M. Irfan Uddin is a renowned researcher in computational intelligence and machine learning applications in modern science.',
      photo: '/prof_irfan_uddin_uploaded.png'
   },
 ];

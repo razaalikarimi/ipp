@@ -8,7 +8,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full bg-[#050B14] text-white pt-24 pb-12 font-sans selection:bg-[#4BA6B9]/20 border-t border-white/5">
+    <footer className="w-full bg-[#050B14] text-white pt-16 pb-8 font-sans selection:bg-[#4BA6B9]/20 border-t border-white/5">
       <div className="max-w-[1240px] mx-auto px-6">
         
         {/* 3-Column Professional Grid */}

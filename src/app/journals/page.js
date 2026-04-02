@@ -25,13 +25,13 @@ export default function JournalsPage() {
            <div className="max-w-[1240px] mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                  {journals.map((j) => (
-                    <Link href={`/journals/${j.slug}`} key={j.id}>
-                       <div className="bg-white rounded-3xl shadow-sm border border-[#E2E8F0] overflow-hidden flex flex-col md:flex-row h-auto min-h-[380px] transition-all duration-500 cursor-pointer">
-                          <div className="w-full md:w-64 h-72 md:h-auto flex flex-col justify-center items-center relative overflow-hidden shrink-0 border-b md:border-b-0 md:border-r border-[#E2E8F0]">
+                    <Link href={`/journals/${j.slug}`} key={j.id} className="group">
+                       <div className="bg-white rounded-3xl shadow-sm border border-[#E2E8F0] overflow-hidden flex flex-col md:flex-row h-auto md:h-[350px] transition-all duration-500 cursor-pointer hover:shadow-2xl">
+                          <div className="w-full md:w-[220px] h-82 md:h-auto flex flex-col justify-center items-center relative overflow-hidden shrink-0 border-b md:border-b-0 md:border-r border-[#E2E8F0] bg-[#F4F6F8]">
                              {j.cover ? (
                                 <>
-                                  <img src={j.cover} alt="" className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-30 scale-110" />
-                                  <img src={j.cover} alt={j.title} className="relative z-10 w-full h-full object-contain p-4" />
+                                  <img src={j.cover} alt="" className="absolute inset-0 w-full h-full object-cover blur-3xl opacity-10 scale-125" />
+                                  <img src={j.cover} alt={j.title} className="relative z-10 w-full h-full object-cover" />
                                 </>
                              ) : (
                                <>

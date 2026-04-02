@@ -30,7 +30,7 @@ h4,
 h5,
 h6 {
   font-weight: 700;
-  color: #1A1A1A;
+  color: inherit;
   margin-bottom: 1rem;
 }
 
@@ -68,3 +68,15 @@ h6 {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
   border: 1px solid #F1F1F1;
 }
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.rotate-y-6 {
+  transform: rotateY(-6deg);
+}
+
+.hover\:rotate-y-6:hover {
+  transform: rotateY(0deg);
+}

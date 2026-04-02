@@ -89,8 +89,8 @@ export default function Header() {
   return (
     <header className={cn(
       "sticky top-0 z-50 w-full transition-all duration-300 bg-white border-b border-[#F1F1F1]",
-       // Fixed height to h-24 as per user request (no motion on scroll)
-      "h-24", 
+       // Fixed height to h-20 (80px) for a more compact feel
+      "h-20", 
       isScrolled ? "shadow-md" : "shadow-none"
     )}>
       <div className="max-w-[1240px] mx-auto px-6 h-full flex items-center justify-between">

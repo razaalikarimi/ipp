@@ -89,10 +89,17 @@ export default function JournalSectionPage() {
                                       <Users size={32} />
                                    </div>
                                 )}
-                                <h4 className="text-[15px] font-medium text-[#1E293B] mb-1 leading-snug">{ed.name}</h4>
-                                <p className="text-[11px] font-medium text-[#2563EB]/80 leading-relaxed max-w-[240px] px-2">{ed.affiliation}</p>
+                                <h4 className="text-[15px] font-bold text-[#1E293B] mb-1 leading-snug">{ed.name}</h4>
+                                <p className="text-[11px] font-medium text-[#64748B] leading-relaxed max-w-[240px] px-2 mb-4">{ed.affiliation}</p>
                                 
-
+                                <div className="space-y-2 pt-3 border-t border-[#F1F5F9] w-full">
+                                   {ed.orcid && (
+                                      <a href={`https://orcid.org/${ed.orcid}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center space-x-2 text-[11px] font-bold text-[#4BA6B9] hover:underline transition-all">
+                                         <Globe size={12} />
+                                         <span>View ORCID</span>
+                                      </a>
+                                   )}
+                                </div>
                              </div>
                          ))}
                       </div>
@@ -200,25 +207,25 @@ export default function JournalSectionPage() {
          </div>
       </div>
 
-      <main className="flex-grow pb-40 px-6">
-        <div className="max-w-[1240px] mx-auto mt-20 grid lg:grid-cols-12 gap-20 items-start">
+      <main className="flex-grow pb-24 px-6">
+        <div className="max-w-[1240px] mx-auto mt-12 grid lg:grid-cols-12 gap-12 items-start">
            
            {/* Sidebar Info Card */}
            <div className="lg:col-span-3 space-y-10">
                <div className="bg-white border border-[#E2E8F0] shadow-sm rounded-2xl overflow-hidden group">
-                <div className="w-full aspect-[2/3] flex flex-col items-center justify-center relative overflow-hidden">
-                   <img src={journal.cover} alt="" className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-30 scale-110" />
-                   <img src={journal.cover} alt={journal.title} className="relative z-10 w-full h-full object-contain p-6 transition-transform duration-700 drop-shadow-2xl" />
-                   <div className="absolute bottom-0 inset-x-0 bg-black/60 backdrop-blur-sm py-4 text-[9px] font-bold tracking-[0.2em] uppercase text-white text-center z-20 border-t border-white/10">Repository Visual</div>
-                </div>
-                
-                <div className="p-6 space-y-6">
-                   <Link href={`/dashboard/submit?journal=${journal.id}`} className="w-full bg-[#1A1A1A] text-white py-4 text-[11px] font-bold uppercase tracking-widest flex items-center justify-center space-x-3 hover:bg-[#4BA6B9] transition-all rounded-xl shadow-lg shadow-black/10 hover:shadow-[#4BA6B9]/20 hover:-translate-y-0.5 whitespace-nowrap">
-                    <span>Submit Manuscript</span>
-                    <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </div>
-              </div>
+                 <div className="w-full aspect-[2/3] flex flex-col items-center justify-center relative overflow-hidden bg-[#F4F6F8]">
+                    <img src={journal.cover} alt="" className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-30 scale-110" />
+                    <img src={journal.cover} alt={journal.title} className="relative z-10 w-full h-full object-cover" />
+                    <div className="absolute bottom-0 inset-x-0 bg-black/60 backdrop-blur-sm py-4 text-[9px] font-bold tracking-[0.2em] uppercase text-white text-center z-20 border-t border-white/10">Repository Visual</div>
+                 </div>
+                 
+                 <div className="p-6 space-y-6">
+                    <Link href={`/dashboard/submit?journal=${journal.id}`} className="w-full bg-[#1A1A1A] text-white py-4 text-[11px] font-bold uppercase tracking-widest flex items-center justify-center space-x-3 hover:bg-[#4BA6B9] transition-all rounded-xl shadow-lg shadow-black/10 hover:shadow-[#4BA6B9]/20 hover:-translate-y-0.5 whitespace-nowrap">
+                     <span>Submit Manuscript</span>
+                     <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                   </Link>
+                 </div>
+               </div>
 
                <div className="p-8 bg-[#F8FAFC] rounded-2xl border border-[#E2E8F0] flex items-center space-x-4">
                   <div className="w-10 h-10 rounded-full bg-[#4BA6B9]/10 flex items-center justify-center text-[#4BA6B9]">
