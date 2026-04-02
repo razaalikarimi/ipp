@@ -199,12 +199,9 @@ export default function Home() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                  {journals.map((j) => (
                     <Link key={j.slug} href={`/journals/${j.slug}`} className="bg-white rounded-2xl shadow-lg border border-[#F1F1F1] overflow-hidden flex flex-col md:flex-row h-auto md:h-[320px] transition-all duration-500 group hover:shadow-2xl">
-                       <div className="w-full md:w-[220px] h-80 md:h-auto flex flex-col justify-center items-center relative overflow-hidden shrink-0 bg-[#F4F6F8]">
+                       <div className="w-full md:w-[260px] shrink-0 border-r border-[#F1F1F1] bg-[#F4F6F8] relative flex items-center justify-center p-0">
                           {j.cover ? (
-                             <>
-                               <img src={j.cover} alt="" className="absolute inset-0 w-full h-full object-cover blur-3xl opacity-10 scale-125" />
-                               <img src={j.cover} alt={j.title} className="relative z-10 w-full h-full object-cover" />
-                             </>
+                             <img src={j.cover} alt={j.title} className="w-full h-full object-cover" />
                           ) : (
                              <div className="bg-[#0B1F3A] w-full h-full flex items-center justify-center">
                                 <span className="text-white text-[10px] font-bold tracking-widest">EISR PRESS</span>
@@ -213,13 +210,13 @@ export default function Home() {
                        </div>
                        <div className="flex-grow p-8 flex flex-col justify-between">
                           <div className="space-y-4">
-                             <h3 className="text-xl font-bold text-[#1e78ff] leading-tight transition-colors">{j.title}</h3>
+                             <h3 className="text-xl font-bold text-[#1A1A1A] group-hover:text-[#4BA6B9] leading-tight transition-colors">{j.title}</h3>
                           </div>
-                          <div className="space-y-4">
-                             <p className="text-sm font-bold text-[#1A1A1A]">Editor-in-Chief: {j.chief}</p>
-                             <div className="flex items-center space-x-3 text-[#4BA6B9] font-bold text-[11px]">
-                                <span>{j.indexing.split(',')[0]}</span>
-                                <div className="w-10 h-6 bg-[#F1F1F1] rounded text-[8px] flex items-center justify-center font-extrabold opacity-40">INDEX</div>
+                          <div className="space-y-5 mt-6">
+                             <p className="text-[13px] font-bold text-[#555555] border-l-2 border-[#F1F1F1] pl-3">Editor-in-Chief: {j.chief}</p>
+                             <div className="flex flex-col space-y-3">
+                                <span className="text-[#4BA6B9] font-bold text-[11px] leading-relaxed block">{j.indexing.split(',')[0]}</span>
+                                <div className="w-fit px-3 h-6 bg-[#F1F6FA] rounded text-[9px] flex items-center justify-center font-extrabold text-[#4BA6B9]">INDEXED</div>
                              </div>
                           </div>
                        </div>

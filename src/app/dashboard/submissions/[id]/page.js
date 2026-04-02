@@ -36,6 +36,20 @@ export default function SubmissionWorkflowPage({ params }) {
   const [activeStep, setActiveStep] = useState('Submission');
   const [workflowOpen, setWorkflowOpen] = useState(true);
   const [pubOpen, setPubOpen] = useState(true);
+  const [formTitle, setFormTitle] = useState('');
+  const [formAbstract, setFormAbstract] = useState('');
+  const [formPrefix, setFormPrefix] = useState('');
+  const [formSubtitle, setFormSubtitle] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    if (submission) {
+      setFormTitle(submission.title || '');
+      setFormAbstract(submission.abstract || '');
+      setFormPrefix(submission.prefix || '');
+      setFormSubtitle(submission.subtitle || '');
+    }
+  }, [submission]);
 
   useEffect(() => {
     const fetchSubmission = async () => {
@@ -140,6 +154,18 @@ export default function SubmissionWorkflowPage({ params }) {
     display: 'block'
   });
 
+  const handleSave = async () => {
+    setIsSaving(true);
+    // Simulate API call for now to show functionality
+    await new Promise(r => setTimeout(r, 800));
+    setIsSaving(false);
+    alert('Changes saved successfully!');
+  };
+
+  const handleFeature = (feature) => {
+    alert(feature + ' feature will be available in the next release.');
+  };
+
   const sectionHeaderStyle = {
     display: 'flex',
     alignItems: 'center',
@@ -199,7 +225,10 @@ export default function SubmissionWorkflowPage({ params }) {
             </div>
           </div>
         </div>
-        <button style={{ backgroundColor: '#fff', border: '1px solid #005f96', color: '#005f96', padding: '6px 12px', fontSize: '13px', borderRadius: '2px', cursor: 'pointer', fontFamily: '"Noto Sans", sans-serif' }}>
+        <button 
+          onClick={() => handleFeature('Library')}
+          style={{ backgroundColor: '#fff', border: '1px solid #005f96', color: '#005f96', padding: '6px 12px', fontSize: '13px', borderRadius: '2px', cursor: 'pointer', fontFamily: '"Noto Sans", sans-serif' }}
+        >
           Library
         </button>
       </div>
@@ -290,7 +319,10 @@ export default function SubmissionWorkflowPage({ params }) {
                     
                     {submission.files?.length > 0 && (
                       <div style={{ padding: '12px 16px' }}>
-                        <button style={{ color: '#005f96', fontSize: '13px', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+                        <button 
+                          onClick={() => handleFeature('Download')}
+                          style={{ color: '#005f96', fontSize: '13px', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                        >
                           Download All Files
                         </button>
                       </div>
@@ -301,7 +333,12 @@ export default function SubmissionWorkflowPage({ params }) {
                   <div style={{ border: '1px solid #e2e8f0', borderRadius: '2px' }}>
                     <div style={{ padding: '12px 16px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <h3 style={{ fontSize: '13px', fontWeight: '700', color: '#1e293b', margin: 0 }}>Pre-Review Discussions</h3>
-                      <button style={{ fontSize: '13px', color: '#005f96', background: 'none', border: 'none', cursor: 'pointer' }}>Add discussion</button>
+                      <button 
+                        onClick={() => handleFeature('Add Discussion')}
+                        style={{ fontSize: '13px', color: '#005f96', background: 'none', border: 'none', cursor: 'pointer' }}
+                      >
+                        Add discussion
+                      </button>
                     </div>
                     
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 180px 120px 60px 40px', padding: '10px 16px', backgroundColor: '#f8fafc', fontSize: '10px', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', borderBottom: '1px solid #e2e8f0' }}>
@@ -358,29 +395,57 @@ export default function SubmissionWorkflowPage({ params }) {
 
                   <div style={{ marginBottom: '16px' }}>
                     <label style={labelStyle}>Prefix</label>
-                    <input type="text" style={{ ...inputStyle, width: '120px' }} placeholder="Examples: A, The" />
+                    <input 
+                      type="text" 
+                      style={{ ...inputStyle, width: '120px' }} 
+                      placeholder="Examples: A, The" 
+                      value={formPrefix}
+                      onChange={(e) => setFormPrefix(e.target.value)}
+                    />
                   </div>
 
                   <div style={{ marginBottom: '16px' }}>
                     <label style={labelStyle}>Title <span style={{ color: '#dc2626' }}>*</span></label>
-                    <input type="text" defaultValue={submission.title} style={inputStyle} />
+                    <input 
+                      type="text" 
+                      style={inputStyle} 
+                      value={formTitle}
+                      onChange={(e) => setFormTitle(e.target.value)}
+                    />
                   </div>
 
                   <div style={{ marginBottom: '16px' }}>
                     <label style={labelStyle}>Subtitle</label>
-                    <input type="text" style={inputStyle} />
+                    <input 
+                      type="text" 
+                      style={inputStyle} 
+                      value={formSubtitle}
+                      onChange={(e) => setFormSubtitle(e.target.value)}
+                    />
                   </div>
 
                   <div style={{ marginBottom: '16px' }}>
                     <label style={labelStyle}>Abstract <span style={{ color: '#dc2626' }}>*</span></label>
                     <div style={{ border: '1px solid #cbd5e1', borderRadius: '2px', overflow: 'hidden' }}>
                       <WysiwygToolbar />
-                      <textarea rows={12} style={{ width: '100%', border: 'none', padding: '12px', outline: 'none', resize: 'vertical', fontSize: '13px', fontFamily: '"Noto Sans", sans-serif' }} defaultValue="Paste or write your manuscript abstract here..."></textarea>
+                      <textarea 
+                        rows={12} 
+                        style={{ width: '100%', border: 'none', padding: '12px', outline: 'none', resize: 'vertical', fontSize: '13px', fontFamily: '"Noto Sans", sans-serif' }} 
+                        value={formAbstract}
+                        onChange={(e) => setFormAbstract(e.target.value)}
+                        placeholder="Paste or write your manuscript abstract here..."
+                      ></textarea>
                     </div>
                   </div>
 
                   <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
-                    <button style={{ backgroundColor: '#005f96', color: '#fff', border: 'none', borderRadius: '2px', padding: '8px 24px', fontSize: '13px', fontWeight: '700', cursor: 'pointer' }}>Save</button>
+                    <button 
+                      onClick={handleSave}
+                      disabled={isSaving}
+                      style={{ backgroundColor: '#005f96', color: '#fff', border: 'none', borderRadius: '2px', padding: '8px 24px', fontSize: '13px', fontWeight: '700', cursor: isSaving ? 'not-allowed' : 'pointer', opacity: isSaving ? 0.7 : 1 }}
+                    >
+                      {isSaving ? 'Saving...' : 'Save'}
+                    </button>
                   </div>
                 </div>
               )}
@@ -391,7 +456,12 @@ export default function SubmissionWorkflowPage({ params }) {
                   <div style={{ border: '1px solid #e2e8f0', borderRadius: '2px' }}>
                     <div style={{ padding: '12px 16px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <h3 style={{ fontSize: '13px', fontWeight: '700', color: '#1e293b', margin: 0 }}>Contributors</h3>
-                      <button style={{ fontSize: '13px', color: '#005f96', background: 'none', border: 'none', cursor: 'pointer' }}>Add Contributor</button>
+                      <button 
+                        onClick={() => handleFeature('Add Contributor')}
+                        style={{ fontSize: '13px', color: '#005f96', background: 'none', border: 'none', cursor: 'pointer' }}
+                      >
+                        Add Contributor
+                      </button>
                     </div>
                     
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 140px 100px 80px', padding: '10px 16px', backgroundColor: '#f8fafc', fontSize: '10px', fontWeight: '700', color: '#64748b', textTransform: 'uppercase', borderBottom: '1px solid #e2e8f0' }}>
@@ -428,7 +498,13 @@ export default function SubmissionWorkflowPage({ params }) {
                     <input type="text" style={inputStyle} />
                   </div>
                   <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
-                    <button style={{ backgroundColor: '#005f96', color: '#fff', border: 'none', borderRadius: '2px', padding: '8px 24px', fontSize: '13px', fontWeight: '700', cursor: 'pointer' }}>Save</button>
+                    <button 
+                      onClick={handleSave}
+                      disabled={isSaving}
+                      style={{ backgroundColor: '#005f96', color: '#fff', border: 'none', borderRadius: '2px', padding: '8px 24px', fontSize: '13px', fontWeight: '700', cursor: isSaving ? 'not-allowed' : 'pointer', opacity: isSaving ? 0.7 : 1 }}
+                    >
+                      {isSaving ? 'Saving...' : 'Save'}
+                    </button>
                   </div>
                 </div>
               )}
@@ -439,7 +515,13 @@ export default function SubmissionWorkflowPage({ params }) {
                   <label style={labelStyle}>References</label>
                   <textarea rows={15} style={{ ...inputStyle, resize: 'vertical' }} placeholder="Provide a list of references cited in this submission. Please separate individual references with a blank line."></textarea>
                   <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '16px', display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
-                    <button style={{ backgroundColor: '#005f96', color: '#fff', border: 'none', borderRadius: '2px', padding: '8px 24px', fontSize: '13px', fontWeight: '700', cursor: 'pointer' }}>Save</button>
+                    <button 
+                      onClick={handleSave}
+                      disabled={isSaving}
+                      style={{ backgroundColor: '#005f96', color: '#fff', border: 'none', borderRadius: '2px', padding: '8px 24px', fontSize: '13px', fontWeight: '700', cursor: isSaving ? 'not-allowed' : 'pointer', opacity: isSaving ? 0.7 : 1 }}
+                    >
+                      {isSaving ? 'Saving...' : 'Save'}
+                    </button>
                   </div>
                 </div>
               )}
@@ -517,7 +599,12 @@ export default function SubmissionWorkflowPage({ params }) {
                 <div style={{ border: '1px solid #e2e8f0', borderRadius: '2px' }}>
                   <div style={{ padding: '12px 16px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <h3 style={{ fontSize: '13px', fontWeight: '700', color: '#1e293b', margin: 0 }}>Galleys</h3>
-                    <button style={{ fontSize: '13px', color: '#005f96', background: 'none', border: 'none', cursor: 'pointer' }}>Add Galley</button>
+                    <button 
+                      onClick={() => handleFeature('Add Galley')}
+                      style={{ fontSize: '13px', color: '#005f96', background: 'none', border: 'none', cursor: 'pointer' }}
+                    >
+                      Add Galley
+                    </button>
                   </div>
                   <div style={{ padding: '24px', textAlign: 'center', fontSize: '13px', color: '#64748b' }}>No galleys have been created.</div>
                 </div>
