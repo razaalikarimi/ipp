@@ -21,9 +21,17 @@ export async function GET() {
         username VARCHAR(255) UNIQUE,
         email VARCHAR(255) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL,
+        role VARCHAR(50) DEFAULT 'author',
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
+
+    // Ensure role column exists if table was created previously
+    const [userCols] = await connection.query(`SHOW COLUMNS FROM users`);
+    const userColNames = userCols.map(c => c.Field);
+    if (!userColNames.includes('role')) {
+      await connection.query(`ALTER TABLE users ADD COLUMN role VARCHAR(50) DEFAULT 'author' AFTER password`);
+    }
 
     // Password reset tokens table
     await connection.query(`

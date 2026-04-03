@@ -219,7 +219,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Editorial Console (Visible to Editor/Admin) */}
-        {(profile?.role === 'editor' || profile?.role === 'admin' || true) && (
+        {(profile?.role === 'editor' || profile?.role === 'admin') && (
           <div style={{ backgroundColor: '#fff', border: '1px solid #005f96', borderRadius: '8px', padding: '20px 24px', gridColumn: 'span 2' }}>
             <h2 style={{ fontSize: '14px', fontWeight: '700', color: '#005f96', margin: '0 0 16px 0', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <SlidersHorizontal size={15} /> Editorial Management Console

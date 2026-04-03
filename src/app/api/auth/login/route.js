@@ -19,7 +19,7 @@ export async function POST(req) {
 
     // Fetch user from DB
     const [users] = await pool.query(
-      'SELECT id, fullName, username, email, password FROM users WHERE email = ? OR username = ?',
+      'SELECT id, fullName, username, email, password, role FROM users WHERE email = ? OR username = ?',
       [identifier, identifier]
     );
 
@@ -44,7 +44,7 @@ export async function POST(req) {
 
     // Generate JWT token
     const token = jwt.sign(
-      { userId: user.id, email: user.email, name: user.fullName },
+      { userId: user.id, email: user.email, name: user.fullName, role: user.role },
       JWT_SECRET,
       { expiresIn: '2h' }
     );
@@ -58,7 +58,8 @@ export async function POST(req) {
           id: user.id,
           fullName: user.fullName,
           username: user.username,
-          email: user.email
+          email: user.email,
+          role: user.role
         }
       },
       { status: 200 }

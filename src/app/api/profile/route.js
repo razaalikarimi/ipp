@@ -13,6 +13,7 @@ export async function GET(req) {
         fullName,
         username,
         email,
+        role,
         givenName,
         familyName,
         affiliation,
