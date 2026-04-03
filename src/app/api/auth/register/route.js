@@ -46,13 +46,14 @@ export async function POST(req) {
 
     const [result] = await pool.query(
       `INSERT INTO users
-      (fullName, username, email, password, givenName, familyName, affiliation, country)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      (fullName, username, email, password, role, givenName, familyName, affiliation, country)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         fullName,
         username,
         email,
         hashedPassword,
+        'author',
         givenName || null,
         familyName || null,
         affiliation,

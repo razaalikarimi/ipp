@@ -21,8 +21,10 @@ export async function GET(req, { params }) {
 
     const submission = subRows[0];
     
-    // Auth check - user must own it or be assigned as a reviewer
-    let isAuthorized = (submission.user_id === user.userId);
+    // Auth check - user must own it, be an editor/admin, or be assigned as a reviewer
+    let isEditorial = (user.role === 'editor' || user.role === 'admin');
+    let isOwner = (submission.user_id === user.userId);
+    let isAuthorized = isOwner || isEditorial;
     let assignment = null;
 
     if (!isAuthorized) {
@@ -62,6 +64,41 @@ export async function GET(req, { params }) {
       [id]
     );
 
+    // 5. Get all assignments & reviews (Full details only for editors/admins)
+    let allAssignments = [];
+    if (isEditorial) {
+      const [allAssRows] = await pool.query(
+        `SELECT ra.id, ra.status, ra.assigned_at, u.fullName as reviewerName, u.email as reviewerEmail 
+         FROM reviewer_assignments ra
+         LEFT JOIN users u ON ra.user_id = u.id
+         WHERE ra.submission_id = ?`,
+        [id]
+      );
+
+      const [allRevRows] = await pool.query(
+        `SELECT sr.*, u.fullName as reviewerName 
+         FROM submission_reviews sr
+         LEFT JOIN users u ON sr.user_id = u.id
+         WHERE sr.submission_id = ?`,
+        [id]
+      );
+
+      allAssignments = allAssRows.map(ass => {
+        const review = allRevRows.find(r => r.user_id === ass.user_id);
+        return {
+          ...ass,
+          review: review ? {
+            recommendation: review.recommendation,
+            commentsAuthors: review.comments_authors,
+            commentsEditors: review.comments_editors,
+            rating: review.rating,
+            date: review.created_at,
+            isDraft: review.is_draft
+          } : null
+        };
+      });
+    }
+
 // Format response
     return NextResponse.json({
       success: true,
@@ -83,7 +120,8 @@ export async function GET(req, { params }) {
           date: d.created_at,
           replies: 0
         })),
-        assignment: assignment
+        assignment: assignment,
+        assignments: allAssignments
       }
     }, { status: 200 });
   } catch (error) {
@@ -103,7 +141,9 @@ export async function PUT(req, { params }) {
     // Auth check: only owner can update for now
     const [subRows] = await pool.query('SELECT user_id FROM submissions WHERE id = ?', [id]);
     if (subRows.length === 0) return NextResponse.json({ success: false, message: 'Not found' }, { status: 404 });
-    if (subRows[0].user_id !== user.userId) return unauthorizedResponse();
+    
+    const isEditorial = (user.role === 'editor' || user.role === 'admin');
+    if (subRows[0].user_id !== user.userId && !isEditorial) return unauthorizedResponse();
 
     // Update submission (assuming abstract/prefix/subtitle have been added to schema)
     await pool.query(

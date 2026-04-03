@@ -40,7 +40,13 @@ export default function SubmissionWorkflowPage({ params }) {
   const [formAbstract, setFormAbstract] = useState('');
   const [formPrefix, setFormPrefix] = useState('');
   const [formSubtitle, setFormSubtitle] = useState('');
+  const [user, setUser] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
+  
+  // Decision State
+  const [decision, setDecision] = useState('');
+  const [decisionComments, setDecisionComments] = useState('');
+  const [recordingDecision, setRecordingDecision] = useState(false);
 
   useEffect(() => {
     if (submission) {
@@ -52,30 +58,37 @@ export default function SubmissionWorkflowPage({ params }) {
   }, [submission]);
 
   useEffect(() => {
-    const fetchSubmission = async () => {
+    const fetchEverything = async () => {
       try {
         const token = localStorage.getItem('eisr_token');
+        if (!token) return;
+
+        // Fetch User profile to check role
+        const profRes = await fetch('/api/profile', { headers: { 'Authorization': `Bearer ${token}` } });
+        const profData = await profRes.json();
+        if (profData.success) setUser(profData.profile);
+
         const res = await fetch(`/api/submissions/${id}?t=${Date.now()}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          },
+          headers: { 'Authorization': `Bearer ${token}` },
           cache: 'no-store'
         });
         const data = await res.json();
         if (data.success) {
           setSubmission(data.submission);
+          // If the API now returns assignments directly in submission object, use it
+          if (data.submission.assignments) setAssignments(data.submission.assignments);
         } else {
           setError(data.message || 'Failed to load submission');
         }
 
-        // Fetch existing assignments for this submission
-        const assignRes = await fetch(`/api/reviewer/assignments?submissionId=${id}&t=${Date.now()}`, {
-          headers: { 'Authorization': `Bearer ${token}` },
-          cache: 'no-store'
-        });
-        const assignData = await assignRes.json();
-        if (assignData.success) {
-          setAssignments(assignData.assignments || []);
+        // Fallback backward compat if assignments weren't in detail res
+        if (!data.submission?.assignments) {
+          const assignRes = await fetch(`/api/reviewer/assignments?submissionId=${id}&t=${Date.now()}`, {
+            headers: { 'Authorization': `Bearer ${token}` },
+            cache: 'no-store'
+          });
+          const assignData = await assignRes.json();
+          if (assignData.success) setAssignments(assignData.assignments || []);
         }
 
       } catch (err) {
@@ -84,7 +97,7 @@ export default function SubmissionWorkflowPage({ params }) {
         setLoading(false);
       }
     };
-    fetchSubmission();
+    fetchEverything();
   }, [id]);
 
   const handleAssignReviewer = async () => {
@@ -125,6 +138,26 @@ export default function SubmissionWorkflowPage({ params }) {
     } finally {
       setAssigningLoading(false);
     }
+  };
+
+  const handleDecision = async () => {
+    if (!decision) return alert('Select a decision');
+    setRecordingDecision(true);
+    try {
+      const token = localStorage.getItem('eisr_token');
+      const res = await fetch(`/api/submissions/${id}/decision`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ decision, comments: decisionComments })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSubmission(prev => ({ ...prev, status: data.newStatus, activity: data.newActivity }));
+        alert('Editorial decision recorded successfully!');
+      } else {
+        alert(data.message);
+      }
+    } catch (err) { alert('Error recording decision'); } finally { setRecordingDecision(false); }
   };
 
   if (loading) {
@@ -591,13 +624,22 @@ export default function SubmissionWorkflowPage({ params }) {
                             <tr key={a.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
                               <td style={{ padding: '10px', color: '#005f96', fontWeight: '600' }}>{a.reviewerName || a.reviewerEmail}</td>
                               <td style={{ padding: '10px' }}>
-                                <span style={{ 
-                                  padding: '2px 8px', borderRadius: '12px', fontSize: '11px', fontWeight: '600',
-                                  backgroundColor: a.status === 'Accepted' ? '#dcfce3' : a.status === 'Declined' ? '#fee2e2' : '#f1f5f9',
-                                  color: a.status === 'Accepted' ? '#166534' : a.status === 'Declined' ? '#991b1b' : '#475569'
-                                }}>
-                                  {a.status}
-                                </span>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                  <span style={{ 
+                                    width: 'fit-content', padding: '2px 8px', borderRadius: '12px', fontSize: '11px', fontWeight: '600',
+                                    backgroundColor: a.status === 'Accepted' ? '#dcfce3' : a.status === 'Declined' ? '#fee2e2' : a.status === 'Completed' ? '#e0f2fe' : '#f1f5f9',
+                                    color: a.status === 'Accepted' ? '#166534' : a.status === 'Declined' ? '#991b1b' : a.status === 'Completed' ? '#0369a1' : '#475569'
+                                  }}>
+                                    {a.status}
+                                  </span>
+                                  {a.review && (
+                                    <div style={{ fontSize: '11px', color: '#64748b', marginTop: '4px', border: '1px solid #e2e8f0', padding: '8px', borderRadius: '4px', backgroundColor: '#f8fafc' }}>
+                                      <div style={{ fontWeight: '700', color: '#334155', textTransform: 'uppercase', marginBottom: '4px' }}>Recommendation: {a.review.recommendation} (Rating: {a.review.rating}/10)</div>
+                                      <div style={{ marginBottom: '4px' }}><strong>Author Comments:</strong> {a.review.commentsAuthors}</div>
+                                      <div><strong>Editor Comments:</strong> {a.review.commentsEditors}</div>
+                                    </div>
+                                  )}
+                                </div>
                               </td>
                               <td style={{ padding: '10px', color: '#64748b' }}>{new Date(a.assigned_at).toLocaleDateString()}</td>
                             </tr>
@@ -623,6 +665,33 @@ export default function SubmissionWorkflowPage({ params }) {
                         {assigningLoading ? 'Sending Invitation...' : 'Assign & Send Email'}
                       </button>
                     </div>
+
+                    {/* Editorial Decision API call */}
+                    {(user?.role === 'editor' || user?.role === 'admin') && (
+                      <div style={{ borderTop: '3px solid #005f96', marginTop: '30px', paddingTop: '20px', backgroundColor: '#fafcff', padding: '20px', borderRadius: '4px' }}>
+                        <h3 style={{ fontSize: '14px', fontWeight: '700', color: '#005f96', marginTop: 0, marginBottom: '10px' }}>Record Editorial Decision</h3>
+                        <p style={{ fontSize: '12px', color: '#64748b', marginBottom: '20px' }}>Finalize the verdict for this manuscript based on reviewer evaluations. This will notify the author and move the submission to the next workflow stage.</p>
+                        
+                        <div style={{ marginBottom: '20px' }}>
+                          <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#334155', marginBottom: '8px' }}>Decision</label>
+                          <select value={decision} onChange={e => setDecision(e.target.value)} style={{ width: '300px', border: '1px solid #cbd5e1', borderRadius: '4px', padding: '8px 12px', fontSize: '13px', outline: 'none' }}>
+                            <option value="">Select Verdict</option>
+                            <option value="accept">Accept Submission (Publish)</option>
+                            <option value="revisions">Request Revisions</option>
+                            <option value="decline">Decline Submission (Reject)</option>
+                          </select>
+                        </div>
+                        
+                        <div style={{ marginBottom: '20px' }}>
+                          <label style={{ display: 'block', fontSize: '12px', fontWeight: '700', color: '#334155', marginBottom: '8px' }}>Editor Comments (For Author)</label>
+                          <textarea value={decisionComments} onChange={e => setDecisionComments(e.target.value)} placeholder="Provide feedback to the author about the decision..." style={{ width: '100%', minHeight: '100px', border: '1px solid #cbd5e1', borderRadius: '4px', padding: '8px 12px', fontSize: '13px', outline: 'none' }} />
+                        </div>
+                        
+                        <button onClick={handleDecision} disabled={recordingDecision} style={{ backgroundColor: '#005f96', color: '#fff', border: 'none', borderRadius: '4px', padding: '10px 24px', fontSize: '13px', fontWeight: '700', cursor: recordingDecision ? 'not-allowed' : 'pointer', opacity: recordingDecision ? 0.7 : 1 }}>
+                          {recordingDecision ? 'Recording Decision...' : 'Record Editorial Decision'}
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
