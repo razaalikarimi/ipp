@@ -45,6 +45,9 @@ export async function GET() {
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT NOT NULL,
         title TEXT NOT NULL,
+        prefix VARCHAR(120) DEFAULT '',
+        subtitle TEXT,
+        abstract TEXT,
         status VARCHAR(50) DEFAULT 'Submitted',
         activity VARCHAR(100) DEFAULT 'Unassigned',
         journal_id VARCHAR(50) DEFAULT 'jcsra',
@@ -54,6 +57,13 @@ export async function GET() {
         INDEX idx_journal (journal_id)
       )
     `);
+
+    // Ensure columns exist even if table was already created earlier
+    const [cols] = await connection.query(`SHOW COLUMNS FROM submissions`);
+    const colNames = cols.map(c => c.Field);
+    if (!colNames.includes('prefix')) await connection.query(`ALTER TABLE submissions ADD COLUMN prefix VARCHAR(120) DEFAULT '' AFTER title`);
+    if (!colNames.includes('subtitle')) await connection.query(`ALTER TABLE submissions ADD COLUMN subtitle TEXT AFTER prefix`);
+    if (!colNames.includes('abstract')) await connection.query(`ALTER TABLE submissions ADD COLUMN abstract TEXT AFTER subtitle`);
 
     // Submission contributors
     await connection.query(`

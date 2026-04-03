@@ -41,11 +41,12 @@ export default function SubmissionsTable({ title, filterFn, columns = 'reviewer'
         const searchParams = new URL(window.location.href).searchParams;
         const journalId = searchParams.get('journal');
         
-        let url = `/api/submissions?role=${columns}`;
+        let url = `/api/submissions?role=${columns}&t=${Date.now()}`;
         if (journalId) url += `&journal=${journalId}`;
         
         const res = await fetch(url, {
-          headers: { 'Authorization': `Bearer ${token}` }
+          headers: { 'Authorization': `Bearer ${token}` },
+          cache: 'no-store'
         });
         const data = await res.json();
         if (data.success) {

@@ -62,7 +62,7 @@ export async function GET(req, { params }) {
       [id]
     );
 
-    // Format response
+// Format response
     return NextResponse.json({
       success: true,
       submission: {
@@ -70,6 +70,9 @@ export async function GET(req, { params }) {
         title: submission.title,
         status: submission.status,
         activity: submission.activity,
+        prefix: submission.prefix || '',
+        subtitle: submission.subtitle || '',
+        abstract: submission.abstract || '',
         language: 'English',
         files: fileRows.map(f => ({ id: f.id, name: f.name, type: f.type, date: f.uploaded_at })),
         contributors: contribRows,
@@ -86,5 +89,31 @@ export async function GET(req, { params }) {
   } catch (error) {
     console.error('Fetch single submission error:', error);
     return NextResponse.json({ success: false, message: 'Internal server error' }, { status: 500 });
+  }
+}
+
+export async function PUT(req, { params }) {
+  const user = verifyRequestUser(req);
+  if (!user) return unauthorizedResponse();
+
+  const { id } = await params;
+  const { title, prefix, subtitle, abstract } = await req.json();
+
+  try {
+    // Auth check: only owner can update for now
+    const [subRows] = await pool.query('SELECT user_id FROM submissions WHERE id = ?', [id]);
+    if (subRows.length === 0) return NextResponse.json({ success: false, message: 'Not found' }, { status: 404 });
+    if (subRows[0].user_id !== user.userId) return unauthorizedResponse();
+
+    // Update submission (assuming abstract/prefix/subtitle have been added to schema)
+    await pool.query(
+      'UPDATE submissions SET title = ?, prefix = ?, subtitle = ?, abstract = ? WHERE id = ?',
+      [title, prefix || '', subtitle || '', abstract || '', id]
+    );
+
+    return NextResponse.json({ success: true, message: 'Updated successfully' });
+  } catch (error) {
+    console.error('Update submission error:', error);
+    return NextResponse.json({ success: false, message: 'Failed to update' }, { status: 500 });
   }
 }

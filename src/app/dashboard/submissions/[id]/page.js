@@ -55,10 +55,11 @@ export default function SubmissionWorkflowPage({ params }) {
     const fetchSubmission = async () => {
       try {
         const token = localStorage.getItem('eisr_token');
-        const res = await fetch(`/api/submissions/${id}`, {
+        const res = await fetch(`/api/submissions/${id}?t=${Date.now()}`, {
           headers: {
             'Authorization': `Bearer ${token}`
-          }
+          },
+          cache: 'no-store'
         });
         const data = await res.json();
         if (data.success) {
@@ -68,8 +69,9 @@ export default function SubmissionWorkflowPage({ params }) {
         }
 
         // Fetch existing assignments for this submission
-        const assignRes = await fetch(`/api/reviewer/assignments?submissionId=${id}`, {
-          headers: { 'Authorization': `Bearer ${token}` }
+        const assignRes = await fetch(`/api/reviewer/assignments?submissionId=${id}&t=${Date.now()}`, {
+          headers: { 'Authorization': `Bearer ${token}` },
+          cache: 'no-store'
         });
         const assignData = await assignRes.json();
         if (assignData.success) {
@@ -109,8 +111,9 @@ export default function SubmissionWorkflowPage({ params }) {
         setReviewerEmail('');
         setReviewerName('');
         // Refresh assignments list
-        const assignRes = await fetch(`/api/reviewer/assignments?submissionId=${id}`, {
-          headers: { 'Authorization': `Bearer ${token}` }
+        const assignRes = await fetch(`/api/reviewer/assignments?submissionId=${id}&t=${Date.now()}`, {
+          headers: { 'Authorization': `Bearer ${token}` },
+          cache: 'no-store'
         });
         const assignData = await assignRes.json();
         if (assignData.success) setAssignments(assignData.assignments || []);
@@ -156,10 +159,40 @@ export default function SubmissionWorkflowPage({ params }) {
 
   const handleSave = async () => {
     setIsSaving(true);
-    // Simulate API call for now to show functionality
-    await new Promise(r => setTimeout(r, 800));
-    setIsSaving(false);
-    alert('Changes saved successfully!');
+    try {
+      const token = localStorage.getItem('eisr_token');
+      const res = await fetch(`/api/submissions/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          title: formTitle,
+          prefix: formPrefix,
+          subtitle: formSubtitle,
+          abstract: formAbstract
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        // Update local submission state to reflect in UI immediately
+        setSubmission(prev => ({
+          ...prev,
+          title: formTitle,
+          prefix: formPrefix,
+          subtitle: formSubtitle,
+          abstract: formAbstract
+        }));
+        alert('Changes saved successfully!');
+      } else {
+        alert('Failed to save: ' + data.message);
+      }
+    } catch (error) {
+      alert('Error updating submission');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleFeature = (feature) => {
