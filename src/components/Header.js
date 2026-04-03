@@ -4,6 +4,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Menu, X, ChevronDown, LayoutDashboard, LogOut, User } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import Logo from './Logo';
 
 const navItems = [
@@ -95,9 +96,24 @@ export default function Header() {
     )}>
       <div className="max-w-[1240px] mx-auto px-6 h-full flex items-center justify-between">
         {/* Logo */}
-        <div className="relative w-[200px] lg:w-[260px] h-full flex items-center shrink-0">
-          <Link href="/" className="relative z-[100] transition-all duration-500 hover:scale-105 h-auto w-full flex items-center">
-            <Logo variant="full" />
+        <div className="relative flex items-center shrink-0">
+          <Link href="/" className="relative z-[100] transition-all duration-500 hover:scale-105 h-auto flex items-center gap-8">
+            <Logo variant="full" className="w-[200px] lg:w-[260px] h-[60px] lg:h-[75px]" />
+            {/* Journal-specific logos */}
+            {(currentJournalSlug === 'jcsra' || currentJournalSlug === 'jeiml') && (
+              <>
+                <div className="w-[1px] h-12 bg-gray-300 hidden sm:block" />
+                <div className="relative w-[170px] lg:w-[220px] h-[55px] lg:h-[70px]">
+                  <Image
+                    src={currentJournalSlug === 'jcsra' ? "/jeisa_header_logo.png" : "/jeiml_header_logo.png"}
+                    alt={`${currentJournalSlug.toUpperCase()} Logo`}
+                    fill
+                    className="object-contain"
+                    priority
+                  />
+                </div>
+              </>
+            )}
           </Link>
         </div>
 

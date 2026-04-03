@@ -18,8 +18,8 @@ export const metadata = {
   keywords: ["EISR", "Scientific Research", "Academic Publishing", "AI Research", "Sustainability", "Innovation"],
   authors: [{ name: "EISR" }],
   icons: {
-    icon: "/eisr_logo.png",
-    apple: "/eisr_logo.png",
+    icon: "/logoEISR.png",
+    apple: "/logoEISR.png",
   },
   openGraph: {
     title: "Eye-Innovations Scientific Research (EISR)",

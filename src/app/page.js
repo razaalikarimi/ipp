@@ -64,7 +64,7 @@ export default function Home() {
         {/* Sliding Hero Section */}
         <section 
           id="home"
-          className="relative h-[500px] bg-[#050B14] bg-cover bg-center flex items-center px-6 antialiased z-40 transition-all duration-1000 ease-in-out"
+          className="relative h-[420px] bg-[#050B14] bg-cover bg-center flex items-center px-6 antialiased z-40 transition-all duration-1000 ease-in-out"
           style={{ 
             backgroundImage: `url('${banners[currentBanner]}')`,
             backgroundRepeat: "no-repeat",
@@ -87,8 +87,8 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="absolute -bottom-24 md:-bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[950px] px-4 md:px-6 z-50">
-             <div className="bg-white rounded-xl shadow-xl py-6 px-6 lg:py-8 lg:px-20 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-4 lg:gap-8 border border-[#F1F1F1]">
+          <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 w-full max-w-[900px] px-4 md:px-6 z-50">
+             <div className="bg-white rounded-xl shadow-lg py-4 px-6 lg:py-6 lg:px-16 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-4 lg:gap-8 border border-[#F1F1F1]">
                 <div className="flex items-start space-x-4">
                    <div className="w-[1.5px] h-12 bg-[#4BA6B9] shrink-0"></div>
                    <div className="flex flex-col">
@@ -117,8 +117,8 @@ export default function Home() {
         </section>
 
         {/* Foundations Section */}
-        <section id="about" className="pt-20 md:pt-32 pb-12 md:pb-16 px-6 bg-white relative z-0">
-           <div className="max-w-[1240px] mx-auto space-y-16">
+        <section id="about" className="pt-24 pb-10 px-6 bg-white relative z-0">
+           <div className="max-w-[1240px] mx-auto space-y-10">
               
               <div className="max-w-4xl mx-auto">
                  <p className="text-lg md:text-xl text-[#333333] leading-relaxed text-justify font-medium">
@@ -126,11 +126,11 @@ export default function Home() {
                  </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                 <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-[#F1F1F1] p-10 flex flex-col h-full hover:shadow-xl transition-shadow">
-                    <div className="flex flex-col items-center mb-6">
-                       <BookOpen className="text-[#1D4ED8] w-12 h-12 mb-4" strokeWidth={1.5} />
-                       <h2 className="text-xl font-bold text-[#1A1A1A]">About</h2>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="bg-white rounded-2xl shadow-sm border border-[#F1F1F1] p-8 flex flex-col h-full hover:shadow-md transition-shadow">
+                     <div className="flex flex-col items-center mb-4">
+                        <BookOpen className="text-[#1D4ED8] w-10 h-10 mb-3" strokeWidth={1.5} />
+                        <h2 className="text-lg font-bold text-[#1A1A1A]">About</h2>
                     </div>
                     <div className="w-full h-px bg-[#F1F1F1] mb-6"></div>
                     <p className="text-sm text-[#555555] leading-relaxed text-center font-medium">
@@ -138,10 +138,10 @@ export default function Home() {
                     </p>
                  </div>
 
-                 <div className="bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-[#F1F1F1] p-10 flex flex-col h-full hover:shadow-xl transition-shadow">
-                    <div className="flex flex-col items-center mb-6">
-                       <Target className="text-[#1D4ED8] w-12 h-12 mb-4" strokeWidth={1.5} />
-                       <h2 className="text-xl font-bold text-[#1A1A1A]">Our Mission</h2>
+                  <div className="bg-white rounded-2xl shadow-sm border border-[#F1F1F1] p-8 flex flex-col h-full hover:shadow-md transition-shadow">
+                     <div className="flex flex-col items-center mb-4">
+                        <Target className="text-[#1D4ED8] w-10 h-10 mb-3" strokeWidth={1.5} />
+                        <h2 className="text-lg font-bold text-[#1A1A1A]">Our Mission</h2>
                     </div>
                     <div className="w-full h-px bg-[#F1F1F1] mb-6"></div>
                     <p className="text-sm text-[#555555] leading-relaxed text-center font-medium">
@@ -151,14 +151,14 @@ export default function Home() {
               </div>
 
               {/* Redesigned Scope & Focus Areas Section */}
-              <div className="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-[#F1F1F1] p-10 lg:p-14 flex flex-col h-full relative overflow-hidden group">
+               <div className="bg-white rounded-3xl shadow-sm border border-[#F1F1F1] p-8 lg:p-10 flex flex-col h-full relative overflow-hidden group">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-[#1D4ED8]/5 rounded-full -mr-32 -mt-32 blur-3xl" />
                   
-                  <div className="flex flex-col items-center mb-12 relative">
-                    <div className="w-16 h-16 bg-[#1e78ff]/10 rounded-2xl flex items-center justify-center text-[#1D4ED8] mb-6 shadow-sm border border-[#1D4ED8]/5">
-                        <Microscope size={32} strokeWidth={1.5} />
+                  <div className="flex flex-col items-center mb-8 relative">
+                    <div className="w-14 h-14 bg-[#1e78ff]/10 rounded-2xl flex items-center justify-center text-[#1D4ED8] mb-4 shadow-sm border border-[#1D4ED8]/5">
+                        <Microscope size={28} strokeWidth={1.5} />
                     </div>
-                    <h2 className="text-2xl font-black text-[#1A1A1A] tracking-tight">Scope & Focus Areas</h2>
+                    <h2 className="text-xl font-black text-[#1A1A1A] tracking-tight">Scope & Focus Areas</h2>
                     <p className="text-[11px] font-black text-[#4BA6B9] uppercase tracking-[0.2em] mt-2 opacity-80">Full Scientific Portfolio</p>
                   </div>
                   
@@ -172,7 +172,7 @@ export default function Home() {
                   </div>
 
                   {/* Indexing Targets Footer */}
-                  <div className="mt-20 pt-12 border-t border-[#F1F1F1] flex flex-col md:flex-row justify-between items-center gap-8 px-2 md:px-4">
+                   <div className="mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-8 px-2 md:px-4">
                     <div className="flex flex-col items-center md:items-start space-y-1">
                        <span className="text-[11px] font-black text-[#1A1A1A] opacity-40 uppercase tracking-widest">Indexing Targets</span>
                        <p className="text-[12px] font-bold text-[#555555]">Global Standard Compliance</p>
@@ -194,12 +194,12 @@ export default function Home() {
         </section>
 
         {/* Journals Grid */}
-        <section id="journals" className="bg-white py-12 lg:py-20 border-t border-[#F1F1F1]">
+        <section id="journals" className="bg-white py-10 lg:py-16">
            <div className="max-w-[1240px] mx-auto px-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                 {journals.map((j) => (
-                    <Link key={j.slug} href={`/journals/${j.slug}`} className="bg-white rounded-2xl shadow-lg border border-[#F1F1F1] overflow-hidden flex flex-col md:flex-row h-auto md:h-[320px] transition-all duration-500 group hover:shadow-2xl">
-                       <div className="w-full md:w-[260px] shrink-0 border-r border-[#F1F1F1] bg-[#F4F6F8] relative flex items-center justify-center p-0">
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {journals.map((j) => (
+                     <Link key={j.slug} href={`/journals/${j.slug}`} className="bg-white rounded-2xl shadow shadow-[#F1F1F1] border border-[#F1F1F1] overflow-hidden flex flex-col md:flex-row h-auto md:h-[260px] transition-all duration-500 group hover:shadow-xl">
+                        <div className="w-full md:w-[220px] shrink-0 border-r border-[#F1F1F1] bg-[#F4F6F8] relative flex items-center justify-center p-0">
                           {j.cover ? (
                              <img src={j.cover} alt={j.title} className="w-full h-full object-cover" />
                           ) : (
@@ -227,10 +227,10 @@ export default function Home() {
         </section>
 
         {/* Leadership Team Section */}
-        <section id="leadership" className="bg-white py-12 lg:py-20 border-t border-[#F1F1F1]">
-           <div className="max-w-[1240px] mx-auto px-6 space-y-16 text-center">
-              <div className="space-y-4">
-                 <h2 className="text-4xl font-medium text-[#1A1A1A] tracking-tight">Leadership Team</h2>
+        <section id="leadership" className="bg-white py-10 lg:py-16">
+           <div className="max-w-[1240px] mx-auto px-6 space-y-10 text-center">
+              <div className="space-y-3">
+                 <h2 className="text-3xl font-bold text-[#1A1A1A] tracking-tight">Leadership Team</h2>
                  <div className="w-16 h-0.5 bg-[#4BA6B9]/20 mx-auto"></div>
               </div>
               
@@ -261,7 +261,7 @@ export default function Home() {
         </section>
 
         {/* APC Table Section */}
-        <section id="apc" className="bg-white py-12 lg:py-20 border-t border-[#F1F1F1]">
+        <section id="apc" className="bg-white py-10 lg:py-16">
            <div className="max-w-[1240px] mx-auto px-6 space-y-12">
               <h2 className="text-3xl font-bold text-[#1A1A1A] tracking-tight text-center">Article Publishing Charges (APCs)</h2>
               <div className="max-w-[800px] mx-auto bg-[#F8F9FB] rounded-2xl border border-[#EEEEEE] overflow-x-auto">
@@ -286,7 +286,7 @@ export default function Home() {
         </section>
 
         {/* Contact Form Section */}
-        <section id="contact" className="bg-[#F8F9FB] py-12 lg:py-20 border-t border-[#F1F1F1]">
+        <section id="contact" className="bg-[#F8F9FB] py-10 lg:py-16">
            <div className="max-w-[1240px] mx-auto px-6">
               <div className="grid lg:grid-cols-2 gap-10 lg:gap-20">
                  <div className="space-y-8">

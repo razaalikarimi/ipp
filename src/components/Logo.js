@@ -8,12 +8,12 @@ export default function Logo({ className, variant = 'full', src }) {
   const pathname = usePathname();
 
   // Decide logo source
-  let finalSrc = src || '/eisr_logo.png';
+  let finalSrc = src || '/logoEISR.png';
 
   return (
     <div className={cn('relative transition-all duration-300', className)}>
-      <div className="flex flex-col items-center">
-        <div className="relative flex items-center justify-center w-[200px] lg:w-[240px] h-[60px] lg:h-[70px]">
+      <div className="flex flex-col items-center w-full h-full">
+        <div className="relative flex items-center justify-center w-full h-full">
           <Image
             src={finalSrc}
             alt="Journal Logo"
