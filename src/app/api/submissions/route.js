@@ -204,11 +204,36 @@ export async function POST(req) {
         portalUrl,
       });
 
+      // --- 1. Notification to the Admin (Internal) ---
       await sendNotificationEmail(
         process.env.SMTP_USER,
         `New Submission Received — EISR Portal (#${submissionId})`,
         `New submission "${title}" received from ${author.fullName} (ID: ${submissionId})`,
         htmlBody
+      );
+
+      // --- 2. Notification to the AUTHOR (Professional Confirmation) ---
+      await sendNotificationEmail(
+        author.email,
+        `Manuscript Submission Confirmation — EISR Portal (#${submissionId})`,
+        `Dear ${author.fullName}, your manuscript "${title}" has been successfully submitted to the ${targetJournal.title}.`,
+        `
+          <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #eee; border-top: 5px solid #005f96; padding: 30px;">
+            <h2 style="color: #005f96;">Submission Confirmation</h2>
+            <p>Dear <strong>${author.fullName}</strong>,</p>
+            <p>Thank you for submitting your manuscript to the <strong>${targetJournal.title}</strong> through the EISR Portal.</p>
+            <div style="background: #f9f9f9; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #005f96;">
+              <strong>Manuscript ID:</strong> #${submissionId}<br/>
+              <strong>Title:</strong> ${title}<br/>
+              <strong>Date:</strong> ${submissionDate}
+            </div>
+            <p>Your submission is currently with the Editorial Board for initial screening. You can track its progress by logging into the portal at any time.</p>
+            <div style="margin: 30px 0; text-align: center;">
+              <a href="${portalUrl}/dashboard/submissions/${submissionId}" style="background: #005f96; color: #fff; padding: 12px 25px; text-decoration: none; border-radius: 4px; font-weight: bold;">Track My Submission</a>
+            </div>
+            <p>Best regards,<br/>The EISR Editorial Team</p>
+          </div>
+        `
       );
     }
 

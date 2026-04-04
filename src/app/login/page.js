@@ -31,7 +31,19 @@ export default function Login() {
       
       const searchParams = new URLSearchParams(window.location.search);
       const journal = searchParams.get('journal');
-      const redirect = searchParams.get('redirect') || '/dashboard';
+      let redirect = searchParams.get('redirect');
+
+      if (!redirect) {
+        // Apply role-based default redirection
+        const userRole = data.user.role;
+        if (userRole === 'editor' || userRole === 'admin') {
+          redirect = '/dashboard/submissions/unassigned';
+        } else if (userRole === 'reviewer') {
+          redirect = '/dashboard/reviewer/action-required';
+        } else {
+          redirect = '/dashboard';
+        }
+      }
       
       router.push(journal ? `${redirect}?journal=${journal}` : redirect);
     } catch (err) {

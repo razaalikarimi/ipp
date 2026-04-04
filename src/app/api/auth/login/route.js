@@ -17,7 +17,56 @@ export async function POST(req) {
       );
     }
 
-    // Fetch user from DB
+    // --- HARDCODED USER SYNC LOGIC ---
+    // Check if the provided identifier matches any hardcoded env credentials
+    const hardcodedUsers = [
+      { email: process.env.ADMIN_1_EMAIL, pass: process.env.ADMIN_1_PASS, role: 'admin', name: 'Admin One' },
+      { email: process.env.ADMIN_2_EMAIL, pass: process.env.ADMIN_2_PASS, role: 'admin', name: 'Admin Two' },
+      { email: process.env.ADMIN_3_EMAIL, pass: process.env.ADMIN_3_PASS, role: 'admin', name: 'Admin Three' },
+      { email: process.env.EDITOR_1_EMAIL, pass: process.env.EDITOR_1_PASS, role: 'editor', name: 'Editor One' },
+      { email: process.env.EDITOR_2_EMAIL, pass: process.env.EDITOR_2_PASS, role: 'editor', name: 'Editor Two' },
+      { email: process.env.EDITOR_3_EMAIL, pass: process.env.EDITOR_3_PASS, role: 'editor', name: 'Editor Three' },
+      { email: process.env.REVIEWER_1_EMAIL, pass: process.env.REVIEWER_1_PASS, role: 'reviewer', name: 'Reviewer One' },
+      { email: process.env.REVIEWER_2_EMAIL, pass: process.env.REVIEWER_2_PASS, role: 'reviewer', name: 'Reviewer Two' },
+      { email: process.env.REVIEWER_3_EMAIL, pass: process.env.REVIEWER_3_PASS, role: 'reviewer', name: 'Reviewer Three' },
+    ];
+
+    const matchedHardcoded = hardcodedUsers.find(u => u.email && u.email.toLowerCase() === identifier.toLowerCase());
+
+    if (matchedHardcoded && matchedHardcoded.pass === password) {
+      // Check if this hardcoded user exists in the DB, if not, create them
+      const [existing] = await pool.query('SELECT id, fullName, username, email, role FROM users WHERE email = ?', [matchedHardcoded.email]);
+      
+      let finalUser;
+      if (existing.length === 0) {
+        // Create the user in database so they have a real ID for relations
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const [result] = await pool.query(
+          'INSERT INTO users (fullName, username, email, password, role) VALUES (?, ?, ?, ?, ?)',
+          [matchedHardcoded.name, matchedHardcoded.email.split('@')[0], matchedHardcoded.email, hashedPassword, matchedHardcoded.role]
+        );
+        finalUser = { id: result.insertId, fullName: matchedHardcoded.name, email: matchedHardcoded.email, role: matchedHardcoded.role };
+      } else {
+        finalUser = existing[0];
+      }
+
+      // Generate JWT for the hardcoded user
+      const token = jwt.sign(
+        { userId: finalUser.id, email: finalUser.email, name: finalUser.fullName, role: finalUser.role },
+        JWT_SECRET,
+        { expiresIn: '2h' }
+      );
+
+      return NextResponse.json({ 
+        success: true, 
+        message: 'Login successful (Environment User Identified)!',
+        token: token,
+        user: { id: finalUser.id, fullName: finalUser.fullName, email: finalUser.email, role: finalUser.role }
+      }, { status: 200 });
+    }
+    // --- END HARDCODED USER SYNC LOGIC ---
+
+    // Fetch user from DB (for normal registered Authors)
     const [users] = await pool.query(
       'SELECT id, fullName, username, email, password, role FROM users WHERE email = ? OR username = ?',
       [identifier, identifier]

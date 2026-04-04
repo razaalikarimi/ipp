@@ -1,7 +1,19 @@
 import { NextResponse } from 'next/server';
 import mysql from 'mysql2/promise';
 
-export async function GET() {
+export async function GET(req) {
+  const { searchParams } = new URL(req.url);
+  const setupKey = searchParams.get('key');
+  
+  // SECURE PRODUCTION CHECK
+  // Only allow setup if the key matches 'setup-key-eisr-99'
+  if (setupKey !== 'setup-key-eisr-99') {
+    return NextResponse.json({ 
+      success: false, 
+      message: 'Unauthorized Setup Attempt. Please provide the correct setup key.' 
+    }, { status: 403 });
+  }
+
   try {
     const connection = await mysql.createConnection({
       host: process.env.MYSQL_HOST || 'localhost',
