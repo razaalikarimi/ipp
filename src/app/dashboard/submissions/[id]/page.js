@@ -614,15 +614,19 @@ export default function SubmissionWorkflowPage({ params }) {
                       <table style={{ width: '100%', marginBottom: '20px', borderCollapse: 'collapse', fontSize: '13px' }}>
                         <thead>
                           <tr style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0', textAlign: 'left' }}>
-                            <th style={{ padding: '10px', fontWeight: 'bold', color: '#475569' }}>Name</th>
+                            <th style={{ padding: '10px', fontWeight: 'bold', color: '#475569' }}>{user?.role === 'editor' || user?.role === 'admin' ? 'Reviewer Name' : 'Reviewer ID'}</th>
                             <th style={{ padding: '10px', fontWeight: 'bold', color: '#475569' }}>Status</th>
                             <th style={{ padding: '10px', fontWeight: 'bold', color: '#475569' }}>Date Assigned</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {assignments.map(a => (
+                          {assignments.map((a, idx) => (
                             <tr key={a.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                              <td style={{ padding: '10px', color: '#005f96', fontWeight: '600' }}>{a.reviewerName || a.reviewerEmail}</td>
+                              <td style={{ padding: '10px', color: '#005f96', fontWeight: '600' }}>
+                                {user?.role === 'editor' || user?.role === 'admin' 
+                                  ? (a.reviewerName || a.reviewerEmail) 
+                                  : `Reviewer ${idx + 1}`}
+                              </td>
                               <td style={{ padding: '10px' }}>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                                   <span style={{ 
@@ -634,9 +638,11 @@ export default function SubmissionWorkflowPage({ params }) {
                                   </span>
                                   {a.review && (
                                     <div style={{ fontSize: '11px', color: '#64748b', marginTop: '4px', border: '1px solid #e2e8f0', padding: '8px', borderRadius: '4px', backgroundColor: '#f8fafc' }}>
-                                      <div style={{ fontWeight: '700', color: '#334155', textTransform: 'uppercase', marginBottom: '4px' }}>Recommendation: {a.review.recommendation} (Rating: {a.review.rating}/10)</div>
+                                      <div style={{ fontWeight: '700', color: '#334155', textTransform: 'uppercase', marginBottom: '4px' }}>Recommendation: {a.review.recommendation} {(user?.role === 'editor' || user?.role === 'admin') && `(Rating: ${a.review.rating}/10)`}</div>
                                       <div style={{ marginBottom: '4px' }}><strong>Author Comments:</strong> {a.review.commentsAuthors}</div>
-                                      <div><strong>Editor Comments:</strong> {a.review.commentsEditors}</div>
+                                      {(user?.role === 'editor' || user?.role === 'admin') && (
+                                        <div><strong>Editor Comments (Private):</strong> {a.review.commentsEditors}</div>
+                                      )}
                                     </div>
                                   )}
                                 </div>
@@ -648,23 +654,25 @@ export default function SubmissionWorkflowPage({ params }) {
                       </table>
                     )}
 
-                    {/* Assign New Reviewer Form */}
-                    <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '16px' }}>
-                      <h4 style={{ fontSize: '13px', fontWeight: '700', marginBottom: '12px', color: '#1e293b' }}>Assign New Reviewer</h4>
-                      <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
-                        <div style={{ flex: 1 }}>
-                          <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#475569', marginBottom: '4px' }}>Reviewer Name</label>
-                          <input type="text" placeholder="Dr. John Doe" value={reviewerName} onChange={e => setReviewerName(e.target.value)} style={{ width: '100%', border: '1px solid #cbd5e1', borderRadius: '4px', padding: '8px 12px', fontSize: '13px', outline: 'none' }} />
+                    {/* Assign New Reviewer Form (Only for Editors/Admins) */}
+                    {(user?.role === 'editor' || user?.role === 'admin') && (
+                      <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '16px' }}>
+                        <h4 style={{ fontSize: '13px', fontWeight: '700', marginBottom: '12px', color: '#1e293b' }}>Assign New Reviewer</h4>
+                        <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+                          <div style={{ flex: 1 }}>
+                            <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#475569', marginBottom: '4px' }}>Reviewer Name</label>
+                            <input type="text" placeholder="Dr. John Doe" value={reviewerName} onChange={e => setReviewerName(e.target.value)} style={{ width: '100%', border: '1px solid #cbd5e1', borderRadius: '4px', padding: '8px 12px', fontSize: '13px', outline: 'none' }} />
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#475569', marginBottom: '4px' }}>Reviewer Email</label>
+                            <input type="email" placeholder="john.doe@university.edu" value={reviewerEmail} onChange={e => setReviewerEmail(e.target.value)} style={{ width: '100%', border: '1px solid #cbd5e1', borderRadius: '4px', padding: '8px 12px', fontSize: '13px', outline: 'none' }} />
+                          </div>
                         </div>
-                        <div style={{ flex: 1 }}>
-                          <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', color: '#475569', marginBottom: '4px' }}>Reviewer Email</label>
-                          <input type="email" placeholder="john.doe@university.edu" value={reviewerEmail} onChange={e => setReviewerEmail(e.target.value)} style={{ width: '100%', border: '1px solid #cbd5e1', borderRadius: '4px', padding: '8px 12px', fontSize: '13px', outline: 'none' }} />
-                        </div>
+                        <button onClick={handleAssignReviewer} disabled={assigningLoading} style={{ backgroundColor: '#005f96', color: '#fff', border: 'none', borderRadius: '4px', padding: '8px 16px', fontSize: '13px', fontWeight: '700', cursor: assigningLoading ? 'not-allowed' : 'pointer', opacity: assigningLoading ? 0.7 : 1 }}>
+                          {assigningLoading ? 'Sending Invitation...' : 'Assign & Send Email'}
+                        </button>
                       </div>
-                      <button onClick={handleAssignReviewer} disabled={assigningLoading} style={{ backgroundColor: '#005f96', color: '#fff', border: 'none', borderRadius: '4px', padding: '8px 16px', fontSize: '13px', fontWeight: '700', cursor: assigningLoading ? 'not-allowed' : 'pointer', opacity: assigningLoading ? 0.7 : 1 }}>
-                        {assigningLoading ? 'Sending Invitation...' : 'Assign & Send Email'}
-                      </button>
-                    </div>
+                    )}
 
                     {/* Editorial Decision API call */}
                     {(user?.role === 'editor' || user?.role === 'admin') && (

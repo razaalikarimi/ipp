@@ -16,57 +16,53 @@ export async function GET(req) {
 
     let query = '';
     let params = [];
+    let whereClauses = [];
 
+    // --- ROLE BASED BASE QUERY & FILTERS ---
     if (role === 'reviewer') {
       query = `
-        SELECT
-          s.id,
-          s.title,
-          s.status,
-          s.activity,
-          DATE_FORMAT(s.created_at, '%M %d, %Y') AS date,
-          s.created_at
+        SELECT 
+          s.id, s.title, s.status, s.activity, 
+          DATE_FORMAT(s.created_at, '%M %d, %Y') AS date, s.created_at
         FROM submissions s
         JOIN reviewer_assignments ra ON s.id = ra.submission_id
-        WHERE ra.user_id = ?
       `;
+      whereClauses.push('ra.user_id = ?');
       params.push(user.userId);
+      if (journalId) {
+        whereClauses.push('s.journal_id = ?');
+        params.push(journalId);
+      }
     } else if (role === 'editor' || role === 'admin') {
       query = `
-        SELECT
-          id,
-          title,
-          status,
-          activity,
-          editor_comments,
-          DATE_FORMAT(created_at, '%M %d, %Y') AS date,
-          created_at
+        SELECT 
+          id, title, status, activity, editor_comments, 
+          DATE_FORMAT(created_at, '%M %d, %Y') AS date, created_at
         FROM submissions
       `;
-      // No WHERE user_id filter applied so Editors can see all submissions
+      if (journalId) {
+        whereClauses.push('journal_id = ?');
+        params.push(journalId);
+      }
     } else {
+      // Author Role
       query = `
-        SELECT
-          id,
-          title,
-          status,
-          activity,
-          editor_comments,
-          DATE_FORMAT(created_at, '%M %d, %Y') AS date,
-          created_at
+        SELECT 
+          id, title, status, activity, editor_comments, 
+          DATE_FORMAT(created_at, '%M %d, %Y') AS date, created_at
         FROM submissions
-        WHERE user_id = ?
       `;
+      whereClauses.push('user_id = ?');
       params.push(user.userId);
+      if (journalId) {
+        whereClauses.push('journal_id = ?');
+        params.push(journalId);
+      }
     }
 
-    if (journalId) {
-      if (role === 'reviewer') {
-        query += ` AND s.journal_id = ?`;
-      } else {
-        query += ` AND journal_id = ?`;
-      }
-      params.push(journalId);
+    // --- CONSTRUCT WHERE CLAUSE ---
+    if (whereClauses.length > 0) {
+      query += ` WHERE ` + whereClauses.join(' AND ');
     }
 
     query += ` ORDER BY created_at DESC`;
