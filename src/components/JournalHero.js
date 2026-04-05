@@ -1,7 +1,6 @@
-
 'use client';
 import Link from 'next/link';
-import { ChevronDown, LayoutDashboard, User } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { journalMenuItems, journalPolicyItems, journalAboutItems } from '@/lib/data';
 
@@ -94,7 +93,7 @@ export default function JournalHero({ journal, activeTab = 'home' }) {
         </div>
 
         {/* Navigation Bar */}
-        <div className="flex flex-wrap gap-x-6 md:gap-x-12 gap-y-4 border-b border-white/5 pb-0 text-[15px] font-bold">
+        <div className="flex flex-wrap gap-x-6 md:gap-x-12 gap-y-4 border-b border-white/5 pb-0 text-[13px] font-bold uppercase tracking-wide">
           <Link
             href={`/journals/${journal.slug}`}
             className={`pb-4 border-b-2 transition-all ${isActive('home') ? 'border-[#4BA6B9] text-[#4BA6B9]' : 'border-transparent hover:border-white'}`}
@@ -114,71 +113,45 @@ export default function JournalHero({ journal, activeTab = 'home' }) {
             Current Issues
           </Link>
 
-          {/* Journal Menu Dropdown */}
-          <div
-            className="relative group"
-            onMouseEnter={() => setActiveDropdown('menu')}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
-            <button className={`flex items-center gap-2 pb-4 px-4 -mx-4 border-b-2 transition-all ${activeDropdown === 'menu' ? 'bg-[#1e78ff] border-transparent' : 'border-transparent hover:border-white'}`}>
-              Journal Menu <ChevronDown size={14} className={activeDropdown === 'menu' ? 'rotate-180 transition-transform' : 'transition-transform'} />
-            </button>
-            <div className={`absolute top-full left-0 w-72 bg-white shadow-2xl border border-[#E2E8F0] py-0 rounded-b-xl z-[200] transition-all duration-300 ${activeDropdown === 'menu' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
-              {journalMenuItems.map(item => (
-                <Link
-                  key={item.name}
-                  href={`/journals/${journal.slug}/${item.slug}`}
-                  className="block px-8 py-5 text-[15px] font-bold text-[#1A1A1A] hover:bg-[#F8FBFF] hover:text-[#4BA6B9] transition-all border-b border-[#F1F5F9] last:border-0"
-                >
-                  {item.name}
-                </Link>
-              ))}
+          {/* Flipkart Style Dropdowns */}
+          {[
+            { id: 'menu', name: 'Journal Menu', items: journalMenuItems },
+            { id: 'policies', name: 'Journal Policies', items: journalPolicyItems },
+            { id: 'about', name: 'About', items: journalAboutItems }
+          ].map((dropdown) => (
+            <div
+              key={dropdown.id}
+              className="relative group"
+              onMouseEnter={() => setActiveDropdown(dropdown.id)}
+              onMouseLeave={() => setActiveDropdown(null)}
+            >
+              <button className={`flex items-center gap-2 pb-4 px-4 -mx-4 border-b-2 transition-all ${activeDropdown === dropdown.id ? 'border-[#4BA6B9] text-[#4BA6B9]' : 'border-transparent hover:border-white'}`}>
+                {dropdown.name} <ChevronDown size={12} className={activeDropdown === dropdown.id ? 'rotate-180 transition-transform' : 'transition-transform'} />
+              </button>
+              <div className={`absolute top-[calc(100%-2px)] left-0 min-w-[240px] bg-white rounded-lg shadow-2xl border border-[#F1F1F1] overflow-hidden z-[200] transition-all duration-300 origin-top ${activeDropdown === dropdown.id ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'}`}>
+                <div className="px-6 py-3 bg-[#F8FAFC] border-b border-[#F1F5F9]">
+                  <span className="text-[11px] font-black text-[#555] uppercase tracking-[0.1em]">{dropdown.name}</span>
+                </div>
+                <div className="py-2 max-h-[70vh] overflow-y-auto custom-scrollbar">
+                  {dropdown.items.map(item => {
+                    const href = dropdown.id === 'about' 
+                      ? (item.slug === 'contact' ? '/contact' : item.slug === 'about' ? `/journals/${journal.slug}/about` : `/policies/${item.slug}`)
+                      : (dropdown.id === 'policies' ? `/policies/${item.slug}?journal=${journal.id}` : `/journals/${journal.slug}/${item.slug}`);
+                    
+                    return (
+                      <Link
+                        key={item.slug}
+                        href={href}
+                        className="flex items-center px-6 py-3 text-[13px] font-semibold text-[#374151] hover:bg-[#F1F8FF] hover:text-[#4BA6B9] transition-all border-l-4 border-transparent hover:border-[#4BA6B9] whitespace-nowrap"
+                      >
+                        {item.name}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
-          </div>
-
-          {/* Journal Policies Dropdown */}
-          <div
-            className="relative group"
-            onMouseEnter={() => setActiveDropdown('policies')}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
-            <button className={`flex items-center gap-2 pb-4 px-4 -mx-4 border-b-2 transition-all ${activeDropdown === 'policies' ? 'bg-[#1e78ff] border-transparent' : 'border-transparent hover:border-white'}`}>
-              Journal Policies <ChevronDown size={14} className={activeDropdown === 'policies' ? 'rotate-180 transition-transform' : 'transition-transform'} />
-            </button>
-            <div className={`absolute top-full left-0 w-[320px] bg-white shadow-2xl border border-[#E2E8F0] py-0 rounded-b-xl z-[200] transition-all duration-300 ${activeDropdown === 'policies' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
-              {journalPolicyItems.map(item => (
-                <Link
-                  key={item.name}
-                  href={`/policies/${item.slug}?journal=${journal.id}`}
-                  className="block px-8 py-5 text-[15px] font-bold text-[#1A1A1A] hover:bg-[#F8FBFF] hover:text-[#4BA6B9] transition-all border-b border-[#F1F5F9] last:border-0"
-                >
-                  {item.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* About Dropdown */}
-          <div
-            className="relative group"
-            onMouseEnter={() => setActiveDropdown('about')}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
-            <button className={`flex items-center gap-2 pb-4 px-4 -mx-4 border-b-2 transition-all ${activeDropdown === 'about' ? 'bg-[#1e78ff] border-transparent' : 'border-transparent hover:border-white'}`}>
-              About <ChevronDown size={14} className={activeDropdown === 'about' ? 'rotate-180 transition-transform' : 'transition-transform'} />
-            </button>
-            <div className={`absolute top-full left-0 w-64 bg-white shadow-2xl border border-[#E2E8F0] py-0 rounded-b-xl z-[200] transition-all duration-300 ${activeDropdown === 'about' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
-              {journalAboutItems.map(item => (
-                <Link
-                  key={item.slug}
-                  href={item.slug === 'contact' ? '/contact' : item.slug === 'about' ? `/journals/${journal.slug}/about` : `/policies/${item.slug}`}
-                  className="block px-8 py-5 text-[15px] font-bold text-[#1A1A1A] hover:bg-[#F8FBFF] hover:text-[#4BA6B9] transition-all border-b border-[#F1F5F9] last:border-0"
-                >
-                  {item.name}
-                </Link>
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>

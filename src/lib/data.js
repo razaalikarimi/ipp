@@ -191,32 +191,32 @@ export const indexing = [
 ];
 
 export const journalMenuItems = [
-  { name: 'Aims and scope', slug: 'aims-and-scope' },
-  { name: 'Author Guidelines', slug: 'author-guidelines' },
-  { name: 'Editorial Team', slug: 'editorial-team' },
-  { name: 'Journal Partnerships', slug: 'partnerships' },
-  { name: 'Abstracting and Indexing', slug: 'indexing' },
-  { name: 'Article Publishing Charges', slug: 'apc' }
+  { name: 'Aims and scope', slug: 'aims-and-scope', icon: 'Target' },
+  { name: 'Author Guidelines', slug: 'author-guidelines', icon: 'BookOpen' },
+  { name: 'Editorial Team', slug: 'editorial-team', icon: 'Users' },
+  { name: 'Journal Partnerships', slug: 'partnerships', icon: 'Globe' },
+  { name: 'Abstracting and Indexing', slug: 'indexing', icon: 'Search' },
+  { name: 'Article Publishing Charges', slug: 'apc', icon: 'CreditCard' }
 ];
 
 export const journalPolicyItems = [
-  { name: 'Publication Ethics Policy', slug: 'publication-ethics' },
-  { name: 'Open Access Policy', slug: 'open-access' },
-  { name: 'Peer Review Policy', slug: 'peer-review' },
-  { name: 'Archiving Policy', slug: 'archiving' },
-  { name: 'Generative AI Policy', slug: 'generative-ai' },
-  { name: 'Copyright and Licenses Policy', slug: 'copyright' },
-  { name: 'Plagiarism Check Policy', slug: 'plagiarism' },
-  { name: 'Misconduct Policy', slug: 'misconduct' },
-  { name: 'Retractions Policy', slug: 'retractions' },
-  { name: 'Publication Misbehavior Policy', slug: 'misbehavior' },
-  { name: 'Corrections Withdrawals Policy', slug: 'corrections' }
+  { name: 'Publication Ethics Policy', slug: 'publication-ethics', icon: 'ShieldCheck' },
+  { name: 'Open Access Policy', slug: 'open-access', icon: 'Unlock' },
+  { name: 'Peer Review Policy', slug: 'peer-review', icon: 'UserCheck' },
+  { name: 'Archiving Policy', slug: 'archiving', icon: 'FileArchive' },
+  { name: 'Generative AI Policy', slug: 'generative-ai', icon: 'Cpu' },
+  { name: 'Copyright and Licenses Policy', slug: 'copyright', icon: 'Copyright' },
+  { name: 'Plagiarism Check Policy', slug: 'plagiarism', icon: 'Copy' },
+  { name: 'Misconduct Policy', slug: 'misconduct', icon: 'AlertTriangle' },
+  { name: 'Retractions Policy', slug: 'retractions', icon: 'RotateCcw' },
+  { name: 'Publication Misbehavior Policy', slug: 'misbehavior', icon: 'Frown' },
+  { name: 'Corrections Withdrawals Policy', slug: 'corrections', icon: 'Edit3' }
 ];
 
 export const journalAboutItems = [
-  { name: 'About The Journal', slug: 'about' },
-  { name: 'Privacy Statement', slug: 'privacy' },
-  { name: 'Contact Us', slug: 'contact' }
+  { name: 'About The Journal', slug: 'about', icon: 'Info' },
+  { name: 'Privacy Statement', slug: 'privacy', icon: 'ShieldText' },
+  { name: 'Contact Us', slug: 'contact', icon: 'Mail' }
 ];
 
 export const leaders = [
