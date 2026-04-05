@@ -275,7 +275,7 @@ export default function SubmissionsTable({ title, filterFn, columns = 'reviewer'
               )}
               <div style={{ padding: '12px 16px', fontSize: '13px', color: '#666' }}>{sub.activity || '—'}</div>
               <div style={{ padding: '12px 16px', textAlign: 'right', display: 'flex', justifyContent: 'flex-end', gap: '15px' }}>
-                {columns === 'reviewer' && (sub.status === 'Review' || sub.status === 'Submitted') && (
+                {columns === 'reviewer' && (['Pending', 'Accepted'].includes(sub.status)) && (
                   <Link href={`/dashboard/reviewer/assignments/${sub.id}`} style={{ color: '#16a34a', textDecoration: 'none', fontSize: '13px', fontWeight: '700' }}>Review</Link>
                 )}
                 <Link href={`/dashboard/submissions/${sub.id}`} style={{ color: '#005f96', textDecoration: 'none', fontSize: '13px' }}>View</Link>

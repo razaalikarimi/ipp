@@ -22,7 +22,8 @@ export async function GET(req) {
     if (role === 'reviewer') {
       query = `
         SELECT 
-          s.id, s.title, s.status, s.activity, 
+          s.id, s.title, s.status, s.activity,
+          ra.status AS assignment_status, 
           DATE_FORMAT(s.created_at, '%M %d, %Y') AS date, s.created_at
         FROM submissions s
         JOIN reviewer_assignments ra ON s.id = ra.submission_id
@@ -72,7 +73,8 @@ export async function GET(req) {
     const submissions = rows.map((row) => ({
       id: row.id,
       title: row.title || 'Untitled Submission',
-      status: row.status || 'Submitted',
+      status: role === 'reviewer' && row.assignment_status ? row.assignment_status : (row.status || 'Submitted'),
+      submission_status: row.status || 'Submitted',
       activity: row.activity || 'Unassigned',
       date: row.date,
       created_at: row.created_at,

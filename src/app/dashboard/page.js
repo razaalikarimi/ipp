@@ -198,11 +198,11 @@ export default function DashboardPage() {
           </h2>
           <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 16px 0', fontSize: '13px' }}>
             {[
-              { href: '/dashboard/reviewer/action-required', label: 'Action Required by me', count: assignments.filter(a => ['Review', 'Submitted'].includes(a.status)).length },
+              { href: '/dashboard/reviewer/action-required', label: 'Action Required by me', count: assignments.filter(a => ['Pending', 'Accepted'].includes(a.status)).length },
               { href: '/dashboard/reviewer/all', label: 'All assignments', count: assignments.length },
               { href: '/dashboard/reviewer/completed', label: 'Completed', count: assignments.filter(a => a.status === 'Completed').length },
-              { href: '/dashboard/reviewer/declined', label: 'Declined', count: 0 },
-              { href: '/dashboard/reviewer/published', label: 'Published', count: 0 },
+              { href: '/dashboard/reviewer/declined', label: 'Declined', count: assignments.filter(a => a.status === 'Declined').length },
+              { href: '/dashboard/reviewer/published', label: 'Published', count: assignments.filter(a => a.submission_status === 'Published').length },
             ].map(item => (
               <li key={item.href} style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Link href={item.href} style={{ color: '#005f96', textDecoration: 'none' }}>
