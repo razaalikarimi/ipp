@@ -232,6 +232,31 @@ export default function SubmissionWorkflowPage({ params }) {
     alert(feature + ' feature will be available in the next release.');
   };
 
+  const handleDownloadFile = (filePath, fileName) => {
+    if (!filePath) {
+      alert('File path is not available.');
+      return;
+    }
+    const a = document.createElement('a');
+    a.href = filePath;
+    a.download = fileName || 'download';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
+  const handleDownloadAll = () => {
+    if (!submission?.files || submission.files.length === 0) {
+      alert('No files to download.');
+      return;
+    }
+    submission.files.forEach((file, index) => {
+      setTimeout(() => {
+        handleDownloadFile(file.path, file.name);
+      }, index * 300);
+    });
+  };
+
   const sectionHeaderStyle = {
     display: 'flex',
     alignItems: 'center',
@@ -371,7 +396,12 @@ export default function SubmissionWorkflowPage({ params }) {
                       submission.files.map((file, i) => (
                         <div key={i} style={{ display: 'grid', gridTemplateColumns: '60px 1fr 140px 120px 40px', padding: '12px 16px', alignItems: 'center', fontSize: '13px', borderBottom: '1px solid #f1f5f9' }}>
                           <span style={{ color: '#475569' }}>{file.id || 194 + i}</span>
-                          <span style={{ color: '#005f96', cursor: 'pointer' }}>{file.name}</span>
+                          <span 
+                            style={{ color: '#005f96', cursor: 'pointer', textDecoration: 'underline' }}
+                            onClick={() => handleDownloadFile(file.path, file.name)}
+                          >
+                            {file.name}
+                          </span>
                           <span style={{ color: '#475569' }}>{new Date(file.date).toLocaleDateString()}</span>
                           <div>
                             <span style={{ backgroundColor: '#005f96', color: '#fff', fontSize: '10px', padding: '2px 8px', borderRadius: '12px', fontWeight: '500' }}>Article Text</span>
@@ -386,7 +416,7 @@ export default function SubmissionWorkflowPage({ params }) {
                     {submission.files?.length > 0 && (
                       <div style={{ padding: '12px 16px' }}>
                         <button 
-                          onClick={() => handleFeature('Download')}
+                          onClick={handleDownloadAll}
                           style={{ color: '#005f96', fontSize: '13px', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
                         >
                           Download All Files

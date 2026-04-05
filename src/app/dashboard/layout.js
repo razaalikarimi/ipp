@@ -14,6 +14,8 @@ export default function DashboardLayout({ children }) {
   const [authorOpen, setAuthorOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [showNotif, setShowNotif] = useState(false);
+  const [readNotifs, setReadNotifs] = useState([]);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   const [currentJournal, setCurrentJournal] = useState(null);
 
@@ -29,6 +31,9 @@ export default function DashboardLayout({ children }) {
     const searchParams = new URLSearchParams(window.location.search);
     const jSlug = searchParams.get('journal'); 
     if (jSlug) setCurrentJournal(jSlug);
+
+    const savedRead = localStorage.getItem('eisr_read_notifs');
+    if (savedRead) setReadNotifs(JSON.parse(savedRead));
   }, []);
 
   useEffect(() => {
@@ -43,7 +48,28 @@ export default function DashboardLayout({ children }) {
         
         const subRes = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
         const subData = await subRes.json();
-        if (subData.success) setSubmissions(subData.submissions);
+        if (subData.success) {
+          setSubmissions(subData.submissions);
+          
+          // Generate Notifications based on Role
+          let payloadRole = 'author';
+          try { payloadRole = JSON.parse(atob(token.split('.')[1])).role || 'author'; } catch(e){}
+          
+          let generated = [];
+          if (payloadRole === 'reviewer') {
+            const pending = subData.submissions.filter(s => ['pending', 'accepted'].includes((s.status || '').toLowerCase()));
+            pending.forEach(s => generated.push({ id: `rev-${s.id}`, title: 'Pending Review', msg: `Review required for "${s.title.substring(0, 30)}..."`, link: `/dashboard/reviewer/assignments/${s.id}` }));
+          } else if (payloadRole === 'editor' || payloadRole === 'admin') {
+            const newSubs = subData.submissions.filter(s => (s.status || '').toLowerCase() === 'submitted');
+            newSubs.forEach(s => generated.push({ id: `new-${s.id}`, title: 'New Submission', msg: `"${s.title.substring(0, 30)}..." needs Editor attention.`, link: `/dashboard/submissions/${s.id}` }));
+          } else {
+            const published = subData.submissions.filter(s => (s.status || '').toLowerCase() === 'published');
+            published.forEach(s => generated.push({ id: `pub-${s.id}`, title: 'Published!', msg: `Your manuscript "${s.title.substring(0, 30)}..." is published.`, link: `/dashboard/submissions/${s.id}` }));
+            const revisions = subData.submissions.filter(s => (s.status || '').toLowerCase().includes('revision'));
+            revisions.forEach(s => generated.push({ id: `revreq-${s.id}`, title: 'Revisions Requested', msg: `Editor requested revisions for "${s.title.substring(0, 30)}..."`, link: `/dashboard/submissions/${s.id}` }));
+          }
+          setNotifications(generated.slice(0, 5));
+        }
 
         // Fetch profile
         const profRes = await fetch('/api/profile', { headers: { 'Authorization': `Bearer ${token}` } });
@@ -55,6 +81,18 @@ export default function DashboardLayout({ children }) {
   }, [currentJournal]);
 
   const handleLogout = () => { localStorage.removeItem('eisr_token'); router.push('/login'); };
+
+  const handleNotifClick = (n) => {
+    if (!readNotifs.includes(n.id)) {
+      const updated = [...readNotifs, n.id];
+      setReadNotifs(updated);
+      localStorage.setItem('eisr_read_notifs', JSON.stringify(updated));
+    }
+    setShowNotif(false);
+    router.push(n.link);
+  };
+
+  const unreadCount = notifications.filter(n => !readNotifs.includes(n.id)).length;
 
   const isActive = (href) => {
     if (href === '/dashboard' && pathname === '/dashboard') return true;
@@ -145,22 +183,102 @@ export default function DashboardLayout({ children }) {
           <button style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', padding: 0 }}><Info size={18} /></button>
           <div style={{ position: 'relative' }}>
             <button
-              onClick={() => setShowNotif(v => !v)}
+              onClick={() => { setShowNotif(v => !v); setShowProfileMenu(false); }}
               style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', position: 'relative' }}
             >
               <Bell size={18} />
-              <span style={{ position: 'absolute', top: '-4px', right: '-4px', backgroundColor: '#dc2626', color: '#fff', width: '15px', height: '15px', borderRadius: '50%', fontSize: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700' }}>
-                1
-              </span>
+              {unreadCount > 0 && (
+                <span style={{ position: 'absolute', top: '-4px', right: '-4px', backgroundColor: '#dc2626', color: '#fff', width: '15px', height: '15px', borderRadius: '50%', fontSize: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700' }}>
+                  {unreadCount}
+                </span>
+              )}
             </button>
+
+            {showNotif && (
+              <div style={{
+                position: 'absolute', top: '35px', right: '-10px',
+                backgroundColor: '#fff', color: '#333',
+                border: '1px solid #e2e8f0', borderRadius: '4px',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                width: '280px', zIndex: 50,
+                display: 'flex', flexDirection: 'column',
+                maxHeight: '350px'
+              }}>
+                <div style={{ padding: '12px 16px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ fontWeight: '700', color: '#1e293b', fontSize: '14px' }}>Notifications</div>
+                  {unreadCount > 0 && <span style={{ fontSize: '11px', color: '#005f96', cursor: 'pointer', fontWeight: '600' }} onClick={() => {
+                    const allIds = notifications.map(n => n.id);
+                    setReadNotifs(allIds);
+                    localStorage.setItem('eisr_read_notifs', JSON.stringify(allIds));
+                  }}>Mark all as read</span>}
+                </div>
+                
+                <div style={{ overflowY: 'auto', flex: 1 }}>
+                  {notifications.length === 0 ? (
+                    <div style={{ padding: '20px', textAlign: 'center', color: '#64748b', fontSize: '13px' }}>No new notifications</div>
+                  ) : (
+                    notifications.map(n => {
+                      const isUnread = !readNotifs.includes(n.id);
+                      return (
+                        <div key={n.id} onClick={() => handleNotifClick(n)} style={{ 
+                          padding: '12px 16px', borderBottom: '1px solid #f1f5f9', cursor: 'pointer',
+                          backgroundColor: isUnread ? '#f0f9ff' : '#fff',
+                          transition: 'background-color 0.2s'
+                        }}
+                        onMouseOver={(e) => e.currentTarget.style.backgroundColor = isUnread ? '#e0f2fe' : '#f8fafc'}
+                        onMouseOut={(e) => e.currentTarget.style.backgroundColor = isUnread ? '#f0f9ff' : '#fff'}>
+                          <div style={{ fontWeight: '600', fontSize: '13px', color: isUnread ? '#0284c7' : '#334155', display: 'flex', justifyContent: 'space-between' }}>
+                            {n.title}
+                            {isUnread && <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#0284c7', marginTop: '4px' }}></span>}
+                          </div>
+                          <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px', lineHeight: '1.4' }}>{n.msg}</div>
+                        </div>
+                      )
+                    })
+                  )}
+                </div>
+              </div>
+            )}
           </div>
-          <div style={{
-            width: '26px', height: '26px', borderRadius: '50%',
-            backgroundColor: '#4e6d8a', color: '#fff',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: '12px', fontWeight: '600', cursor: 'pointer'
-          }} onClick={handleLogout} title="Logout">
-            SS
+          <div style={{ position: 'relative' }}>
+            <div style={{
+              width: '26px', height: '26px', borderRadius: '50%',
+              backgroundColor: '#4e6d8a', color: '#fff',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: '12px', fontWeight: '600', cursor: 'pointer'
+            }} onClick={() => { setShowProfileMenu(!showProfileMenu); setShowNotif(false); }}>
+              {initials}
+            </div>
+
+            {showProfileMenu && (
+              <div style={{
+                position: 'absolute', top: '35px', right: '0',
+                backgroundColor: '#fff', color: '#333',
+                border: '1px solid #e2e8f0', borderRadius: '4px',
+                boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                width: '180px', zIndex: 50,
+                fontSize: '13px', display: 'flex', flexDirection: 'column'
+              }}>
+                <div style={{ padding: '12px 16px', borderBottom: '1px solid #e2e8f0' }}>
+                  <div style={{ fontWeight: '600', color: '#1e293b', wordBreak: 'break-all' }}>{displayName}</div>
+                  {user?.username && <div style={{ fontSize: '11px', color: '#64748b', marginTop: '2px' }}>@{user.username}</div>}
+                  {user?.email && <div style={{ fontSize: '11px', color: '#64748b', wordBreak: 'break-all' }}>{user.email}</div>}
+                </div>
+                <button 
+                  onClick={handleLogout}
+                  style={{
+                    padding: '10px 16px', border: 'none', background: 'none',
+                    textAlign: 'left', cursor: 'pointer', color: '#dc2626',
+                    fontFamily: '"Noto Sans", sans-serif', fontSize: '13px',
+                    fontWeight: '600', display: 'block', width: '100%'
+                  }}
+                  onMouseOver={(e) => e.target.style.backgroundColor = '#fef2f2'}
+                  onMouseOut={(e) => e.target.style.backgroundColor = 'transparent'}
+                >
+                  Logout
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

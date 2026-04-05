@@ -114,6 +114,31 @@ export default function ReviewerEvaluationPage() {
     } catch (err) { alert('Network error'); } finally { setSaving(false); }
   };
 
+  const handleDownloadFile = (filePath, fileName) => {
+    if (!filePath) {
+      alert('File path is not available.');
+      return;
+    }
+    const a = document.createElement('a');
+    a.href = filePath;
+    a.download = fileName || 'download';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
+  const handleDownloadAll = () => {
+    if (!submission?.files || submission.files.length === 0) {
+      alert('No files to download.');
+      return;
+    }
+    submission.files.forEach((file, index) => {
+      setTimeout(() => {
+        handleDownloadFile(file.path, file.name);
+      }, index * 300);
+    });
+  };
+
   if (loading || !submission) return null;
 
   const steps = [
@@ -193,7 +218,7 @@ export default function ReviewerEvaluationPage() {
               <div style={{ border: '1px solid ' + borderColor, borderRadius: '4px', marginBottom: '30px', overflow: 'hidden' }}>
                 <div style={{ backgroundColor: '#fcfcfc', padding: '10px 15px', borderBottom: '1px solid ' + borderColor, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontSize: '13px', fontWeight: 'bold' }}>Review Files</span>
-                  <button style={{ background: 'none', border: 'none', color: primaryBlue, fontSize: '12px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', gap: '4px' }}><Search size={14}/> Search</button>
+                  <button onClick={handleDownloadAll} style={{ background: 'none', border: 'none', color: primaryBlue, fontSize: '12px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', gap: '4px' }}>Download All</button>
                 </div>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
                   <thead>
@@ -209,7 +234,7 @@ export default function ReviewerEvaluationPage() {
                       submission.files.map((file, idx) => (
                         <tr key={file.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
                           <td style={{ padding: '10px', color: '#666' }}>{idx + 1}</td>
-                          <td style={{ padding: '10px', color: primaryBlue, textDecoration: 'underline', cursor: 'pointer' }}>{file.name}</td>
+                          <td style={{ padding: '10px', color: primaryBlue, textDecoration: 'underline', cursor: 'pointer' }} onClick={() => handleDownloadFile(file.path, file.name)}>{file.name}</td>
                           <td style={{ padding: '10px', color: '#666' }}>{new Date(file.date).toLocaleDateString()}</td>
                           <td style={{ padding: '10px', color: '#666' }}>{file.type}</td>
                         </tr>
@@ -258,7 +283,7 @@ export default function ReviewerEvaluationPage() {
              <div style={{ border: '1px solid ' + borderColor, borderRadius: '4px', marginBottom: '30px', overflow: 'hidden' }}>
                 <div style={{ backgroundColor: '#fcfcfc', padding: '10px 15px', borderBottom: '1px solid ' + borderColor, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span style={{ fontSize: '13px', fontWeight: 'bold' }}>Review Files</span>
-                  <button style={{ background: 'none', border: 'none', color: primaryBlue, fontSize: '12px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', gap: '4px' }}><Search size={14}/> Search</button>
+                  <button onClick={handleDownloadAll} style={{ background: 'none', border: 'none', color: primaryBlue, fontSize: '12px', fontWeight: 'bold', cursor: 'pointer', display: 'flex', gap: '4px' }}>Download All</button>
                 </div>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
                   <thead>
@@ -274,7 +299,7 @@ export default function ReviewerEvaluationPage() {
                       submission.files.map((file, idx) => (
                         <tr key={file.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
                           <td style={{ padding: '10px', color: '#666' }}>{idx + 1}</td>
-                          <td style={{ padding: '10px', color: primaryBlue, textDecoration: 'underline', cursor: 'pointer' }}>{file.name}</td>
+                          <td style={{ padding: '10px', color: primaryBlue, textDecoration: 'underline', cursor: 'pointer' }} onClick={() => handleDownloadFile(file.path, file.name)}>{file.name}</td>
                           <td style={{ padding: '10px', color: '#666' }}>{new Date(file.date).toLocaleDateString()}</td>
                           <td style={{ padding: '10px', color: '#666' }}>{file.type}</td>
                         </tr>

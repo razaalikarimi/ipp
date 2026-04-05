@@ -45,7 +45,7 @@ export async function GET(req, { params }) {
 
     // 2. Get files
     const [fileRows] = await pool.query(
-      'SELECT id, name, type, uploaded_at FROM submission_files WHERE submission_id = ?',
+      'SELECT id, name, type, path, uploaded_at FROM submission_files WHERE submission_id = ?',
       [id]
     );
 
@@ -111,7 +111,7 @@ export async function GET(req, { params }) {
         subtitle: submission.subtitle || '',
         abstract: submission.abstract || '',
         language: 'English',
-        files: fileRows.map(f => ({ id: f.id, name: f.name, type: f.type, date: f.uploaded_at })),
+        files: fileRows.map(f => ({ id: f.id, name: f.name, type: f.type, path: f.path, date: f.uploaded_at })),
         contributors: contribRows,
         discussions: discRows.map(d => ({
           id: d.id,
