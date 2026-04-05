@@ -32,7 +32,7 @@ export default function JournalsPage() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
                  {journals.map((j) => (
                     <Link href={`/journals/${j.slug}`} key={j.id} className="group">
-                       <div className="bg-white rounded-2xl shadow-sm border border-[#E2E8F0] overflow-hidden flex flex-col md:flex-row h-auto md:h-[280px] transition-all duration-500 cursor-pointer hover:shadow-2xl hover:-translate-y-1">
+                       <div className="bg-white rounded-2xl md:rounded-l-none shadow-sm border border-[#E2E8F0] overflow-hidden flex flex-col md:flex-row h-auto md:h-[280px] transition-all duration-500 cursor-pointer hover:shadow-2xl hover:-translate-y-1">
                           {/* Left Side: Cover/Brand */}
                           <div className="w-full md:w-[220px] shrink-0 border-b md:border-b-0 md:border-r border-[#E2E8F0] bg-[#F4F6F8] relative flex items-center justify-center p-0">
                              {j.cover ? (
@@ -70,8 +70,17 @@ export default function JournalsPage() {
                                 </p>
                                 
                                 <div className="flex items-center justify-between pt-2 border-t border-[#F1F5F9]">
-                                   <div className="text-[11px] font-bold text-[#4BA6B9] uppercase tracking-wide">
-                                     {j.indexing && j.indexing.includes('Scopus') ? 'Indexed by Scopus' : 'Global Distribution'}
+                                   <div className="flex gap-2 flex-wrap">
+                                     {j.indexingPartners?.slice(0, 2).map((partner, idx) => (
+                                        <span key={idx} className="px-2 py-1 bg-[#F1F6FA] text-[9px] font-bold text-[#4BA6B9] rounded uppercase tracking-wide">
+                                          {partner}
+                                        </span>
+                                     ))}
+                                     {(!j.indexingPartners || j.indexingPartners.length === 0) && (
+                                        <span className="px-2 py-1 bg-[#F1F6FA] text-[9px] font-bold text-[#4BA6B9] rounded uppercase tracking-wide">
+                                          Global Distribution
+                                        </span>
+                                     )}
                                    </div>
                                    <div className="flex items-center gap-2 text-[12px] font-black text-[#1A1A1A] group-hover:gap-3 transition-all">
                                       Explore <ArrowRight size={14} className="text-[#4BA6B9]" />

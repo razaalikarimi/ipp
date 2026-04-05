@@ -198,25 +198,61 @@ export default function Home() {
            <div className="max-w-[1240px] mx-auto px-6">
                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {journals.map((j) => (
-                     <Link key={j.slug} href={`/journals/${j.slug}`} className="bg-white rounded-2xl shadow shadow-[#F1F1F1] border border-[#F1F1F1] overflow-hidden flex flex-col md:flex-row h-auto md:h-[260px] transition-all duration-500 group hover:shadow-xl">
-                        <div className="w-full md:w-[220px] shrink-0 border-r border-[#F1F1F1] bg-[#F4F6F8] relative flex items-center justify-center p-0">
-                          {j.cover ? (
-                             <img src={j.cover} alt={j.title} className="w-full h-full object-cover" />
-                          ) : (
-                             <div className="bg-[#0B1F3A] w-full h-full flex items-center justify-center">
-                                <span className="text-white text-[10px] font-bold tracking-widest">EISR PRESS</span>
-                             </div>
-                          )}
-                       </div>
-                       <div className="flex-grow p-8 flex flex-col justify-between">
-                          <div className="space-y-4">
-                             <h3 className="text-xl font-bold text-[#1A1A1A] group-hover:text-[#4BA6B9] leading-tight transition-colors">{j.title}</h3>
+                     <Link href={`/journals/${j.slug}`} key={j.id} className="group">
+                       <div className="bg-white rounded-2xl md:rounded-l-none shadow shadow-[#F1F1F1] border border-[#F1F1F1] overflow-hidden flex flex-col md:flex-row h-auto md:h-[280px] transition-all duration-500 cursor-pointer hover:shadow-2xl hover:-translate-y-1">
+                          {/* Left Side: Cover/Brand */}
+                          <div className="w-full md:w-[220px] shrink-0 border-b md:border-b-0 md:border-r border-[#E2E8F0] bg-[#F4F6F8] relative flex items-center justify-center p-0">
+                             {j.cover ? (
+                                <img src={j.cover} alt={j.title} className="w-full h-full object-cover" />
+                             ) : (
+                               <div className="relative w-full h-full flex flex-col items-center justify-center bg-[#0B1F3A] p-6 text-center">
+                                 <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_white_1px,transparent_1px)] bg-[length:16px_16px]" />
+                                 <div className="z-10 leading-tight">
+                                    <span className="text-white/40 text-[10px] font-black block mb-2 uppercase tracking-widest">EISR PRESS</span>
+                                    <span className="text-white text-lg font-black uppercase block tracking-tighter">{j.id}</span>
+                                    <span className="text-[#4BA6B9] text-[10px] font-bold block mt-1">Portfolio</span>
+                                 </div>
+                               </div>
+                             )}
                           </div>
-                          <div className="space-y-5 mt-6">
-                             <p className="text-[13px] font-bold text-[#555555] border-l-2 border-[#F1F1F1] pl-3">Editor-in-Chief: {j.chief}</p>
-                             <div className="flex flex-col space-y-3">
-                                <span className="text-[#4BA6B9] font-bold text-[11px] leading-relaxed block">{j.indexing.split(',')[0]}</span>
-                                <div className="w-fit px-3 h-6 bg-[#F1F6FA] rounded text-[9px] flex items-center justify-center font-extrabold text-[#4BA6B9]">INDEXED</div>
+
+                          {/* Right Side: Info */}
+                          <div className="flex-grow p-6 lg:p-8 flex flex-col justify-between">
+                             <div className="space-y-4">
+                                <div className="flex items-center gap-3">
+                                   <span className="px-2 py-0.5 rounded bg-[#F1F6FA] text-[10px] font-black text-[#4BA6B9] uppercase tracking-wider">
+                                     {j.id.toUpperCase()}
+                                   </span>
+                                   <div className="h-px flex-grow bg-[#F1F5F9]" />
+                                </div>
+                                <h3 className="text-xl font-sans font-black text-[#1A1A1A] group-hover:text-[#4BA6B9] leading-tight tracking-tight transition-colors">
+                                  {j.title}
+                                </h3>
+                             </div>
+
+                             <div className="space-y-4 mt-6">
+                                <p className="text-[13px] font-bold text-[#555555] group-hover:translate-x-1 transition-transform border-l-2 border-[#4BA6B9] pl-3 leading-snug">
+                                   Editor-in-Chief:<br/>
+                                   <span className="text-[#1A1A1A]">{j.chief}</span>
+                                </p>
+                                
+                                <div className="flex items-center justify-between pt-2 border-t border-[#F1F5F9]">
+                                   <div className="flex gap-2 flex-wrap">
+                                     {j.indexingPartners?.slice(0, 2).map((partner, idx) => (
+                                        <span key={idx} className="px-2 py-1 bg-[#F1F6FA] text-[9px] font-bold text-[#4BA6B9] rounded uppercase tracking-wide">
+                                          {partner}
+                                        </span>
+                                     ))}
+                                     {(!j.indexingPartners || j.indexingPartners.length === 0) && (
+                                        <span className="px-2 py-1 bg-[#F1F6FA] text-[9px] font-bold text-[#4BA6B9] rounded uppercase tracking-wide">
+                                          Global Distribution
+                                        </span>
+                                     )}
+                                   </div>
+                                   <div className="flex items-center gap-2 text-[12px] font-black text-[#1A1A1A] group-hover:gap-3 transition-all shrink-0 ml-2">
+                                      Explore <ArrowRight size={14} className="text-[#4BA6B9]" />
+                                   </div>
+                                </div>
                              </div>
                           </div>
                        </div>
