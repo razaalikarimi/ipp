@@ -8,16 +8,16 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="w-full bg-[#050B14] text-white pt-16 pb-8 font-sans selection:bg-[#4BA6B9]/20 border-t border-white/5">
+    <footer className="w-full bg-[#050B14] text-white pt-4 pb-2 font-sans selection:bg-[#4BA6B9]/20 border-t border-white/5">
       <div className="max-w-[1240px] mx-auto px-6">
         
         {/* 3-Column Professional Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16 pb-20 border-b border-white/5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 pb-4 border-b border-white/5">
           
           {/* Column 1: Our Journals */}
-          <div className="space-y-8">
+          <div className="space-y-2">
             <h4 className="text-[14px] font-black text-white tracking-wide">Our Journals</h4>
-            <div className="flex flex-col space-y-5">
+            <div className="flex flex-col space-y-2">
               {journals.map(j => (
                 <Link key={j.slug} href={`/journals/${j.slug}`} className="group flex items-start gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-white/20 mt-1.5 group-hover:bg-[#4BA6B9] transition-all" />
@@ -33,9 +33,9 @@ export default function Footer() {
           </div>
 
           {/* Column 2: Support Hub */}
-          <div className="space-y-8">
+          <div className="space-y-2">
             <h4 className="text-[14px] font-black text-white tracking-wide">Support Hub</h4>
-            <div className="flex flex-col space-y-4">
+            <div className="flex flex-col space-y-2">
                {[
                  { name: 'Author Guidelines', path: '/journals/jeiml/author-guidelines' },
                  { name: 'Publication Ethics', path: '/policies/publication-ethics' },
@@ -55,7 +55,7 @@ export default function Footer() {
           </div>
 
           {/* Column 3: Address & Contact */}
-          <div className="space-y-8">
+          <div className="space-y-2">
             <h4 className="text-[14px] font-black text-white tracking-wide">Address & Contact</h4>
             <div className="space-y-6">
               <div className="flex items-start space-x-4 text-[#D1D5DB]">
@@ -78,12 +78,12 @@ export default function Footer() {
         </div>
 
         {/* Branding & Attribution */}
-        <div className="pt-16">
+        <div className="pt-4">
            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
               <div className="space-y-6">
                  <div className="flex items-center gap-6">
                      <Link href="/" className="hover:scale-105 transition-transform duration-500">
-                        <span className="text-3xl font-black tracking-tighter text-white">EISR</span>
+                        <Logo variant="full" className="w-[160px] h-[45px] opacity-90" />
                      </Link>
                     <div className="h-10 w-px bg-white/10 hidden md:block" />
                     <div className="flex flex-col">
