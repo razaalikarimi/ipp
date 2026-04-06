@@ -81,7 +81,15 @@ Journal of Eye-Innovation in Machine Learning (JEIML) is an open-access internat
       { id: 1, title: 'JEIML Receives Formal Acceptance into Scopus Database', date: 'November 23, 2025', image: '/scopus_news.jpg', excerpt: 'The editorial board is pleased to announce that JEIML has met all rigorous criteria for indexing in Scopus.' },
       { id: 2, title: 'Strategic Partnership with EBSCO Academic Search', date: 'October 7, 2025', image: '/ebsco_news.jpg', excerpt: 'JEIML research content is now globally searchable via the EBSCO discovery platform.' }
     ],
-    about: 'The Journal of Eye-Innovation in Machine Learning (JEIML) serves as an authoritative worldwide platform for the communication of breakthrough research in computational intelligence. By focusing on both the mathematical foundations and the disruptive applications of AI, JEIML provides researchers with a peer-reviewed ecosystem that prioritizes technical depth, methodological rigor, and societal impact. Our community-driven editorial board ensures that every paper contributes meaningfully to the global body of knowledge.',
+    about: `Journal of Eye-Innovation in Machine Learning (JEIML) is an international, peer-reviewed, open-access scholarly journal dedicated to advancing research and innovation in the fields of machine learning, artificial intelligence, deep learning, computer vision, data science, pattern recognition, and intelligent systems.
+
+The journal aims to provide a global platform for researchers, academicians, industry professionals, and practitioners to disseminate high-quality original research, review articles, and technical contributions that present novel theoretical insights, practical methodologies, and real-world applications.
+
+JEIML encourages interdisciplinary research that bridges theory and practice, promoting innovative solutions to complex problems across domains such as healthcare, engineering, cybersecurity, smart systems, robotics, finance, education, and industrial applications.
+
+All submitted manuscripts undergo a rigorous double-blind peer-review process, ensuring high standards of academic quality, originality, clarity, and scientific impact. The journal is committed to maintaining ethical publishing practices, transparency, and integrity throughout the publication process.
+
+As an open-access journal, JEIML ensures that all published articles are freely accessible to the global research community, supporting the wide dissemination and exchange of scientific knowledge.`,
     privacy: 'The names and email addresses entered in this journal site will be used exclusively for the stated purposes of this journal and will not be made available for any other purpose or to any other party.',
     cover: '/jeiml_cover_new.png'
   },
@@ -157,7 +165,15 @@ Journal of Eye Innovation in Security Analysis (JEISA) is an open-access interna
       misbehavior: 'Unethical actions such as submission manipulation, peer-review interference, citation gaming, and identity falsification are treated as serious violations and lead to strict disciplinary action.',
       corrections: `{{JOURNAL_ACRONYM}} allows: \n• Corrections (Errata) for minor errors not affecting conclusions. \n• Withdrawals for early-stage submissions before peer review. \nPost-publication withdrawals are permitted only in exceptional circumstances.`
     },
-    about: 'Journal of Eye-Innovation in Security Analysis (JEISA) is an international, peer-reviewed, open-access scholarly journal dedicated to advancing research and innovation in the fields of cybersecurity, network security, risk management, threat intelligence, cryptography, digital forensics, and information assurance.\n\nThe journal aims to provide a global platform for researchers, academicians, industry professionals, and security practitioners to disseminate high-quality original research, review articles, and technical contributions that present novel theoretical insights, practical defense methodologies, and real-world security applications.\n\nJEISA encourages interdisciplinary research that bridges theory and practice, promoting innovative solutions to complex security challenges across various domains, including healthcare privacy, industrial control systems, cloud security, financial fraud detection, IoT security, and national defense.\n\nAll submitted manuscripts undergo a rigorous double-blind peer-review process, ensuring high standards of academic quality, originality, clarity, and scientific impact. The journal is committed to maintaining ethical publishing practices, transparency, and integrity in all stages of the publication process.\n\nAs an open-access journal, JEISA ensures that all published articles are freely accessible to the global research community, supporting the wide dissemination and exchange of critical security knowledge.',
+    about: `Journal of Eye Innovation in Security Analysis (JEISA) is an international, peer-reviewed, open-access scholarly journal dedicated to advancing research and innovation across cybersecurity, information security, threat intelligence, digital forensics, cryptography, network and system security, security analytics, and AI-driven security technologies.
+
+The journal provides a global platform for researchers, academicians, industry professionals, and practitioners to disseminate high-quality original research, review articles, and technical contributions that present novel theoretical insights, practical methodologies, and real-world applications in security analysis.
+
+JEISA encourages interdisciplinary research that bridges theory and practice, promoting innovative solutions to complex security challenges across domains such as critical infrastructure, healthcare security, smart systems, finance, industrial cybersecurity, and AI-enabled threat detection.
+
+All submitted manuscripts undergo a rigorous double-blind peer-review process, ensuring the highest standards of academic quality, originality, clarity, and scientific impact. The journal is committed to ethical publishing practices, transparency, and integrity throughout the publication process.
+
+As an open-access journal, JEISA ensures that all published articles are freely accessible to the global research and professional security community, supporting the wide dissemination and exchange of knowledge in the field of security analysis.`,
     cover: '/jeisa_cover_new.png'
   }
 ];
