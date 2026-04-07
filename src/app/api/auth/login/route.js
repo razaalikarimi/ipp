@@ -48,6 +48,38 @@ export async function POST(req) {
         finalUser = { id: result.insertId, fullName: matchedHardcoded.name, email: matchedHardcoded.email, role: matchedHardcoded.role };
       } else {
         finalUser = existing[0];
+        // Ensure role is correctly set in DB (may have been created without role during assignment)
+        if (!finalUser.role || finalUser.role !== matchedHardcoded.role) {
+          await pool.query('UPDATE users SET role = ? WHERE id = ?', [matchedHardcoded.role, finalUser.id]);
+          finalUser.role = matchedHardcoded.role;
+        }
+      }
+
+      // *** CRITICAL FIX: Sync reviewer_assignments to use THIS user's ID ***
+      // This handles the case where assignments were created with a different user_id
+      // for the same email (e.g., placeholder user created before login)
+      if (matchedHardcoded.role === 'reviewer') {
+        // Find any reviewer_assignments linked to users with this email but different user_id
+        const [otherUsers] = await pool.query(
+          'SELECT id FROM users WHERE email = ? AND id != ?',
+          [matchedHardcoded.email, finalUser.id]
+        );
+        if (otherUsers.length > 0) {
+          const otherIds = otherUsers.map(u => u.id);
+          // Update any assignments pointing to the old user_id to point to the real user
+          await pool.query(
+            `UPDATE reviewer_assignments SET user_id = ? WHERE user_id IN (${otherIds.map(() => '?').join(',')})`,
+            [finalUser.id, ...otherIds]
+          );
+        }
+        // Also update any assignments that have this email via users table - direct fix
+        await pool.query(
+          `UPDATE reviewer_assignments ra
+           JOIN users u ON ra.user_id = u.id
+           SET ra.user_id = ?
+           WHERE u.email = ? AND ra.user_id != ?`,
+          [finalUser.id, matchedHardcoded.email, finalUser.id]
+        );
       }
 
       // Generate JWT for the hardcoded user
