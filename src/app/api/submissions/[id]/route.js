@@ -29,8 +29,11 @@ export async function GET(req, { params }) {
 
     if (!isAuthorized) {
       const [assignmentRows] = await pool.query(
-        'SELECT id, assigned_at, status FROM reviewer_assignments WHERE submission_id = ? AND user_id = ?',
-        [id, user.userId]
+        `SELECT ra.id, ra.assigned_at, ra.status 
+         FROM reviewer_assignments ra
+         JOIN users u ON ra.user_id = u.id
+         WHERE ra.submission_id = ? AND (ra.user_id = ? OR u.email = ?)`,
+        [id, user.userId, user.email]
       );
       if (assignmentRows.length > 0) {
         isAuthorized = true;

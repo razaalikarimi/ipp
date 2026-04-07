@@ -20,6 +20,9 @@ export async function GET(req) {
 
     // --- ROLE BASED BASE QUERY & FILTERS ---
     if (role === 'reviewer') {
+      // Match by BOTH user_id OR email to handle cases where
+      // reviewer_assignments was created with a different user_id
+      // than what the reviewer's JWT contains (common with env-hardcoded users)
       query = `
         SELECT 
           s.id, s.title, s.status, s.activity,
@@ -27,9 +30,11 @@ export async function GET(req) {
           DATE_FORMAT(s.created_at, '%M %d, %Y') AS date, s.created_at
         FROM submissions s
         JOIN reviewer_assignments ra ON s.id = ra.submission_id
+        JOIN users u ON ra.user_id = u.id
       `;
-      whereClauses.push('ra.user_id = ?');
+      whereClauses.push('(ra.user_id = ? OR u.email = ?)');
       params.push(user.userId);
+      params.push(user.email);
       if (journalId) {
         whereClauses.push('s.journal_id = ?');
         params.push(journalId);
