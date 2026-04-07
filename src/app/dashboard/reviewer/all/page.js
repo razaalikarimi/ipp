@@ -4,7 +4,7 @@ export default function ReviewerAllPage() {
   return (
     <SubmissionsTable
       title="All assignments"
-      filterFn={() => false}
+      filterFn={() => true}
       columns="reviewer"
     />
   );

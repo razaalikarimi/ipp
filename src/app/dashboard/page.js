@@ -122,6 +122,7 @@ export default function DashboardPage() {
     : (profile?.fullName || 'Researcher');
 
   const recentSubmissions = submissions.slice(0, 5);
+  const recentAssignments = assignments.slice(0, 5);
 
   const statCardStyle = (color) => ({
     backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px',
@@ -241,7 +242,7 @@ export default function DashboardPage() {
 
       {/* Recent Submissions Table */}
       {recentSubmissions.length > 0 && (
-        <div style={{ backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', overflow: 'hidden' }}>
+        <div style={{ backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', overflow: 'hidden', marginBottom: '20px' }}>
           <div style={{ padding: '16px 24px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h2 style={{ fontSize: '14px', fontWeight: '700', color: '#1e293b', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Clock size={15} color="#005f96" /> Recent Submissions
@@ -277,6 +278,52 @@ export default function DashboardPage() {
                   </span>
                   <Link href={`/dashboard/submissions/${sub.id}`} style={{ fontSize: '12px', color: '#005f96', textDecoration: 'none', fontWeight: '600', textAlign: 'right' }}>
                     View →
+                  </Link>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Recent Assignments Table */}
+      {recentAssignments.length > 0 && (
+        <div style={{ backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', overflow: 'hidden', marginBottom: '20px' }}>
+          <div style={{ padding: '16px 24px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h2 style={{ fontSize: '14px', fontWeight: '700', color: '#1e293b', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Clock size={15} color="#005f96" /> Recent Assignments
+            </h2>
+            <Link href="/dashboard/reviewer/action-required" style={{ fontSize: '13px', color: '#005f96', textDecoration: 'none', fontWeight: '500' }}>
+              View all →
+            </Link>
+          </div>
+          <div>
+            {recentAssignments.map((sub, idx) => {
+              const statusColors = {
+                'Published': '#16a34a', 'Declined': '#dc2626', 'Accepted': '#16a34a',
+                'Completed': '#0284c7', 'Pending': '#ca8a04',
+              };
+              const sc = statusColors[sub.status] || '#64748b';
+              return (
+                <div key={sub.id} style={{
+                  display: 'grid', gridTemplateColumns: '60px 1fr 120px 140px 80px',
+                  borderBottom: idx < recentAssignments.length - 1 ? '1px solid #f1f5f9' : 'none',
+                  alignItems: 'center', padding: '12px 24px',
+                  backgroundColor: idx % 2 === 0 ? '#fff' : '#fafcff',
+                }}>
+                  <span style={{ fontSize: '12px', color: '#94a3b8', fontWeight: '600' }}>#{sub.id}</span>
+                  <Link href={`/dashboard/reviewer/assignments/${sub.id}`} style={{ fontSize: '13px', color: '#005f96', textDecoration: 'none', fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', paddingRight: '12px' }}>
+                    {sub.title}
+                  </Link>
+                  <span style={{ fontSize: '12px', color: sc, fontWeight: '600', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: sc, display: 'inline-block' }} />
+                    {sub.status || 'Pending'}
+                  </span>
+                  <span style={{ fontSize: '12px', color: '#94a3b8' }}>
+                    {sub.date || '—'}
+                  </span>
+                  <Link href={`/dashboard/reviewer/assignments/${sub.id}`} style={{ fontSize: '12px', color: '#005f96', textDecoration: 'none', fontWeight: '600', textAlign: 'right' }}>
+                    Review →
                   </Link>
                 </div>
               );
