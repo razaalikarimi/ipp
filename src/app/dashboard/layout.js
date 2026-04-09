@@ -64,10 +64,11 @@ export default function DashboardLayout({ children }) {
           setReviewerSubmissions(revData.submissions);
         }
 
-        // Fetch Editorial Submissions if role is editor/admin
+        // Determine User Role once
         let payloadRole = 'author';
         try { payloadRole = JSON.parse(atob(token.split('.')[1])).role || 'author'; } catch(e){}
 
+        // Fetch Editorial Submissions if role is editor/admin
         if (payloadRole === 'editor' || payloadRole === 'admin') {
           let edUrl = '/api/submissions?role=editor';
           if (currentJournal) edUrl += `&journal=${currentJournal}`;
@@ -79,9 +80,6 @@ export default function DashboardLayout({ children }) {
         }
 
         // Generate Notifications based on Role
-        let payloadRole = 'author';
-        try { payloadRole = JSON.parse(atob(token.split('.')[1])).role || 'author'; } catch(e){}
-        
         let generated = [];
         if (payloadRole === 'reviewer') {
           const pending = revData.submissions?.filter(s => ['pending', 'accepted'].includes((s.status || '').toLowerCase())) || [];
