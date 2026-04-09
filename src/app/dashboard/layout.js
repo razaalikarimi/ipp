@@ -13,6 +13,8 @@ export default function DashboardLayout({ children }) {
   const [reviewerSubmissions, setReviewerSubmissions] = useState([]);
   const [reviewerOpen, setReviewerOpen] = useState(true);
   const [authorOpen, setAuthorOpen] = useState(false);
+  const [editorOpen, setEditorOpen] = useState(true);
+  const [editorSubmissions, setEditorSubmissions] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [showNotif, setShowNotif] = useState(false);
   const [readNotifs, setReadNotifs] = useState([]);
@@ -60,6 +62,20 @@ export default function DashboardLayout({ children }) {
         const revData = await revRes.json();
         if (revData.success) {
           setReviewerSubmissions(revData.submissions);
+        }
+
+        // Fetch Editorial Submissions if role is editor/admin
+        let payloadRole = 'author';
+        try { payloadRole = JSON.parse(atob(token.split('.')[1])).role || 'author'; } catch(e){}
+
+        if (payloadRole === 'editor' || payloadRole === 'admin') {
+          let edUrl = '/api/submissions?role=editor';
+          if (currentJournal) edUrl += `&journal=${currentJournal}`;
+          const edRes = await fetch(edUrl, { headers: { 'Authorization': `Bearer ${token}` } });
+          const edData = await edRes.json();
+          if (edData.success) {
+            setEditorSubmissions(edData.submissions);
+          }
         }
 
         // Generate Notifications based on Role
@@ -134,6 +150,12 @@ export default function DashboardLayout({ children }) {
     revDeclined: reviewerSubmissions.filter(s => (s.status || '').toLowerCase() === 'declined').length,
     revPublished: reviewerSubmissions.filter(s => (s.submission_status || '').toLowerCase() === 'published').length,
     revArchived: reviewerSubmissions.filter(s => (s.status || '').toLowerCase() === 'archived').length,
+
+    // Editorial counts
+    edUnassigned: editorSubmissions.filter(s => (s.activity || '').toLowerCase() === 'unassigned').length,
+    edReview: editorSubmissions.filter(s => (s.activity || '').toLowerCase().includes('review')).length,
+    edCompleted: editorSubmissions.filter(s => ['Published', 'Declined'].includes(s.status)).length,
+    edTotal: editorSubmissions.length,
   };
 
   const displayName = profile?.givenName
@@ -311,6 +333,21 @@ export default function DashboardLayout({ children }) {
           minHeight: 'calc(100vh - 40px)', flexShrink: 0, display: 'flex',
           flexDirection: 'column', overflowY: 'auto',
         }}>
+          {/* Editorial Dashboard (Visible to Editors/Admins) */}
+          {(user?.role === 'editor' || user?.role === 'admin') && (
+            <>
+              <SectionHeader icon={Plus} label="Editorial Dashboard" open={editorOpen} onToggle={() => setEditorOpen(!editorOpen)} />
+              {editorOpen && (
+                <div style={{ borderBottom: '1px solid #e2e8f0' }}>
+                  <NavItem href="/dashboard/submissions" label="All Submissions" count={counts.edTotal} />
+                  <NavItem href="/dashboard/submissions/unassigned" label="Unassigned" count={counts.edUnassigned} />
+                  <NavItem href="/dashboard/submissions/in-review" label="In Review" count={counts.edReview} />
+                  <NavItem href="/dashboard/submissions/published" label="Completed & Published" count={counts.edCompleted} />
+                </div>
+              )}
+            </>
+          )}
+
           {/* My Assignments as Reviewer */}
           <SectionHeader icon={Edit3} label="My Assignments as Reviewer" open={reviewerOpen} onToggle={() => setReviewerOpen(!reviewerOpen)} />
           {reviewerOpen && (

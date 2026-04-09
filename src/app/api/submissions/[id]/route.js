@@ -114,7 +114,13 @@ export async function GET(req, { params }) {
         subtitle: submission.subtitle || '',
         abstract: submission.abstract || '',
         language: 'English',
-        files: fileRows.map(f => ({ id: f.id, name: f.name, type: f.type, path: f.path, date: f.uploaded_at })),
+        files: Array.from(new Map(fileRows.map(f => [f.path, f])).values()).map(f => ({ 
+          id: f.id, 
+          name: f.name, 
+          type: f.type, 
+          path: f.path, 
+          date: f.uploaded_at 
+        })),
         contributors: contribRows,
         discussions: discRows.map(d => ({
           id: d.id,

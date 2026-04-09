@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ChevronLeft, Upload, AlertCircle, Check, MoreHorizontal, X, Edit2, Move, Eye, FileText, Link as LinkIcon } from 'lucide-react';
+import { ChevronLeft, Upload, AlertCircle, Check, MoreHorizontal, X, Edit2, Move, Eye, FileText, Link as LinkIcon, Trash2 } from 'lucide-react';
 
 const STEPS = ['Details', 'Upload Files', 'Contributors', 'For the Editors', 'Review'];
 
@@ -104,6 +104,13 @@ export default function SubmitPage() {
         console.error('Upload failed for', f.name, err);
       }
     }
+  };
+
+  const handleRemoveFile = (id) => {
+    setForm(prev => ({
+      ...prev,
+      files: prev.files.filter(f => f.id !== id)
+    }));
   };
 
   const validateStep = () => {
@@ -352,15 +359,22 @@ export default function SubmitPage() {
 
               {form.files.length > 0 && (
                 <div style={{ border: '1px solid #e2e8f0', borderRadius: '4px', overflow: 'hidden', marginBottom: '32px' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: '60px 1fr 200px 120px', padding: '12px 16px', backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0', fontSize: '11px', fontWeight: '700', color: '#475569', textTransform: 'uppercase' }}>
-                    <span>ID</span><span>File Name</span><span>Date Uploaded</span><span>Type</span>
+                  <div style={{ display: 'grid', gridTemplateColumns: '60px 1fr 200px 120px 80px', padding: '12px 16px', backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0', fontSize: '11px', fontWeight: '700', color: '#475569', textTransform: 'uppercase' }}>
+                    <span>ID</span><span>File Name</span><span>Date Uploaded</span><span>Type</span><span>Action</span>
                   </div>
                   {form.files.map((file) => (
-                    <div key={file.id} style={{ display: 'grid', gridTemplateColumns: '60px 1fr 200px 120px', padding: '16px', borderBottom: '1px solid #f1f5f9', alignItems: 'center', fontSize: '13px' }}>
+                    <div key={file.id} style={{ display: 'grid', gridTemplateColumns: '60px 1fr 200px 120px 80px', padding: '16px', borderBottom: '1px solid #f1f5f9', alignItems: 'center', fontSize: '13px' }}>
                       <span style={{ color: '#64748b' }}>{file.id}</span>
                       <span style={{ fontWeight: '600', color: '#1e293b' }}>{file.name}</span>
                       <span style={{ color: '#64748b' }}>{file.date}</span>
                       <span style={{ backgroundColor: '#005f96', color: '#fff', fontSize: '10px', padding: '3px 12px', borderRadius: '15px', fontWeight: '700', width: 'fit-content' }}>{file.type}</span>
+                      <button 
+                        onClick={() => handleRemoveFile(file.id)}
+                        style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                        title="Remove file"
+                      >
+                        <Trash2 size={16} />
+                      </button>
                     </div>
                   ))}
                 </div>

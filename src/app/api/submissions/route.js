@@ -167,13 +167,22 @@ export async function POST(req) {
     }
 
     if (files.length > 0) {
-      const fileValues = files
-        .filter((f) => f?.name)
+      // De-duplicate files based on path to prevent duplicate records
+      const uniqueFilesMap = new Map();
+      files.forEach(f => {
+        if (f?.name && f?.path) {
+          uniqueFilesMap.set(f.path, f);
+        }
+      });
+
+      const uniqueFiles = Array.from(uniqueFilesMap.values());
+
+      const fileValues = uniqueFiles
         .map((f) => [
           submissionId,
           f.name,
           f.type || 'Article Text',
-          f.path || `/uploads/${f.name}`,
+          f.path,
         ]);
 
       if (fileValues.length > 0) {

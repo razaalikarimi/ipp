@@ -14,8 +14,13 @@ export async function POST(req) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Sanitize filename
-    const filename = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
+    // Sanitize and make filename unique
+    const timestamp = Date.now();
+    const randomStr = Math.random().toString(36).substring(2, 8);
+    const originalExt = path.extname(file.name);
+    const baseName = path.basename(file.name, originalExt).replace(/[^a-zA-Z0-9]/g, '_');
+    const filename = `${baseName}_${timestamp}_${randomStr}${originalExt}`;
+    
     const uploadDir = path.join(process.cwd(), 'public', 'uploads');
     
     // Ensure directory exists
