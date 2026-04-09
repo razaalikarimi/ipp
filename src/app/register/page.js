@@ -7,6 +7,7 @@ import { User, Lock, Mail, Globe, Eye, EyeOff, AlertCircle, ArrowRight, ShieldCh
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
+import { countries } from '@/lib/countries';
 
 export default function Register() {
   const router = useRouter();
@@ -17,30 +18,69 @@ export default function Register() {
     username: '',
     password: '',
     confirmPassword: '',
+    country: '',
+    affiliation: '',
   });
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [agreedPrivacy, setAgreedPrivacy] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const newErrors = {};
+
+    // --- FRONTEND VALIDATION ---
+    if (formData.givenName.trim().length < 2) {
+      newErrors.givenName = 'Given Name must be at least 2 characters.';
+    }
+    if (formData.affiliation.trim().length < 3) {
+      newErrors.affiliation = 'Affiliation must be at least 3 characters.';
+    }
+    if (!formData.country) {
+      newErrors.country = 'Please select your country.';
+    }
+    if (formData.username.trim().length < 4) {
+      newErrors.username = 'Username must be at least 4 characters.';
+    } else if (!/^[a-zA-Z0-9_]+$/.test(formData.username)) {
+      newErrors.username = 'Username can only contain letters, numbers, and underscores.';
+    }
+    if (formData.password.length < 5) {
+      newErrors.password = 'Password must be at least 5 characters long.';
+    } else {
+      const passwordRegex = /^[A-Z](?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{4,}$/;
+      if (!passwordRegex.test(formData.password)) {
+        newErrors.password = 'Password must start with an uppercase letter and include at least one number and one special character.';
+      }
+    }
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match.');
-      return;
+      newErrors.confirmPassword = 'Passwords do not match.';
     }
     if (!agreedPrivacy) {
-      setError('You must agree to the privacy statement.');
+      newErrors.agreedPrivacy = 'You must agree to the privacy statement.';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      // Scroll to first error
+      const firstErrorKey = Object.keys(newErrors)[0];
+      const element = document.getElementsByName(firstErrorKey)[0];
+      if (element) element.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
+
     setLoading(true);
-    setError('');
+    setErrors({});
     try {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          fullName: `${formData.givenName} ${formData.familyName}`,
+          fullName: `${formData.givenName} ${formData.familyName}`.trim(),
+          givenName: formData.givenName,
+          familyName: formData.familyName,
+          affiliation: formData.affiliation,
+          country: formData.country,
           username: formData.username,
           email: formData.email,
           password: formData.password,
@@ -51,11 +91,21 @@ export default function Register() {
       const search = typeof window !== 'undefined' ? window.location.search : '';
       router.push(`/register/complete${search}`);
     } catch (err) {
-      setError(err.message);
+      setErrors({ global: err.message });
     } finally {
       setLoading(false);
     }
   };
+
+  const ErrorMsg = ({ msg }) => (
+    <motion.p 
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: 'auto' }}
+      className="text-red-500 text-[11px] font-medium mt-1 leading-tight"
+    >
+      {msg}
+    </motion.p>
+  );
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 font-sans">
@@ -76,7 +126,7 @@ export default function Register() {
           </div>
 
           <AnimatePresence mode="wait">
-            {error && (
+            {errors.global && (
               <motion.div 
                 initial={{ opacity: 0, height: 0, marginBottom: 0 }}
                 animate={{ opacity: 1, height: 'auto', marginBottom: 24 }}
@@ -85,7 +135,7 @@ export default function Register() {
               >
                 <div className="p-3 bg-red-50 border border-red-100 rounded-lg text-red-600 text-[13px] font-medium flex items-center gap-2">
                   <AlertCircle size={16} className="shrink-0" />
-                  <p>{error}</p>
+                  <p>{errors.global}</p>
                 </div>
               </motion.div>
             )}
@@ -99,12 +149,14 @@ export default function Register() {
                 <div className="space-y-1.5">
                   <label className="text-[13px] font-semibold text-slate-700">Given Name <span className="text-red-500">*</span></label>
                   <input 
+                    name="givenName"
                     type="text" required
                     placeholder="e.g. John"
                     value={formData.givenName}
                     onChange={e => setFormData({ ...formData, givenName: e.target.value })}
-                    className="w-full h-13 bg-white border border-slate-300 rounded-lg px-4 text-[15px] text-slate-900 placeholder-slate-400 outline-none transition-all focus:border-[#4BA6B9] focus:ring-[3px] focus:ring-[#4BA6B9]/10 hover:border-slate-400 shadow-sm"
+                    className={`w-full h-13 bg-white border ${errors.givenName ? 'border-red-500' : 'border-slate-300'} rounded-lg px-4 text-[15px] text-slate-900 placeholder-slate-400 outline-none transition-all focus:border-[#4BA6B9] focus:ring-[3px] focus:ring-[#4BA6B9]/10 hover:border-slate-400 shadow-sm`}
                   />
+                  {errors.givenName && <ErrorMsg msg={errors.givenName} />}
                 </div>
 
                 <div className="space-y-1.5">
@@ -123,24 +175,31 @@ export default function Register() {
                 <div className="space-y-1.5">
                   <label className="text-[13px] font-semibold text-slate-700">Affiliation <span className="text-red-500">*</span></label>
                   <input 
+                    name="affiliation"
                     type="text" required
                     placeholder="University or Organization"
-                    className="w-full h-13 bg-white border border-slate-300 rounded-lg px-4 text-[15px] text-slate-900 placeholder-slate-400 outline-none transition-all focus:border-[#4BA6B9] focus:ring-[3px] focus:ring-[#4BA6B9]/10 hover:border-slate-400 shadow-sm"
+                    value={formData.affiliation}
+                    onChange={e => setFormData({ ...formData, affiliation: e.target.value })}
+                    className={`w-full h-13 bg-white border ${errors.affiliation ? 'border-red-500' : 'border-slate-300'} rounded-lg px-4 text-[15px] text-slate-900 placeholder-slate-400 outline-none transition-all focus:border-[#4BA6B9] focus:ring-[3px] focus:ring-[#4BA6B9]/10 hover:border-slate-400 shadow-sm`}
                   />
+                  {errors.affiliation && <ErrorMsg msg={errors.affiliation} />}
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-[13px] font-semibold text-slate-700">Country <span className="text-red-500">*</span></label>
                   <select 
+                    name="country"
                     required
-                    className="w-full h-13 bg-white border border-slate-300 rounded-lg px-4 text-[15px] text-slate-900 outline-none transition-all focus:border-[#4BA6B9] focus:ring-[3px] focus:ring-[#4BA6B9]/10 hover:border-slate-400 appearance-none shadow-sm"
+                    value={formData.country}
+                    onChange={e => setFormData({ ...formData, country: e.target.value })}
+                    className={`w-full h-13 bg-white border ${errors.country ? 'border-red-500' : 'border-slate-300'} rounded-lg px-4 text-[15px] text-slate-900 outline-none transition-all focus:border-[#4BA6B9] focus:ring-[3px] focus:ring-[#4BA6B9]/10 hover:border-slate-400 appearance-none shadow-sm`}
                     style={{ backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.8rem center', backgroundSize: '1.2em' }}
                   >
                     <option value="">Select your country</option>
-                    <option value="IN">India</option>
-                    <option value="US">United States</option>
-                    <option value="UK">United Kingdom</option>
-                    <option value="AU">Australia</option>
+                    {countries.map(c => (
+                      <option key={c.code} value={c.code}>{c.name}</option>
+                    ))}
                   </select>
+                  {errors.country && <ErrorMsg msg={errors.country} />}
                 </div>
               </div>
             </div>
@@ -165,12 +224,14 @@ export default function Register() {
                 <div className="space-y-1.5">
                   <label className="text-[13px] font-semibold text-slate-700">Username <span className="text-red-500">*</span></label>
                   <input 
+                    name="username"
                     type="text" required
                     placeholder="Choose a username"
                     value={formData.username}
                     onChange={e => setFormData({ ...formData, username: e.target.value })}
-                    className="w-full h-13 bg-white border border-slate-300 rounded-lg px-4 text-[15px] text-slate-900 placeholder-slate-400 outline-none transition-all focus:border-[#4BA6B9] focus:ring-[3px] focus:ring-[#4BA6B9]/10 hover:border-slate-400 shadow-sm"
+                    className={`w-full h-13 bg-white border ${errors.username ? 'border-red-500' : 'border-slate-300'} rounded-lg px-4 text-[15px] text-slate-900 placeholder-slate-400 outline-none transition-all focus:border-[#4BA6B9] focus:ring-[3px] focus:ring-[#4BA6B9]/10 hover:border-slate-400 shadow-sm`}
                   />
+                  {errors.username && <ErrorMsg msg={errors.username} />}
                 </div>
               </div>
 
@@ -179,11 +240,12 @@ export default function Register() {
                   <label className="text-[13px] font-semibold text-slate-700">Password <span className="text-red-500">*</span></label>
                   <div className="relative">
                     <input 
+                      name="password"
                       type={showPassword ? 'text' : 'password'} required
                       placeholder="••••••••"
                       value={formData.password}
                       onChange={e => setFormData({ ...formData, password: e.target.value })}
-                      className="w-full h-13 bg-white border border-slate-300 rounded-lg pl-4 pr-11 text-[15px] text-slate-900 placeholder-slate-400 outline-none transition-all focus:border-[#4BA6B9] focus:ring-[3px] focus:ring-[#4BA6B9]/10 hover:border-slate-400 shadow-sm"
+                      className={`w-full h-13 bg-white border ${errors.password ? 'border-red-500' : 'border-slate-300'} rounded-lg pl-4 pr-11 text-[15px] text-slate-900 placeholder-slate-400 outline-none transition-all focus:border-[#4BA6B9] focus:ring-[3px] focus:ring-[#4BA6B9]/10 hover:border-slate-400 shadow-sm`}
                     />
                     <button
                       type="button"
@@ -193,19 +255,22 @@ export default function Register() {
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
+                  {errors.password && <ErrorMsg msg={errors.password} />}
                 </div>
 
                 <div className="space-y-1.5">
                   <label className="text-[13px] font-semibold text-slate-700">Confirm Password <span className="text-red-500">*</span></label>
                   <div className="relative">
                     <input 
+                      name="confirmPassword"
                       type={showPassword ? 'text' : 'password'} required
                       placeholder="••••••••"
                       value={formData.confirmPassword}
                       onChange={e => setFormData({ ...formData, confirmPassword: e.target.value })}
-                      className="w-full h-13 bg-white border border-slate-300 rounded-lg pl-4 pr-11 text-[15px] text-slate-900 placeholder-slate-400 outline-none transition-all focus:border-[#4BA6B9] focus:ring-[3px] focus:ring-[#4BA6B9]/10 hover:border-slate-400 shadow-sm"
+                      className={`w-full h-13 bg-white border ${errors.confirmPassword ? 'border-red-500' : 'border-slate-300'} rounded-lg pl-4 pr-11 text-[15px] text-slate-900 placeholder-slate-400 outline-none transition-all focus:border-[#4BA6B9] focus:ring-[3px] focus:ring-[#4BA6B9]/10 hover:border-slate-400 shadow-sm`}
                     />
                   </div>
+                  {errors.confirmPassword && <ErrorMsg msg={errors.confirmPassword} />}
                 </div>
               </div>
             </div>
@@ -213,15 +278,19 @@ export default function Register() {
             <div className="my-6 border-t border-slate-100"></div>
 
             <div className="space-y-3">
-              <div className="flex items-start gap-2.5">
-                <input 
-                  id="agreedPrivacy" type="checkbox" required checked={agreedPrivacy} 
-                  onChange={e => setAgreedPrivacy(e.target.checked)}
-                  className="mt-[3px] w-4 h-4 rounded-[4px] border-slate-300 text-[#4BA6B9] focus:ring-[#4BA6B9] focus:ring-offset-0 cursor-pointer shrink-0 transition-colors" 
-                />
-                <label htmlFor="agreedPrivacy" className="text-[13px] text-slate-600 leading-tight cursor-pointer">
-                  I agree to have my data collected and stored according to the <Link href="/privacy" className="text-[#4BA6B9] hover:underline font-semibold">privacy statement</Link>. <span className="text-red-500">*</span>
-                </label>
+              <div className="flex flex-col">
+                <div className="flex items-start gap-2.5">
+                  <input 
+                    name="agreedPrivacy"
+                    id="agreedPrivacy" type="checkbox" required checked={agreedPrivacy} 
+                    onChange={e => setAgreedPrivacy(e.target.checked)}
+                    className="mt-[3px] w-4 h-4 rounded-[4px] border-slate-300 text-[#4BA6B9] focus:ring-[#4BA6B9] focus:ring-offset-0 cursor-pointer shrink-0 transition-colors" 
+                  />
+                  <label htmlFor="agreedPrivacy" className="text-[13px] text-slate-600 leading-tight cursor-pointer">
+                    I agree to have my data collected and stored according to the <Link href="/privacy" className="text-[#4BA6B9] hover:underline font-semibold">privacy statement</Link>. <span className="text-red-500">*</span>
+                  </label>
+                </div>
+                {errors.agreedPrivacy && <ErrorMsg msg={errors.agreedPrivacy} />}
               </div>
 
               <div className="flex items-start gap-2.5">

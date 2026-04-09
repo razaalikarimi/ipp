@@ -43,10 +43,11 @@ export default function SubmissionWorkflowPage({ params }) {
   const [user, setUser] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
   
-  // Decision State
-  const [decision, setDecision] = useState('');
-  const [decisionComments, setDecisionComments] = useState('');
-  const [recordingDecision, setRecordingDecision] = useState(false);
+  // Revision State
+  const [revisionComments, setRevisionComments] = useState('');
+  const [revFiles, setRevFiles] = useState([]);
+  const [submittingRevision, setSubmittingRevision] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (submission) {
@@ -160,6 +161,49 @@ export default function SubmissionWorkflowPage({ params }) {
     } catch (err) { alert('Error recording decision'); } finally { setRecordingDecision(false); }
   };
 
+  const handleRevisionFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetch('/api/upload', { method: 'POST', body: formData });
+      const data = await res.json();
+      if (data.success) {
+        setRevFiles(prev => [...prev, { name: file.name, path: data.path }]);
+      } else {
+        alert('Upload failed: ' + data.message);
+      }
+    } catch (err) {
+      alert('Upload error');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleSubmitRevisions = async () => {
+    if (revFiles.length === 0) return alert('Please upload at least one revised file.');
+    setSubmittingRevision(true);
+    try {
+      const token = localStorage.getItem('eisr_token');
+      const res = await fetch(`/api/submissions/${id}/revisions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ files: revFiles, comments: revisionComments })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSubmission(prev => ({ ...prev, status: data.newStatus, activity: data.newActivity }));
+        alert('Revisions submitted successfully!');
+        setRevFiles([]);
+        setRevisionComments('');
+      } else {
+        alert(data.message);
+      }
+    } catch (err) { alert('Error submitting revisions'); } finally { setSubmittingRevision(false); }
+  };
+
   if (loading) {
     return <div style={{ padding: '40px', textAlign: 'center', color: '#64748b', fontFamily: '"Noto Sans", sans-serif' }}>Loading submission details...</div>;
   }
@@ -237,8 +281,13 @@ export default function SubmissionWorkflowPage({ params }) {
       alert('File path is not available.');
       return;
     }
+    // Ensure relative paths start with /
+    const downloadUrl = filePath.startsWith('http') || filePath.startsWith('/') 
+      ? filePath 
+      : '/' + filePath;
+
     const a = document.createElement('a');
-    a.href = filePath;
+    a.href = downloadUrl;
     a.download = fileName || 'download';
     document.body.appendChild(a);
     a.click();
@@ -477,6 +526,59 @@ export default function SubmissionWorkflowPage({ params }) {
                       </div>
                     )}
                   </div>
+
+                  {/* Submit Revisions Section (Visible only to Authors when requested) */}
+                  {submission.status === 'Revisions Requested' && user?.role === 'author' && (
+                    <div style={{ border: '2px solid #ca8a04', borderRadius: '4px', padding: '24px', backgroundColor: '#fffcf5', marginBottom: '24px' }}>
+                      <h3 style={{ fontSize: '15px', fontWeight: '700', color: '#854d0e', marginTop: 0, marginBottom: '12px' }}>Submit Revised Manuscript</h3>
+                      <p style={{ fontSize: '13px', color: '#854d0e', marginBottom: '20px' }}>The editors have requested revisions. Please upload your revised files and provide a point-by-point response to the editorial comments below.</p>
+                      
+                      <div style={{ marginBottom: '20px' }}>
+                        <label style={{ ...labelStyle, marginTop: 0 }}>Response to Reviewers/Editors</label>
+                        <textarea 
+                          value={revisionComments} 
+                          onChange={e => setRevisionComments(e.target.value)}
+                          placeholder="Provide details about the changes made based on the feedback..."
+                          style={{ ...inputStyle, minHeight: '120px' }}
+                        />
+                      </div>
+
+                      <div style={{ marginBottom: '20px' }}>
+                        <label style={{ ...labelStyle, marginTop: 0 }}>Upload Revised Files</label>
+                        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '10px' }}>
+                          <input 
+                            type="file" 
+                            id="rev-upload" 
+                            onChange={handleRevisionFileUpload} 
+                            style={{ display: 'none' }} 
+                          />
+                          <label 
+                            htmlFor="rev-upload" 
+                            style={{ backgroundColor: '#fff', border: '1px dashed #ca8a04', color: '#854d0e', padding: '10px 20px', borderRadius: '4px', cursor: 'pointer', fontSize: '13px', fontWeight: '600' }}
+                          >
+                            {uploading ? 'Uploading...' : 'Choose Revised File'}
+                          </label>
+                        </div>
+                        {revFiles.length > 0 && (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                            {revFiles.map((f, i) => (
+                              <div key={i} style={{ fontSize: '12px', color: '#334155', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <UploadCloud size={14} /> {f.name}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      <button 
+                        onClick={handleSubmitRevisions}
+                        disabled={submittingRevision || revFiles.length === 0}
+                        style={{ backgroundColor: '#ca8a04', color: '#fff', border: 'none', borderRadius: '4px', padding: '12px 24px', fontSize: '14px', fontWeight: '700', cursor: (submittingRevision || revFiles.length === 0) ? 'not-allowed' : 'pointer', opacity: (submittingRevision || revFiles.length === 0) ? 0.7 : 1 }}
+                      >
+                        {submittingRevision ? 'Submitting...' : 'Complete Revision Submission'}
+                      </button>
+                    </div>
+                  )}
                 </>
               )}
 

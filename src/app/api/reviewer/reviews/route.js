@@ -85,7 +85,11 @@ export async function POST(req) {
         [submissionId, user.userId]
       );
       
-      // Optionally update submission activity or status if all reviews are in (ignoring for now)
+      // Update submission activity to reflect that a review has been turned in
+      await pool.query(
+        'UPDATE submissions SET activity = "Review Submitted" WHERE id = ?',
+        [submissionId]
+      );
     }
 
     return NextResponse.json({ 

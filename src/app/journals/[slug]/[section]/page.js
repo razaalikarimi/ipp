@@ -216,7 +216,6 @@ export default function JournalSectionPage() {
                  <div className="w-full aspect-[2/3] flex flex-col items-center justify-center relative overflow-hidden bg-[#F4F6F8]">
                     <img src={journal.cover} alt="" className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-30 scale-110" />
                     <img src={journal.cover} alt={journal.title} className="relative z-10 w-full h-full object-cover" />
-                    <div className="absolute bottom-0 inset-x-0 bg-black/60 backdrop-blur-sm py-4 text-[9px] font-bold tracking-[0.2em] uppercase text-white text-center z-20 border-t border-white/10">Repository Visual</div>
                  </div>
                  
                  <div className="p-6 space-y-6">

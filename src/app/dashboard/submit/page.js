@@ -52,28 +52,58 @@ export default function SubmitPage() {
     fontFamily: '"Noto Sans", sans-serif',
   };
 
-  const handleFileAdd = (e) => {
+  const handleFileAdd = async (e) => {
     const newFiles = Array.from(e.target.files || []);
-    const formatted = newFiles.map((f, i) => ({
-      id: form.files.length + i + 1,
-      name: f.name,
-      date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
-      type: 'Article Text'
-    }));
-    setForm(f => ({ ...f, files: [...f.files, ...formatted] }));
+    for (const f of newFiles) {
+      try {
+        const formData = new FormData();
+        formData.append('file', f);
+        const res = await fetch('/api/upload', { method: 'POST', body: formData });
+        const data = await res.json();
+        if (data.success) {
+          setForm(prev => ({
+            ...prev,
+            files: [...prev.files, {
+              id: prev.files.length + 1,
+              name: data.name,
+              path: data.path,
+              date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+              type: 'Article Text'
+            }]
+          }));
+        }
+      } catch (err) {
+        console.error('Upload failed for', f.name, err);
+      }
+    }
   };
 
-  const handleDrop = (e) => {
+  const handleDrop = async (e) => {
     e.preventDefault();
     setDragOver(false);
     const droppedFiles = Array.from(e.dataTransfer.files);
-    const formatted = droppedFiles.map((f, i) => ({
-      id: form.files.length + i + 1,
-      name: f.name,
-      date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
-      type: 'Article Text'
-    }));
-    setForm(f => ({ ...f, files: [...f.files, ...formatted] }));
+    for (const f of droppedFiles) {
+      try {
+        const formData = new FormData();
+        formData.append('file', f);
+        const res = await fetch('/api/upload', { method: 'POST', body: formData });
+        const data = await res.json();
+        if (data.success) {
+          setForm(prev => ({
+            ...prev,
+            files: [...prev.files, {
+              id: prev.files.length + 1,
+              name: data.name,
+              path: data.path,
+              date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+              type: 'Article Text'
+            }]
+          }));
+        }
+      } catch (err) {
+        console.error('Upload failed for', f.name, err);
+      }
+    }
   };
 
   const validateStep = () => {
@@ -113,7 +143,7 @@ export default function SubmitPage() {
           title: form.title,
           editorComments: form.editorComments,
           contributors: form.contributors,
-          files: form.files.map(f => ({ name: f.name, type: f.type, path: '/uploads/' + f.name })),
+          files: form.files.map(f => ({ name: f.name, type: f.type, path: f.path })),
           journalId: currentJournalId
         })
       });

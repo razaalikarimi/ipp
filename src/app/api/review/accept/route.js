@@ -61,7 +61,7 @@ export async function GET(req) {
     }
 
     await pool.query('UPDATE reviewer_assignments SET status = "Accepted" WHERE id = ?', [assignment.id]);
-    await pool.query('UPDATE submissions SET activity = "In Review" WHERE id = ?', [submissionId]);
+    await pool.query('UPDATE submissions SET activity = "Review in Progress" WHERE id = ?', [submissionId]);
 
     return new NextResponse(renderPage('Accepted', 'Review Accepted', 'Thank you for agreeing to review this manuscript. You may now log in to access the review files.', '#4BA6B9', 'Go to Login', '/login'), { headers: { 'Content-Type': 'text/html' } });
 

@@ -10,6 +10,7 @@ export default function DashboardLayout({ children }) {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [submissions, setSubmissions] = useState([]);
+  const [reviewerSubmissions, setReviewerSubmissions] = useState([]);
   const [reviewerOpen, setReviewerOpen] = useState(true);
   const [authorOpen, setAuthorOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
@@ -50,26 +51,38 @@ export default function DashboardLayout({ children }) {
         const subData = await subRes.json();
         if (subData.success) {
           setSubmissions(subData.submissions);
-          
-          // Generate Notifications based on Role
-          let payloadRole = 'author';
-          try { payloadRole = JSON.parse(atob(token.split('.')[1])).role || 'author'; } catch(e){}
-          
-          let generated = [];
-          if (payloadRole === 'reviewer') {
-            const pending = subData.submissions.filter(s => ['pending', 'accepted'].includes((s.status || '').toLowerCase()));
-            pending.forEach(s => generated.push({ id: `rev-${s.id}`, title: 'Pending Review', msg: `Review required for "${s.title.substring(0, 30)}..."`, link: `/dashboard/reviewer/assignments/${s.id}` }));
-          } else if (payloadRole === 'editor' || payloadRole === 'admin') {
-            const newSubs = subData.submissions.filter(s => (s.status || '').toLowerCase() === 'submitted');
-            newSubs.forEach(s => generated.push({ id: `new-${s.id}`, title: 'New Submission', msg: `"${s.title.substring(0, 30)}..." needs Editor attention.`, link: `/dashboard/submissions/${s.id}` }));
-          } else {
-            const published = subData.submissions.filter(s => (s.status || '').toLowerCase() === 'published');
-            published.forEach(s => generated.push({ id: `pub-${s.id}`, title: 'Published!', msg: `Your manuscript "${s.title.substring(0, 30)}..." is published.`, link: `/dashboard/submissions/${s.id}` }));
-            const revisions = subData.submissions.filter(s => (s.status || '').toLowerCase().includes('revision'));
-            revisions.forEach(s => generated.push({ id: `revreq-${s.id}`, title: 'Revisions Requested', msg: `Editor requested revisions for "${s.title.substring(0, 30)}..."`, link: `/dashboard/submissions/${s.id}` }));
-          }
-          setNotifications(generated.slice(0, 5));
         }
+
+        // Fetch Reviewer Submissions
+        let revUrl = '/api/submissions?role=reviewer';
+        if (currentJournal) revUrl += `&journal=${currentJournal}`;
+        const revRes = await fetch(revUrl, { headers: { 'Authorization': `Bearer ${token}` } });
+        const revData = await revRes.json();
+        if (revData.success) {
+          setReviewerSubmissions(revData.submissions);
+        }
+
+        // Generate Notifications based on Role
+        let payloadRole = 'author';
+        try { payloadRole = JSON.parse(atob(token.split('.')[1])).role || 'author'; } catch(e){}
+        
+        let generated = [];
+        if (payloadRole === 'reviewer') {
+          const pending = revData.submissions?.filter(s => ['pending', 'accepted'].includes((s.status || '').toLowerCase())) || [];
+          pending.forEach(s => generated.push({ id: `rev-${s.id}`, title: 'Pending Review', msg: `Review required for "${s.title.substring(0, 30)}..."`, link: `/dashboard/reviewer/assignments/${s.id}` }));
+        } else if (payloadRole === 'editor' || payloadRole === 'admin') {
+          const newSubs = subData.submissions.filter(s => (s.status || '').toLowerCase() === 'submitted' && (s.activity || '').toLowerCase() === 'unassigned');
+          newSubs.forEach(s => generated.push({ id: `new-${s.id}`, title: 'New Submission', msg: `"${s.title.substring(0, 30)}..." needs Editor attention.`, link: `/dashboard/submissions/${s.id}` }));
+          
+          const reviewDone = subData.submissions.filter(s => (s.activity || '').toLowerCase() === 'review submitted');
+          reviewDone.forEach(s => generated.push({ id: `rev-done-${s.id}`, title: 'Review Received', msg: `Review submitted for "${s.title.substring(0, 30)}...". Ready for decision.`, link: `/dashboard/submissions/${s.id}` }));
+        } else {
+          const published = subData.submissions.filter(s => (s.status || '').toLowerCase() === 'published');
+          published.forEach(s => generated.push({ id: `pub-${s.id}`, title: 'Published!', msg: `Your manuscript "${s.title.substring(0, 30)}..." is published.`, link: `/dashboard/submissions/${s.id}` }));
+          const revisions = subData.submissions.filter(s => (s.status || '').toLowerCase().includes('revision'));
+          revisions.forEach(s => generated.push({ id: `revreq-${s.id}`, title: 'Revisions Requested', msg: `Editor requested revisions for "${s.title.substring(0, 30)}..."`, link: `/dashboard/submissions/${s.id}` }));
+        }
+        setNotifications(generated.slice(0, 5));
 
         // Fetch profile
         const profRes = await fetch('/api/profile', { headers: { 'Authorization': `Bearer ${token}` } });
@@ -113,6 +126,14 @@ export default function DashboardLayout({ children }) {
     scheduled: filteredSubs.filter(s => (s.status || '').toLowerCase().includes('scheduled')).length,
     published: filteredSubs.filter(s => (s.status || '').toLowerCase() === 'published').length,
     declined: filteredSubs.filter(s => (s.status || '').toLowerCase() === 'declined').length,
+    
+    // Reviewer counts
+    revAction: reviewerSubmissions.filter(s => ['pending', 'accepted'].includes((s.status || '').toLowerCase())).length,
+    revAll: reviewerSubmissions.length,
+    revCompleted: reviewerSubmissions.filter(s => (s.status || '').toLowerCase() === 'completed').length,
+    revDeclined: reviewerSubmissions.filter(s => (s.status || '').toLowerCase() === 'declined').length,
+    revPublished: reviewerSubmissions.filter(s => (s.submission_status || '').toLowerCase() === 'published').length,
+    revArchived: reviewerSubmissions.filter(s => (s.status || '').toLowerCase() === 'archived').length,
   };
 
   const displayName = profile?.givenName
@@ -294,12 +315,12 @@ export default function DashboardLayout({ children }) {
           <SectionHeader icon={Edit3} label="My Assignments as Reviewer" open={reviewerOpen} onToggle={() => setReviewerOpen(!reviewerOpen)} />
           {reviewerOpen && (
             <div>
-              <NavItem href="/dashboard/reviewer/action-required" label="Action Required by me" count={0} />
-              <NavItem href="/dashboard/reviewer/all" label="All assignments" count={0} />
-              <NavItem href="/dashboard/reviewer/completed" label="Completed" count={0} />
-              <NavItem href="/dashboard/reviewer/declined" label="Declined" count={0} />
-              <NavItem href="/dashboard/reviewer/published" label="Published" count={0} />
-              <NavItem href="/dashboard/reviewer/archived" label="Archived" count={0} />
+              <NavItem href="/dashboard/reviewer/action-required" label="Action Required by me" count={counts.revAction} />
+              <NavItem href="/dashboard/reviewer/all" label="All assignments" count={counts.revAll} />
+              <NavItem href="/dashboard/reviewer/completed" label="Completed" count={counts.revCompleted} />
+              <NavItem href="/dashboard/reviewer/declined" label="Declined" count={counts.revDeclined} />
+              <NavItem href="/dashboard/reviewer/published" label="Published" count={counts.revPublished} />
+              <NavItem href="/dashboard/reviewer/archived" label="Archived" count={counts.revArchived} />
             </div>
           )}
 

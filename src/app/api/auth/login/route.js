@@ -29,6 +29,7 @@ export async function POST(req) {
       { email: process.env.REVIEWER_1_EMAIL, pass: process.env.REVIEWER_1_PASS, role: 'reviewer', name: 'Reviewer One' },
       { email: process.env.REVIEWER_2_EMAIL, pass: process.env.REVIEWER_2_PASS, role: 'reviewer', name: 'Reviewer Two' },
       { email: process.env.REVIEWER_3_EMAIL, pass: process.env.REVIEWER_3_PASS, role: 'reviewer', name: 'Reviewer Three' },
+      { email: process.env.REVIEWER_4_EMAIL, pass: process.env.REVIEWER_4_PASS, role: 'reviewer', name: 'Shubh Salunke' },
     ];
 
     const matchedHardcoded = hardcodedUsers.find(u => u.email && u.email.toLowerCase() === identifier.toLowerCase());
