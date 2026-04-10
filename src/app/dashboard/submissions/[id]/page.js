@@ -49,6 +49,11 @@ export default function SubmissionWorkflowPage({ params }) {
   const [submittingRevision, setSubmittingRevision] = useState(false);
   const [uploading, setUploading] = useState(false);
 
+  // Editorial Decision State
+  const [decision, setDecision] = useState('');
+  const [decisionComments, setDecisionComments] = useState('');
+  const [recordingDecision, setRecordingDecision] = useState(false);
+
   useEffect(() => {
     if (submission) {
       setFormTitle(submission.title || '');
@@ -453,7 +458,7 @@ export default function SubmissionWorkflowPage({ params }) {
                           </span>
                           <span style={{ color: '#475569' }}>{new Date(file.date).toLocaleDateString()}</span>
                           <div>
-                            <span style={{ backgroundColor: '#005f96', color: '#fff', fontSize: '10px', padding: '2px 8px', borderRadius: '12px', fontWeight: '500' }}>Article Text</span>
+                            <span style={{ backgroundColor: '#005f96', color: '#fff', fontSize: '10px', padding: '2px 8px', borderRadius: '12px', fontWeight: '500' }}>{file.type || 'Article Text'}</span>
                           </div>
                           <span style={{ color: '#64748b', cursor: 'pointer', textAlign: 'center' }}><MoreHorizontal size={14} /></span>
                         </div>
