@@ -9,8 +9,17 @@ export async function POST(request) {
     if (!token || !password) {
       return NextResponse.json({ success: false, message: 'Token and password are required.' }, { status: 400 });
     }
-    if (password.length < 6) {
-      return NextResponse.json({ success: false, message: 'Password must be at least 6 characters.' }, { status: 400 });
+
+    // --- PASSWORD STRENGTH VALIDATION (Sync with registration policy) ---
+    if (password.length < 5) {
+      return NextResponse.json({ success: false, message: 'Password must be at least 5 characters long.' }, { status: 400 });
+    }
+    const passwordRegex = /^[A-Z](?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{4,}$/;
+    if (!passwordRegex.test(password)) {
+      return NextResponse.json({ 
+        success: false, 
+        message: 'Password must start with an uppercase letter and include at least one number and one special character.' 
+      }, { status: 400 });
     }
 
     // 1. Find valid token

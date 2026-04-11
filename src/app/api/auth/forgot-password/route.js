@@ -11,7 +11,7 @@ export async function POST(request) {
     }
 
     // 1. Check user exists
-    const [users] = await pool.query('SELECT id, fullName FROM users WHERE email = ?', [email]);
+    const [users] = await pool.query('SELECT id, fullName, role FROM users WHERE email = ?', [email]);
     if (users.length === 0) {
       // Return generic message for security (don't reveal if email exists)
       return NextResponse.json({
@@ -21,6 +21,15 @@ export async function POST(request) {
     }
 
     const user = users[0];
+
+    // --- SECURITY RESTRICTION: Block reset for sensitive roles ---
+    const restrictedRoles = ['admin', 'editor', 'reviewer'];
+    if (restrictedRoles.includes(user.role?.toLowerCase())) {
+      return NextResponse.json({
+        success: false,
+        message: 'Administrative and Editorial accounts cannot reset passwords through this automated portal. Please contact the system administrator directly for password recovery.'
+      }, { status: 403 });
+    }
 
     // 2. Delete old tokens for this email
     await pool.query('DELETE FROM password_resets WHERE email = ?', [email]);

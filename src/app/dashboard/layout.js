@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { ChevronUp, ChevronDown, Edit3, FileText, Plus, Bell, User, X, Info } from 'lucide-react';
+import { journals } from '@/lib/data';
 
 export default function DashboardLayout({ children }) {
   const router = useRouter();
@@ -208,6 +209,10 @@ export default function DashboardLayout({ children }) {
     </button>
   );
 
+  // Compute the header title based on current journal context
+  const targetJournalData = journals.find(j => j.id === currentJournal);
+  const headerTitle = targetJournalData ? targetJournalData.title : 'EISR - Academic Publishing Portal';
+
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', fontFamily: '"Noto Sans", -apple-system, sans-serif', backgroundColor: '#fff' }}>
 
@@ -217,8 +222,8 @@ export default function DashboardLayout({ children }) {
         display: 'flex', alignItems: 'center', padding: '0 20px',
         justifyContent: 'space-between', height: '40px',
       }}>
-        <div style={{ fontWeight: '600', fontSize: '14px', letterSpacing: '0.02em' }}>
-          {currentJournal === 'jeiml' ? 'Journal of Eye-Innovation in Machine Learning' : 'Journal of Eye Innovation in Security Analysis'}
+        <div style={{ fontWeight: '600', fontStyle: targetJournalData ? 'normal' : 'italic', fontSize: '14px', letterSpacing: '0.02em', color: targetJournalData ? '#fff' : '#4BA6B9' }}>
+          {headerTitle}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
           <button style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', padding: 0 }}><Info size={18} /></button>

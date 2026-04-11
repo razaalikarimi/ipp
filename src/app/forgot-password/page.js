@@ -4,15 +4,20 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Link from 'next/link';
 import { Mail, ArrowRight, ArrowLeft, CheckCircle, AlertCircle } from 'lucide-react';
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function ForgotPasswordPage() {
+function ForgotPasswordForm() {
+  const searchParams = useSearchParams();
+  const journal = searchParams.get('journal');
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(null); // 'success' | 'error'
   const [message, setMessage] = useState('');
   const [devLink, setDevLink] = useState('');
+
+  const loginLink = journal ? `/login?journal=${journal}` : '/login';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -87,7 +92,7 @@ export default function ForgotPasswordPage() {
                 )}
 
                 <Link
-                  href="/login"
+                  href={loginLink}
                   className="flex items-center justify-center gap-2 w-full h-11 bg-slate-900 hover:bg-slate-800 text-white rounded-lg font-semibold text-[14px] transition-all"
                 >
                   <ArrowLeft size={16} /> Back to Sign in
@@ -139,7 +144,7 @@ export default function ForgotPasswordPage() {
 
                   <div className="text-center pt-6 border-t border-slate-100">
                     <Link
-                      href="/login"
+                      href={loginLink}
                       className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-slate-600 hover:text-slate-900 transition-colors"
                     >
                       <ArrowLeft size={14} /> Back to Sign in
@@ -152,6 +157,18 @@ export default function ForgotPasswordPage() {
         </motion.div>
       </main>
 
+      <Footer />
+    </div>
+  );
+}
+
+export default function ForgotPasswordPage() {
+  return (
+    <div className="min-h-screen flex flex-col bg-slate-50 font-sans">
+      <Header />
+      <Suspense fallback={null}>
+        <ForgotPasswordForm />
+      </Suspense>
       <Footer />
     </div>
   );

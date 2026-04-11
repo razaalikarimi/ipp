@@ -27,6 +27,21 @@ function ResetForm() {
       setMessage('Passwords do not match.');
       return;
     }
+
+    // --- PASSWORD STRENGTH VALIDATION (Sync with registration policy) ---
+    if (password.length < 5) {
+      setStatus('error');
+      setMessage('Password must be at least 5 characters long.');
+      return;
+    }
+
+    const passwordRegex = /^[A-Z](?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{4,}$/;
+    if (!passwordRegex.test(password)) {
+      setStatus('error');
+      setMessage('Password must start with an uppercase letter and include at least one number and one special character.');
+      return;
+    }
+
     setLoading(true);
     setStatus(null);
 
