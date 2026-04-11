@@ -135,7 +135,10 @@ export default function SubmissionWorkflowPage({ params }) {
           cache: 'no-store'
         });
         const assignData = await assignRes.json();
-        if (assignData.success) setAssignments(assignData.assignments || []);
+        if (assignData.success) {
+          setAssignments(assignData.assignments || []);
+          window.dispatchEvent(new Event('eisr_refresh_data'));
+        }
       } else {
         alert('Failed: ' + data.message);
       }
@@ -160,6 +163,7 @@ export default function SubmissionWorkflowPage({ params }) {
       if (data.success) {
         setSubmission(prev => ({ ...prev, status: data.newStatus, activity: data.newActivity }));
         alert('Editorial decision recorded successfully!');
+        window.dispatchEvent(new Event('eisr_refresh_data'));
       } else {
         alert(data.message);
       }

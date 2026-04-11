@@ -5,7 +5,10 @@ export default function InReviewManuscriptsPage() {
   return (
     <SubmissionsTable 
       title="Editorial Dashboard: Manuscripts In Review" 
-      filterFn={sub => (sub.activity || '').toLowerCase().includes('review')} 
+      filterFn={sub => {
+        const act = (sub.activity || '').toLowerCase();
+        return act.includes('review') && !act.includes('declined');
+      }} 
       columns="editor" 
       extraMenuItems={[]} 
     />

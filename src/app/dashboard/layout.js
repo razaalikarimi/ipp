@@ -50,7 +50,10 @@ export default function DashboardLayout({ children }) {
         let url = '/api/submissions';
         if (currentJournal) url += `?journal=${currentJournal}`;
         
-        const subRes = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+        const subRes = await fetch(`${url}${url.includes('?') ? '&' : '?'}t=${Date.now()}`, { 
+          headers: { 'Authorization': `Bearer ${token}` },
+          cache: 'no-store'
+        });
         const subData = await subRes.json();
         if (subData.success) {
           setSubmissions(subData.submissions);
@@ -59,28 +62,33 @@ export default function DashboardLayout({ children }) {
         // Fetch Reviewer Submissions
         let revUrl = '/api/submissions?role=reviewer';
         if (currentJournal) revUrl += `&journal=${currentJournal}`;
-        const revRes = await fetch(revUrl, { headers: { 'Authorization': `Bearer ${token}` } });
+        const revRes = await fetch(`${revUrl}&t=${Date.now()}`, { 
+          headers: { 'Authorization': `Bearer ${token}` },
+          cache: 'no-store'
+        });
         const revData = await revRes.json();
         if (revData.success) {
           setReviewerSubmissions(revData.submissions);
         }
 
-        // Determine User Role once
+        // Determine User Role
         let payloadRole = 'author';
         try { payloadRole = JSON.parse(atob(token.split('.')[1])).role || 'author'; } catch(e){}
 
-        // Fetch Editorial Submissions if role is editor/admin
         if (payloadRole === 'editor' || payloadRole === 'admin') {
           let edUrl = '/api/submissions?role=editor';
           if (currentJournal) edUrl += `&journal=${currentJournal}`;
-          const edRes = await fetch(edUrl, { headers: { 'Authorization': `Bearer ${token}` } });
+          const edRes = await fetch(`${edUrl}&t=${Date.now()}`, { 
+            headers: { 'Authorization': `Bearer ${token}` },
+            cache: 'no-store'
+          });
           const edData = await edRes.json();
           if (edData.success) {
             setEditorSubmissions(edData.submissions);
           }
         }
-
-        // Generate Notifications based on Role
+        
+        // Notification generation logic...
         let generated = [];
         if (payloadRole === 'reviewer') {
           const pending = revData.submissions?.filter(s => ['pending', 'accepted'].includes((s.status || '').toLowerCase())) || [];
@@ -88,14 +96,6 @@ export default function DashboardLayout({ children }) {
         } else if (payloadRole === 'editor' || payloadRole === 'admin') {
           const newSubs = subData.submissions.filter(s => (s.status || '').toLowerCase() === 'submitted' && (s.activity || '').toLowerCase() === 'unassigned');
           newSubs.forEach(s => generated.push({ id: `new-${s.id}`, title: 'New Submission', msg: `"${s.title.substring(0, 30)}..." needs Editor attention.`, link: `/dashboard/submissions/${s.id}` }));
-          
-          const reviewDone = subData.submissions.filter(s => (s.activity || '').toLowerCase() === 'review submitted');
-          reviewDone.forEach(s => generated.push({ id: `rev-done-${s.id}`, title: 'Review Received', msg: `Review submitted for "${s.title.substring(0, 30)}...". Ready for decision.`, link: `/dashboard/submissions/${s.id}` }));
-        } else {
-          const published = subData.submissions.filter(s => (s.status || '').toLowerCase() === 'published');
-          published.forEach(s => generated.push({ id: `pub-${s.id}`, title: 'Published!', msg: `Your manuscript "${s.title.substring(0, 30)}..." is published.`, link: `/dashboard/submissions/${s.id}` }));
-          const revisions = subData.submissions.filter(s => (s.status || '').toLowerCase().includes('revision'));
-          revisions.forEach(s => generated.push({ id: `revreq-${s.id}`, title: 'Revisions Requested', msg: `Editor requested revisions for "${s.title.substring(0, 30)}..."`, link: `/dashboard/submissions/${s.id}` }));
         }
         setNotifications(generated.slice(0, 5));
 
@@ -105,7 +105,17 @@ export default function DashboardLayout({ children }) {
         if (profData.success) setProfile(profData.profile);
       } catch {}
     };
+
     fetchData();
+
+    // Live Sync: Refresh data every 60 seconds or on custom event
+    const interval = setInterval(fetchData, 60000);
+    window.addEventListener('eisr_refresh_data', fetchData);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('eisr_refresh_data', fetchData);
+    };
   }, [currentJournal]);
 
   const handleLogout = () => { localStorage.removeItem('eisr_token'); router.push('/login'); };
@@ -128,33 +138,42 @@ export default function DashboardLayout({ children }) {
     return false;
   };
 
-  // Compute counts from real data, filtered by current journal
-  const filteredSubs = currentJournal 
-    ? submissions.filter(s => s.journal_id === (currentJournal === 'jeiml' ? 'jeiml' : 'jcsra'))
-    : submissions;
+  // Compute counts from real data, MUST respect current journal filter to match pages
+  const jId = currentJournal === 'jeiml' ? 'jeiml' : (currentJournal ? 'jcsra' : null);
+  
+  const filteredAuthor = jId ? submissions.filter(s => s.journal_id === jId) : submissions;
+  const filteredEditor = jId ? editorSubmissions.filter(s => s.journal_id === jId) : editorSubmissions;
+  const filteredReviewer = jId ? reviewerSubmissions.filter(s => s.journal_id === jId) : reviewerSubmissions;
 
   const counts = {
-    active: filteredSubs.filter(s => !['Declined', 'Published'].includes(s.status)).length,
-    revisionsRequested: filteredSubs.filter(s => (s.status || '').toLowerCase().includes('revision')).length,
-    revisionsSubmitted: filteredSubs.filter(s => (s.status || '').toLowerCase().includes('revisions submitted')).length,
-    incomplete: filteredSubs.filter(s => (s.status || '').toLowerCase().includes('incomplete')).length,
-    scheduled: filteredSubs.filter(s => (s.status || '').toLowerCase().includes('scheduled')).length,
-    published: filteredSubs.filter(s => (s.status || '').toLowerCase() === 'published').length,
-    declined: filteredSubs.filter(s => (s.status || '').toLowerCase() === 'declined').length,
+    active: filteredAuthor.filter(s => !['Declined', 'Published'].includes(s.status)).length,
+    revisionsRequested: filteredAuthor.filter(s => (s.status || '').toLowerCase().includes('revision')).length,
+    revisionsSubmitted: filteredAuthor.filter(s => (s.status || '').toLowerCase().includes('revisions submitted')).length,
+    incomplete: filteredAuthor.filter(s => (s.status || '').toLowerCase().includes('incomplete')).length,
+    scheduled: filteredAuthor.filter(s => (s.status || '').toLowerCase().includes('scheduled')).length,
+    published: filteredAuthor.filter(s => (s.status || '').toLowerCase() === 'published').length,
+    declined: filteredAuthor.filter(s => (s.status || '').toLowerCase() === 'declined').length,
     
     // Reviewer counts
-    revAction: reviewerSubmissions.filter(s => ['pending', 'accepted'].includes((s.status || '').toLowerCase())).length,
-    revAll: reviewerSubmissions.length,
-    revCompleted: reviewerSubmissions.filter(s => (s.status || '').toLowerCase() === 'completed').length,
-    revDeclined: reviewerSubmissions.filter(s => (s.status || '').toLowerCase() === 'declined').length,
-    revPublished: reviewerSubmissions.filter(s => (s.submission_status || '').toLowerCase() === 'published').length,
-    revArchived: reviewerSubmissions.filter(s => (s.status || '').toLowerCase() === 'archived').length,
+    revAction: filteredReviewer.filter(s => ['pending', 'accepted'].includes((s.status || '').toLowerCase())).length,
+    revAll: filteredReviewer.length,
+    revCompleted: filteredReviewer.filter(s => (s.status || '').toLowerCase() === 'completed').length,
+    revDeclined: filteredReviewer.filter(s => (s.status || '').toLowerCase() === 'declined').length,
+    revPublished: filteredReviewer.filter(s => (s.submission_status || '').toLowerCase() === 'published').length,
+    revArchived: filteredReviewer.filter(s => (s.status || '').toLowerCase() === 'archived').length,
 
     // Editorial counts
-    edUnassigned: editorSubmissions.filter(s => (s.activity || '').toLowerCase() === 'unassigned').length,
-    edReview: editorSubmissions.filter(s => (s.activity || '').toLowerCase().includes('review')).length,
-    edCompleted: editorSubmissions.filter(s => ['Published', 'Declined'].includes(s.status)).length,
-    edTotal: editorSubmissions.length,
+    edUnassigned: filteredEditor.filter(s => {
+      const act = (s.activity || '').toLowerCase();
+      return act === 'unassigned' || act.includes('declined');
+    }).length,
+    edReview: filteredEditor.filter(s => {
+      const act = (s.activity || '').toLowerCase();
+      return act.includes('review') && !act.includes('declined');
+    }).length,
+    edPublished: filteredEditor.filter(s => (s.status || '').toLowerCase() === 'published').length,
+    edDeclined: filteredEditor.filter(s => (s.status || '').toLowerCase() === 'declined').length,
+    edTotal: filteredEditor.length,
   };
 
   const displayName = profile?.givenName
@@ -345,7 +364,8 @@ export default function DashboardLayout({ children }) {
                   <NavItem href="/dashboard/submissions" label="All Submissions" count={counts.edTotal} />
                   <NavItem href="/dashboard/submissions/unassigned" label="Unassigned" count={counts.edUnassigned} />
                   <NavItem href="/dashboard/submissions/in-review" label="In Review" count={counts.edReview} />
-                  <NavItem href="/dashboard/submissions/published" label="Completed & Published" count={counts.edCompleted} />
+                  <NavItem href="/dashboard/submissions/published" label="Published" count={counts.edPublished} />
+                  <NavItem href="/dashboard/submissions/declined" label="Declined" count={counts.edDeclined} />
                 </div>
               )}
             </>
