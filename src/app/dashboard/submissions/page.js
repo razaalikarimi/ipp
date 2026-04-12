@@ -19,8 +19,8 @@ export default function ActiveSubmissionsPage() {
 
   return (
     <SubmissionsTable
-      title={role === 'editor' ? "Editorial Dashboard: Active Submissions" : "Active submissions"}
-      filterFn={sub => !['Declined', 'Published'].includes(sub.status)}
+      title={role === 'editor' ? "Editorial Dashboard: All Submissions" : "Active submissions"}
+      filterFn={sub => role === 'editor' ? true : !['declined', 'published'].includes((sub.status || '').toLowerCase())}
       columns={role}
       extraMenuItems={role === 'author' ? [{ label: '✕  Delete Incomplete Submissions', onClick: () => {} }] : []}
     />

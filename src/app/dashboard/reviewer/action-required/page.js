@@ -4,7 +4,7 @@ export default function ReviewerActionRequiredPage() {
   return (
     <SubmissionsTable
       title="Action Required by me"
-      filterFn={sub => ['Pending', 'Accepted'].includes(sub.status)}
+      filterFn={sub => ['pending', 'accepted'].includes((sub.status || '').toLowerCase())}
       columns="reviewer"
     />
   );

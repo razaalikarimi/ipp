@@ -4,7 +4,7 @@ export default function ReviewerArchivedPage() {
   return (
     <SubmissionsTable
       title="Archived assignments"
-      filterFn={() => true}
+      filterFn={sub => (sub.status || '').toLowerCase() === 'archived'}
       columns="reviewer"
     />
   );
