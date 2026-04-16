@@ -775,7 +775,7 @@ export default function SubmissionWorkflowPage({ params }) {
                                     backgroundColor: a.status === 'Accepted' ? '#dcfce3' : a.status === 'Declined' ? '#fee2e2' : a.status === 'Completed' ? '#e0f2fe' : '#f1f5f9',
                                     color: a.status === 'Accepted' ? '#166534' : a.status === 'Declined' ? '#991b1b' : a.status === 'Completed' ? '#0369a1' : '#475569'
                                   }}>
-                                    {a.status}
+                                    {a.status === 'Declined' ? 'Invitation Declined' : a.status}
                                   </span>
                                   {a.review && (
                                     <div style={{ fontSize: '11px', color: '#64748b', marginTop: '4px', border: '1px solid #e2e8f0', padding: '8px', borderRadius: '4px', backgroundColor: '#f8fafc' }}>

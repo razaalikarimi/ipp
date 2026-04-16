@@ -365,7 +365,7 @@ export default function DashboardLayout({ children }) {
                   <NavItem href="/dashboard/submissions/unassigned" label="Unassigned" count={counts.edUnassigned} />
                   <NavItem href="/dashboard/submissions/in-review" label="In Review" count={counts.edReview} />
                   <NavItem href="/dashboard/submissions/published" label="Published" count={counts.edPublished} />
-                  <NavItem href="/dashboard/submissions/declined" label="Declined" count={counts.edDeclined} />
+                  <NavItem href="/dashboard/submissions/declined" label="Declined Submissions" count={counts.edDeclined} />
                 </div>
               )}
             </>
@@ -378,7 +378,7 @@ export default function DashboardLayout({ children }) {
               <NavItem href="/dashboard/reviewer/action-required" label="Action Required by me" count={counts.revAction} />
               <NavItem href="/dashboard/reviewer/all" label="All assignments" count={counts.revAll} />
               <NavItem href="/dashboard/reviewer/completed" label="Completed" count={counts.revCompleted} />
-              <NavItem href="/dashboard/reviewer/declined" label="Declined" count={counts.revDeclined} />
+              <NavItem href="/dashboard/reviewer/declined" label="Declined Invitations" count={counts.revDeclined} />
               <NavItem href="/dashboard/reviewer/published" label="Published" count={counts.revPublished} />
               <NavItem href="/dashboard/reviewer/archived" label="Archived" count={counts.revArchived} />
             </div>
@@ -394,7 +394,7 @@ export default function DashboardLayout({ children }) {
               <NavItem href="/dashboard/submissions/incomplete" label="Incomplete submissions" count={counts.incomplete} />
               <NavItem href="/dashboard/submissions/scheduled" label="Scheduled for publication" count={counts.scheduled} />
               <NavItem href="/dashboard/submissions/published" label="Published" count={counts.published} />
-              <NavItem href="/dashboard/submissions/declined" label="Declined" count={counts.declined} />
+              <NavItem href="/dashboard/submissions/declined" label="Declined Submissions" count={counts.declined} />
               <div style={{ padding: '12px 20px' }}>
                 <Link href={`/dashboard/submit${currentJournal ? '?journal='+currentJournal : ''}`} style={{ fontSize: '13px', color: '#005f96', textDecoration: 'none', fontWeight: '600' }}>Start A New Submission</Link>
               </div>

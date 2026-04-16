@@ -309,7 +309,7 @@ export default function SubmitPage() {
                     style={{ width: '18px', height: '18px', accentColor: '#005f96' }}
                   />
                   <span style={{ fontSize: '14px', fontWeight: '600', color: '#1e293b' }}>
-                    Yes, I agree to have my data collected and stored according to the <Link href="#" style={{ color: '#005f96', textDecoration: 'underline' }}>privacy statement</Link>.
+                    Yes, I agree to have my data collected and stored according to the <Link href="/privacy" target="_blank" style={{ color: '#005f96', textDecoration: 'underline' }}>privacy statement</Link>.
                   </span>
                 </label>
               </div>
