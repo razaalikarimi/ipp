@@ -300,6 +300,7 @@ export default function SubmissionsTable({ title, filterFn, columns = 'reviewer'
                 )}
               </div>
             </div>
+          );
         })}
       </div>
 
