@@ -158,6 +158,7 @@ export default function SubmitPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Submission failed');
       
+      window.dispatchEvent(new Event('eisr_refresh_data'));
       router.push('/dashboard/submit/complete');
     } catch (err) {
       setErrors([err.message]);

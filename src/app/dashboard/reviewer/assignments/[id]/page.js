@@ -81,6 +81,7 @@ export default function ReviewerEvaluationPage() {
       });
       const data = await res.json();
       if (data.success) {
+        window.dispatchEvent(new Event('eisr_refresh_data'));
         if (action === 'accept') setCurrentStep(2);
         else router.push('/dashboard/reviewer/all');
       } else {
@@ -108,6 +109,7 @@ export default function ReviewerEvaluationPage() {
       });
       const data = await res.json();
       if (data.success) {
+        window.dispatchEvent(new Event('eisr_refresh_data'));
         if (!isDraft) setCurrentStep(4);
         else alert('Draft saved!');
       }
@@ -119,9 +121,14 @@ export default function ReviewerEvaluationPage() {
       alert('File path is not available.');
       return;
     }
+    
+    // Extract filename from the path (handles both forward and backward slashes)
+    const filename = filePath.split(/[\\/]/).pop();
+    const downloadUrl = `/api/download?file=${encodeURIComponent(filename)}`;
+
     const a = document.createElement('a');
-    a.href = filePath;
-    a.download = fileName || 'download';
+    a.href = downloadUrl;
+    a.download = fileName || filename;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

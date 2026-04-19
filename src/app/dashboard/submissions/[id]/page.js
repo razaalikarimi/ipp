@@ -204,6 +204,7 @@ export default function SubmissionWorkflowPage({ params }) {
       const data = await res.json();
       if (data.success) {
         setSubmission(prev => ({ ...prev, status: data.newStatus, activity: data.newActivity }));
+        window.dispatchEvent(new Event('eisr_refresh_data'));
         alert('Revisions submitted successfully!');
         setRevFiles([]);
         setRevisionComments('');
@@ -290,14 +291,14 @@ export default function SubmissionWorkflowPage({ params }) {
       alert('File path is not available.');
       return;
     }
-    // Ensure relative paths start with /
-    const downloadUrl = filePath.startsWith('http') || filePath.startsWith('/') 
-      ? filePath 
-      : '/' + filePath;
+    
+    // Extract filename from the path (handles both forward and backward slashes)
+    const filename = filePath.split(/[\\/]/).pop();
+    const downloadUrl = `/api/download?file=${encodeURIComponent(filename)}`;
 
     const a = document.createElement('a');
     a.href = downloadUrl;
-    a.download = fileName || 'download';
+    a.download = fileName || filename;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

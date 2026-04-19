@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Search, ChevronUp, ChevronDown, X, SlidersHorizontal, MoreHorizontal, FileText, ChevronsUpDown } from 'lucide-react';
 
@@ -33,14 +34,14 @@ export default function SubmissionsTable({ title, filterFn, columns = 'reviewer'
   const [filterDays, setFilterDays] = useState(0);
   const [filterIssue, setFilterIssue] = useState('');
   const [showMenu, setShowMenu] = useState(false);
+  const searchParams = useSearchParams();
+  const journalId = searchParams.get('journal');
 
   useEffect(() => {
     const fetchSubmissions = async () => {
+      setLoading(true);
       try {
         const token = localStorage.getItem('eisr_token');
-        const searchParams = new URL(window.location.href).searchParams;
-        const journalId = searchParams.get('journal');
-        
         let url = `/api/submissions?role=${columns}&t=${Date.now()}`;
         if (journalId) url += `&journal=${journalId}`;
         
@@ -61,7 +62,7 @@ export default function SubmissionsTable({ title, filterFn, columns = 'reviewer'
       }
     };
     fetchSubmissions();
-  }, []);
+  }, [columns, journalId]);
 
   const filtered = submissions
     .filter(sub => filterFn ? filterFn(sub) : true)
@@ -76,10 +77,9 @@ export default function SubmissionsTable({ title, filterFn, columns = 'reviewer'
     })
     .sort((a, b) => sortDir === 'asc' ? a.id - b.id : b.id - a.id);
 
+  const isReviewer = columns === 'reviewer';
   const isAuthor = columns === 'author';
-  const gridCols = isAuthor 
-    ? '80px 1.5fr 1fr 1fr 140px' 
-    : '80px 1.5fr 1fr 140px';
+  const gridCols = isReviewer ? '60px 1fr 120px 120px' : '60px 1fr 160px 180px 120px';
 
   return (
     <div style={{ padding: '24px 20px', width: '100%', boxSizing: 'border-box', fontFamily: '"Noto Sans", sans-serif' }}>
@@ -235,8 +235,9 @@ export default function SubmissionsTable({ title, filterFn, columns = 'reviewer'
             ID <ChevronsUpDown size={14} />
           </div>
           <div style={{ padding: '10px 16px', fontSize: '11px', fontWeight: '600', color: '#444', textTransform: 'uppercase' }}>SUBMISSIONS</div>
-          {isAuthor && <div style={{ padding: '10px 16px', fontSize: '11px', fontWeight: '600', color: '#444', textTransform: 'uppercase' }}>STAGE</div>}
-          <div style={{ padding: '10px 16px', fontSize: '11px', fontWeight: '600', color: '#444', textTransform: 'uppercase' }}>EDITORIAL ACTIVITY</div>
+          {!isReviewer && <div style={{ padding: '10px 16px', fontSize: '11px', fontWeight: '600', color: '#444', textTransform: 'uppercase' }}>STAGE / STATUS</div>}
+          {!isReviewer && <div style={{ padding: '10px 16px', fontSize: '11px', fontWeight: '600', color: '#444', textTransform: 'uppercase' }}>EDITORIAL ACTIVITY</div>}
+          {isReviewer && <div style={{ padding: '10px 16px', fontSize: '11px', fontWeight: '600', color: '#444', textTransform: 'uppercase' }}>STATUS</div>}
           <div style={{ padding: '10px 16px', fontSize: '11px', fontWeight: '600', color: '#444', textTransform: 'uppercase', textAlign: 'right' }}>ACTIONS</div>
         </div>
 
@@ -250,8 +251,9 @@ export default function SubmissionsTable({ title, filterFn, columns = 'reviewer'
           }}>
             <div style={{ padding: '12px 16px' }}></div>
             <div style={{ padding: '12px 16px', fontSize: '13px', color: '#666' }}>No Items</div>
-            {isAuthor && <div style={{ padding: '12px 16px' }}></div>}
-            <div style={{ padding: '12px 16px' }}></div>
+            {!isReviewer && <div style={{ padding: '12px 16px' }}></div>}
+            {!isReviewer && <div style={{ padding: '12px 16px' }}></div>}
+            {isReviewer && <div style={{ padding: '12px 16px' }}></div>}
             <div style={{ padding: '12px 16px' }}></div>
           </div>
         ) : filtered.map((sub, idx) => {
@@ -263,25 +265,41 @@ export default function SubmissionsTable({ title, filterFn, columns = 'reviewer'
             }}>
               <div style={{ padding: '12px 16px', fontSize: '13px', color: '#666' }}>{sub.id}</div>
               <div style={{ padding: '12px 16px' }}>
-                <Link href={`/dashboard/submissions/${sub.id}`} style={{ color: '#005f96', textDecoration: 'none', fontSize: '13px' }}>
+                <Link href={isReviewer ? `/dashboard/reviewer/assignments/${sub.id}` : `/dashboard/submissions/${sub.id}`} style={{ color: '#005f96', textDecoration: 'none', fontSize: '13px' }}>
                   {sub.title}
                 </Link>
               </div>
-              {isAuthor && (
+              {!isReviewer && (
                 <div style={{ padding: '12px 16px', fontSize: '13px', color: '#333', display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: statusStyle.dot }} />
                   {sub.status || 'Submission'}
                 </div>
               )}
-              <div style={{ padding: '12px 16px', fontSize: '13px', color: '#666' }}>{sub.activity || '—'}</div>
+              {!isReviewer && (
+                <div style={{ padding: '12px 16px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ 
+                    backgroundColor: (sub.activity || '').includes('Declined') ? '#fee2e2' : (sub.activity || '').includes('Accepted') ? '#dcfce3' : '#f1f5f9',
+                    color: (sub.activity || '').includes('Declined') ? '#991b1b' : (sub.activity || '').includes('Accepted') ? '#166534' : '#64748b',
+                    fontSize: '11px', fontWeight: '600', padding: '2px 8px', borderRadius: '12px'
+                  }}>
+                    {sub.activity || '—'}
+                  </span>
+                </div>
+              )}
+              {isReviewer && (
+                <div style={{ padding: '12px 16px', fontSize: '13px', color: '#333' }}>
+                  {sub.status}
+                </div>
+              )}
               <div style={{ padding: '12px 16px', textAlign: 'right', display: 'flex', justifyContent: 'flex-end', gap: '15px' }}>
-                {columns === 'reviewer' && (['Pending', 'Accepted'].includes(sub.status)) && (
+                {isReviewer && (['Pending', 'Accepted'].includes(sub.status)) && (
                   <Link href={`/dashboard/reviewer/assignments/${sub.id}`} style={{ color: '#16a34a', textDecoration: 'none', fontSize: '13px', fontWeight: '700' }}>Review</Link>
                 )}
-                <Link href={`/dashboard/submissions/${sub.id}`} style={{ color: '#005f96', textDecoration: 'none', fontSize: '13px' }}>View</Link>
+                {!isReviewer && (
+                  <Link href={`/dashboard/submissions/${sub.id}`} style={{ color: '#005f96', textDecoration: 'none', fontSize: '13px', fontWeight: '600' }}>View Details</Link>
+                )}
               </div>
             </div>
-          );
         })}
       </div>
 
