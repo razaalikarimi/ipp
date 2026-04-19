@@ -44,11 +44,11 @@ export async function POST(req) {
     if (!password || password.length < 5) {
       return NextResponse.json({ success: false, message: 'Password must be at least 5 characters long.' }, { status: 400 });
     }
-    const passwordRegex = /^[A-Z](?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{4,}$/;
+    const passwordRegex = /^[A-Z](?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#^_\-]).{4,}$/;
     if (!passwordRegex.test(password)) {
       return NextResponse.json({ 
         success: false, 
-        message: 'Password must start with an uppercase letter and include at least one number and one special character (@$!%*?&).' 
+        message: 'Password must start with an uppercase letter and include at least one number and one special character (@$!%*?&#).' 
       }, { status: 400 });
     }
 

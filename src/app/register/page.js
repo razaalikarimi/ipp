@@ -48,9 +48,9 @@ export default function Register() {
     if (formData.password.length < 5) {
       newErrors.password = 'Password must be at least 5 characters long.';
     } else {
-      const passwordRegex = /^[A-Z](?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{4,}$/;
+      const passwordRegex = /^[A-Z](?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&#^_\-]).{4,}$/;
       if (!passwordRegex.test(formData.password)) {
-        newErrors.password = 'Password must start with an uppercase letter and include at least one number and one special character.';
+        newErrors.password = 'Password must start with an uppercase letter and include at least one number and one special character (@$!%*?&#).';
       }
     }
     if (formData.password !== formData.confirmPassword) {
