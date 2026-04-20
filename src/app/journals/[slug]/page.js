@@ -16,7 +16,40 @@ import Logo from '@/components/Logo';
 export default function JournalPage() {
   const { slug } = useParams();
   const journal = journals.find(j => j.slug === slug) || journals[0]; 
-  const journalArticles = articles.filter(a => a.journal.toLowerCase() === journal.id.toLowerCase());
+  const [journalArticles, setJournalArticles] = useState([]);
+  const [liveStats, setLiveStats] = useState({
+    citationsScopus: '----',
+    citationsGoogle: '----',
+    articles: '----',
+    views: '----',
+    authors: '----',
+    distribution: '----',
+    acceptance: '----'
+  });
+
+  useEffect(() => {
+    if (!journal?.id) return;
+    
+    // Fetch stats
+    fetch(`/api/stats/${journal.id}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setLiveStats(data.stats);
+        }
+      })
+      .catch(err => console.error('Error fetching journal stats:', err));
+
+    // Fetch latest articles for this journal
+    fetch(`/api/articles/latest?journalId=${journal.id}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setJournalArticles(data.articles);
+        }
+      })
+      .catch(err => console.error('Error fetching journal articles:', err));
+  }, [journal.id]);
 
   return (
     <div className="min-h-screen flex flex-col font-sans bg-white selection:bg-[#4BA6B9]/10 relative">
@@ -77,15 +110,15 @@ export default function JournalPage() {
               {/* Journal Statistics Bar */}
               <div className="space-y-6">
                 <h2 className="text-xl font-bold text-[#1A1A1A]">Journal Statistics</h2>
-                <div className="bg-[#white] rounded-2xl p-6 md:p-10 border-2 border-[#E2E8F0] shadow-sm">
+                <div className="bg-[#f8fafc]/50 rounded-[2rem] p-10 md:p-14 border border-[#E2E8F0] shadow-sm">
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-12 gap-x-8 text-center items-start">
-                       <StatItem value={journal.stats.citationsScopus} label="Citations By Scopus" />
-                       <StatItem value={journal.stats.citationsGoogle} label="Citations By Google Scholar" />
-                       <StatItem value={journal.stats.articles} label="Articles" />
-                       <StatItem value={journal.stats.views} label="Total Views" />
-                       <StatItem value={journal.stats.authors} label="Authors" />
-                       <StatItem value={journal.stats.distribution} label="Authors Distribution" />
-                       <StatItem value={journal.stats.acceptance} label="Acceptance Rate" />
+                       <StatItem value={liveStats.citationsScopus} label="Citations By Scopus" />
+                       <StatItem value={liveStats.citationsGoogle} label="Citations By Google Scholar" />
+                       <StatItem value={liveStats.articles} label="Articles" />
+                       <StatItem value={liveStats.views} label="Total Views" />
+                       <StatItem value={liveStats.authors} label="Authors" />
+                       <StatItem value={liveStats.distribution} label="Authors Distribution" />
+                       <StatItem value={liveStats.acceptance} label="Acceptance Rate" />
                     </div>
                 </div>
               </div>
@@ -190,10 +223,9 @@ function InfoRow({ label, value, color = "text-[#1A1A1A]" }) {
 
 function StatItem({ value, label }) {
   return (
-    <div className="space-y-3 flex flex-col items-center">
-       <p className="text-3xl font-black text-[#1A1A1A] tracking-tighter">{value}</p>
-       <div className="w-8 h-1 bg-[#4BA6B9] rounded-full opacity-30 mx-auto" />
-       <p className="text-[11px] font-bold text-[#1A1A1A] uppercase tracking-tight leading-tight max-w-[140px] px-2">{label}</p>
+    <div className="space-y-1 flex flex-col items-center">
+       <p className="text-3xl font-bold text-[#1A1A1A] tracking-tight">{value}</p>
+       <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-widest leading-tight max-w-[140px] px-2">{label}</p>
     </div>
   );
 }
@@ -218,7 +250,7 @@ function ArticleCard({ article }) {
           <div className="flex items-center space-x-1.5 font-bold"><Calendar size={11} className="text-[#4BA6B9]" /> <span>First Online</span></div>
        </div>
        
-       <Link href={`/articles/${article.slug}`} className="block flex-grow">
+       <Link href={`/articles/${article.id}`} className="block flex-grow">
           <h3 className="text-lg font-bold text-[#1e78ff] group-hover:text-[#4BA6B9] transition-colors leading-tight mb-4">
              {article.title}
           </h3>
