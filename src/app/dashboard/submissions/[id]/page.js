@@ -40,6 +40,13 @@ export default function SubmissionWorkflowPage({ params }) {
   const [formAbstract, setFormAbstract] = useState('');
   const [formPrefix, setFormPrefix] = useState('');
   const [formSubtitle, setFormSubtitle] = useState('');
+  const [formKeywords, setFormKeywords] = useState('');
+  const [formReferences, setFormReferences] = useState('');
+  const [formDoi, setFormDoi] = useState('');
+  const [formVolume, setFormVolume] = useState('');
+  const [formIssue, setFormIssue] = useState('');
+  const [formStartPage, setFormStartPage] = useState('');
+  const [formEndPage, setFormEndPage] = useState('');
   const [user, setUser] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
   
@@ -60,6 +67,13 @@ export default function SubmissionWorkflowPage({ params }) {
       setFormAbstract(submission.abstract || '');
       setFormPrefix(submission.prefix || '');
       setFormSubtitle(submission.subtitle || '');
+      setFormKeywords(submission.keywords || '');
+      setFormReferences(submission.references_list || '');
+      setFormDoi(submission.doi || '');
+      setFormVolume(submission.volume || '');
+      setFormIssue(submission.issue || '');
+      setFormStartPage(submission.start_page || '');
+      setFormEndPage(submission.end_page || '');
     }
   }, [submission]);
 
@@ -250,33 +264,29 @@ export default function SubmissionWorkflowPage({ params }) {
       const token = localStorage.getItem('eisr_token');
       const res = await fetch(`/api/submissions/${id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          title: formTitle,
-          prefix: formPrefix,
-          subtitle: formSubtitle,
-          abstract: formAbstract
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ 
+          title: formTitle, 
+          prefix: formPrefix, 
+          subtitle: formSubtitle, 
+          abstract: formAbstract,
+          keywords: formKeywords,
+          references_list: formReferences,
+          doi: formDoi,
+          volume: formVolume,
+          issue: formIssue,
+          start_page: formStartPage,
+          end_page: formEndPage
         })
       });
       const data = await res.json();
       if (data.success) {
-        // Update local submission state to reflect in UI immediately
-        setSubmission(prev => ({
-          ...prev,
-          title: formTitle,
-          prefix: formPrefix,
-          subtitle: formSubtitle,
-          abstract: formAbstract
-        }));
         alert('Changes saved successfully!');
       } else {
-        alert('Failed to save: ' + data.message);
+        alert('Failed: ' + data.message);
       }
-    } catch (error) {
-      alert('Error updating submission');
+    } catch (err) {
+      alert('Error saving data');
     } finally {
       setIsSaving(false);
     }
@@ -696,22 +706,43 @@ export default function SubmissionWorkflowPage({ params }) {
               {/* ── PUBLICATION: Metadata ── */}
               {activeMenu === 'Publication' && activeStep === 'Metadata' && (
                 <div style={{ maxWidth: '800px' }}>
-                  <div style={{ marginBottom: '20px' }}>
-                    <label style={labelStyle}>Keywords</label>
-                    <input type="text" style={inputStyle} placeholder="Add keywords and press enter..." />
-                    <p style={{ fontSize: '11px', color: '#64748b', marginTop: '4px' }}>Provide terms that represent your research topics.</p>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                    <div style={{ marginBottom: '20px' }}>
+                      <label style={labelStyle}>DOI</label>
+                      <input type="text" style={inputStyle} value={formDoi} onChange={e => setFormDoi(e.target.value)} placeholder="e.g. 10.63180/jeisa.eisr.2024.1.18" />
+                    </div>
+                    <div style={{ marginBottom: '20px' }}>
+                      <label style={labelStyle}>Keywords</label>
+                      <input type="text" style={inputStyle} value={formKeywords} onChange={e => setFormKeywords(e.target.value)} placeholder="Security, Risk, Blockchain" />
+                    </div>
                   </div>
-                  <div style={{ marginBottom: '20px' }}>
-                    <label style={labelStyle}>Supporting Agencies</label>
-                    <input type="text" style={inputStyle} />
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '15px', borderTop: '1px solid #f1f5f9', paddingTop: '10px' }}>
+                    <div>
+                      <label style={labelStyle}>Volume</label>
+                      <input type="text" style={inputStyle} value={formVolume} onChange={e => setFormVolume(e.target.value)} placeholder="2024" />
+                    </div>
+                    <div>
+                      <label style={labelStyle}>Issue</label>
+                      <input type="text" style={inputStyle} value={formIssue} onChange={e => setFormIssue(e.target.value)} placeholder="1" />
+                    </div>
+                    <div>
+                      <label style={labelStyle}>Start Page</label>
+                      <input type="text" style={inputStyle} value={formStartPage} onChange={e => setFormStartPage(e.target.value)} placeholder="101" />
+                    </div>
+                    <div>
+                      <label style={labelStyle}>End Page</label>
+                      <input type="text" style={inputStyle} value={formEndPage} onChange={e => setFormEndPage(e.target.value)} placeholder="115" />
+                    </div>
                   </div>
-                  <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
+
+                  <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '16px', display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
                     <button 
                       onClick={handleSave}
                       disabled={isSaving}
                       style={{ backgroundColor: '#005f96', color: '#fff', border: 'none', borderRadius: '2px', padding: '8px 24px', fontSize: '13px', fontWeight: '700', cursor: isSaving ? 'not-allowed' : 'pointer', opacity: isSaving ? 0.7 : 1 }}
                     >
-                      {isSaving ? 'Saving...' : 'Save'}
+                      {isSaving ? 'Saving...' : 'Save Metadata'}
                     </button>
                   </div>
                 </div>
@@ -720,15 +751,23 @@ export default function SubmissionWorkflowPage({ params }) {
               {/* ── PUBLICATION: References ── */}
               {activeMenu === 'Publication' && activeStep === 'References' && (
                 <div style={{ maxWidth: '800px' }}>
-                  <label style={labelStyle}>References</label>
-                  <textarea rows={15} style={{ ...inputStyle, resize: 'vertical' }} placeholder="Provide a list of references cited in this submission. Please separate individual references with a blank line."></textarea>
+                  <label style={labelStyle}>References List</label>
+                  <p style={{ fontSize: '11px', color: '#64748b', marginBottom: '8px' }}>Enter the bibliography in APA or standard academic format. Use new lines for separate references.</p>
+                  <textarea 
+                    rows={15} 
+                    style={{ ...inputStyle, resize: 'vertical', fontFamily: 'serif' }} 
+                    value={formReferences}
+                    onChange={e => setFormReferences(e.target.value)}
+                    placeholder="1. Author, A. (Year). Title. Journal...
+2. Author, B. (Year)..."
+                  ></textarea>
                   <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '16px', display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
                     <button 
                       onClick={handleSave}
                       disabled={isSaving}
                       style={{ backgroundColor: '#005f96', color: '#fff', border: 'none', borderRadius: '2px', padding: '8px 24px', fontSize: '13px', fontWeight: '700', cursor: isSaving ? 'not-allowed' : 'pointer', opacity: isSaving ? 0.7 : 1 }}
                     >
-                      {isSaving ? 'Saving...' : 'Save'}
+                      {isSaving ? 'Saving...' : 'Save References'}
                     </button>
                   </div>
                 </div>

@@ -11,7 +11,7 @@ export async function GET(req, { params }) {
   try {
     // 1. Get submission
     const [subRows] = await pool.query(
-      'SELECT id, title, status, activity, created_at, user_id FROM submissions WHERE id = ?',
+      'SELECT id, title, prefix, subtitle, abstract, keywords, references_list, doi, volume, issue, start_page, end_page, status, activity, created_at, user_id FROM submissions WHERE id = ?',
       [id]
     );
 
@@ -113,6 +113,13 @@ export async function GET(req, { params }) {
         prefix: submission.prefix || '',
         subtitle: submission.subtitle || '',
         abstract: submission.abstract || '',
+        keywords: submission.keywords || '',
+        references_list: submission.references_list || '',
+        doi: submission.doi || '',
+        volume: submission.volume || '',
+        issue: submission.issue || '',
+        start_page: submission.start_page || '',
+        end_page: submission.end_page || '',
         language: 'English',
         files: Array.from(new Map(fileRows.map(f => [f.path, f])).values()).map(f => ({ 
           id: f.id, 
@@ -144,21 +151,34 @@ export async function PUT(req, { params }) {
   if (!user) return unauthorizedResponse();
 
   const { id } = await params;
-  const { title, prefix, subtitle, abstract } = await req.json();
+    const { 
+      title, prefix, subtitle, abstract, 
+      keywords, references_list, doi, 
+      volume, issue, start_page, end_page 
+    } = await req.json();
 
-  try {
-    // Auth check: only owner can update for now
-    const [subRows] = await pool.query('SELECT user_id FROM submissions WHERE id = ?', [id]);
-    if (subRows.length === 0) return NextResponse.json({ success: false, message: 'Not found' }, { status: 404 });
-    
-    const isEditorial = (user.role === 'editor' || user.role === 'admin');
-    if (subRows[0].user_id !== user.userId && !isEditorial) return unauthorizedResponse();
+    try {
+      // Auth check: only owner can update for now
+      const [subRows] = await pool.query('SELECT user_id FROM submissions WHERE id = ?', [id]);
+      if (subRows.length === 0) return NextResponse.json({ success: false, message: 'Not found' }, { status: 404 });
+      
+      const isEditorial = (user.role === 'editor' || user.role === 'admin');
+      if (subRows[0].user_id !== user.userId && !isEditorial) return unauthorizedResponse();
 
-    // Update submission (assuming abstract/prefix/subtitle have been added to schema)
-    await pool.query(
-      'UPDATE submissions SET title = ?, prefix = ?, subtitle = ?, abstract = ? WHERE id = ?',
-      [title, prefix || '', subtitle || '', abstract || '', id]
-    );
+      // Update submission
+      await pool.query(
+        `UPDATE submissions SET 
+          title = ?, prefix = ?, subtitle = ?, abstract = ?, 
+          keywords = ?, references_list = ?, doi = ?, 
+          volume = ?, issue = ?, start_page = ?, end_page = ? 
+         WHERE id = ?`,
+        [
+          title, prefix || '', subtitle || '', abstract || '', 
+          keywords || '', references_list || '', doi || '', 
+          volume || '', issue || '', start_page || '', end_page || '', 
+          id
+        ]
+      );
 
     return NextResponse.json({ success: true, message: 'Updated successfully' });
   } catch (error) {

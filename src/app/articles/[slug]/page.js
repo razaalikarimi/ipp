@@ -56,9 +56,9 @@ export default function ArticlePage() {
     ? journals.find(j => j.id.toLowerCase() === (article.journal_id || '').toLowerCase()) || journals[0]
     : null;
 
-  const doi = article
-    ? `https://doi.org/10.63180/${article.journal_id}.eisr.${new Date(article.published_date).getFullYear()}.1.${article.id}`
-    : '';
+  const doi = article?.doi 
+    ? article.doi 
+    : (article ? `https://doi.org/10.63180/${article.journal_id}.eisr.${new Date(article.published_date).getFullYear()}.1.${article.id}` : '#');
 
   const publishedYear = article ? new Date(article.published_date).getFullYear() : '';
   const formattedDate = article
@@ -205,7 +205,7 @@ export default function ArticlePage() {
                   <ChevronRight size={10} className="text-gray-300" />
                   <Link href="#" className="hover:text-[#4BA6B9] transition-colors">Archives</Link>
                   <ChevronRight size={10} className="text-gray-300" />
-                  <Link href="#" className="hover:text-[#4BA6B9] transition-colors">Volume {publishedYear}, Issue 1</Link>
+                  <Link href="#" className="hover:text-[#4BA6B9] transition-colors">Volume {article.volume || publishedYear}, Issue {article.issue || '1'}</Link>
                   <ChevronRight size={10} className="text-gray-300" />
                   <span className="text-[#4BA6B9]">Article</span>
                 </div>
@@ -284,7 +284,7 @@ export default function ArticlePage() {
             <div className="bg-gray-50 rounded-xl p-6 space-y-3 border border-gray-100 mt-8">
               <h4 className="text-[13px] font-black text-gray-900 uppercase tracking-wider">How to Cite the Article</h4>
               <p className="text-[13px] text-gray-600 leading-relaxed font-serif">
-                {article.authors} ({publishedYear}). {article.title}. <span className="italic">{journal ? journal.title : article.journal_id}</span>, {publishedYear}(1). <a href={doi} className="text-[#4BA6B9] hover:underline break-all">{doi}</a>
+                {article.authors} ({publishedYear}). {article.title}. <span className="italic">{journal ? journal.title : article.journal_id}</span>, {article.volume || publishedYear}({article.issue || '1'}){article.start_page ? `, ${article.start_page}-${article.end_page}` : ''}. <a href={doi} className="text-[#4BA6B9] hover:underline break-all">{doi}</a>
               </p>
             </div>
 
@@ -302,8 +302,8 @@ export default function ArticlePage() {
                 <div className="w-1.5 h-5 bg-[#4BA6B9] rounded-full"></div>
                 References
               </h3>
-              <div className="text-[13px] text-gray-600 font-serif space-y-3">
-                <p>1. No references provided in the database.</p>
+              <div className="text-[13px] text-gray-600 font-serif space-y-3 whitespace-pre-line">
+                {article.references_list || 'No references provided in the database for this article.'}
               </div>
             </div>
 

@@ -84,6 +84,13 @@ export async function GET(req) {
     if (!colNames.includes('prefix')) await connection.query(`ALTER TABLE submissions ADD COLUMN prefix VARCHAR(120) DEFAULT '' AFTER title`);
     if (!colNames.includes('subtitle')) await connection.query(`ALTER TABLE submissions ADD COLUMN subtitle TEXT AFTER prefix`);
     if (!colNames.includes('abstract')) await connection.query(`ALTER TABLE submissions ADD COLUMN abstract TEXT AFTER subtitle`);
+    if (!colNames.includes('keywords')) await connection.query(`ALTER TABLE submissions ADD COLUMN keywords TEXT AFTER abstract`);
+    if (!colNames.includes('references_list')) await connection.query(`ALTER TABLE submissions ADD COLUMN references_list TEXT AFTER keywords`);
+    if (!colNames.includes('doi')) await connection.query(`ALTER TABLE submissions ADD COLUMN doi VARCHAR(255) AFTER references_list`);
+    if (!colNames.includes('volume')) await connection.query(`ALTER TABLE submissions ADD COLUMN volume VARCHAR(50) AFTER doi`);
+    if (!colNames.includes('issue')) await connection.query(`ALTER TABLE submissions ADD COLUMN issue VARCHAR(50) AFTER volume`);
+    if (!colNames.includes('start_page')) await connection.query(`ALTER TABLE submissions ADD COLUMN start_page VARCHAR(50) AFTER issue`);
+    if (!colNames.includes('end_page')) await connection.query(`ALTER TABLE submissions ADD COLUMN end_page VARCHAR(50) AFTER start_page`);
     if (!colNames.includes('views')) await connection.query(`ALTER TABLE submissions ADD COLUMN views INT DEFAULT 0`);
 
     // Submission contributors
