@@ -46,6 +46,8 @@ export async function GET(req) {
     // Read file content
     const fileBuffer = await readFile(finalPath);
     
+    const inline = searchParams.get('inline') === 'true';
+
     // Determine Content-Type based on extension
     const ext = path.extname(filename).toLowerCase();
     const mimeTypes = {
@@ -61,11 +63,13 @@ export async function GET(req) {
     
     const contentType = mimeTypes[ext] || 'application/octet-stream';
 
-    // Return the file as a response with appropriate headers for downloading
+    const disposition = inline && ext === '.pdf' ? 'inline' : 'attachment';
+
+    // Return the file as a response with appropriate headers
     return new NextResponse(fileBuffer, {
       headers: {
         'Content-Type': contentType,
-        'Content-Disposition': `attachment; filename="${filename}"`,
+        'Content-Disposition': `${disposition}; filename="${filename}"`,
         'Cache-Control': 'no-store, max-age=0'
       },
     });

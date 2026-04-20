@@ -84,6 +84,7 @@ export async function GET(req) {
     if (!colNames.includes('prefix')) await connection.query(`ALTER TABLE submissions ADD COLUMN prefix VARCHAR(120) DEFAULT '' AFTER title`);
     if (!colNames.includes('subtitle')) await connection.query(`ALTER TABLE submissions ADD COLUMN subtitle TEXT AFTER prefix`);
     if (!colNames.includes('abstract')) await connection.query(`ALTER TABLE submissions ADD COLUMN abstract TEXT AFTER subtitle`);
+    if (!colNames.includes('views')) await connection.query(`ALTER TABLE submissions ADD COLUMN views INT DEFAULT 0`);
 
     // Submission contributors
     await connection.query(`

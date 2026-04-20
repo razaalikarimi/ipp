@@ -31,6 +31,28 @@ export default function Home() {
   const banners = ['/baner0001.jpg', '/baner0002.jpg', '/baner0003.jpg', '/baner0004.jpg'];
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [stats, setStats] = useState({ articles: null, views: null, journals: null });
+  const [latestArticles, setLatestArticles] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/stats')
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          setStats({ articles: data.articles, views: data.views, journals: data.journals });
+        }
+      })
+      .catch(() => {});
+      
+    fetch('/api/articles/latest')
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          setLatestArticles(data.articles);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const handleOnSubmit = async (e) => {
      e.preventDefault();
@@ -92,7 +114,9 @@ export default function Home() {
                 <div className="flex items-start space-x-4">
                    <div className="w-[1.5px] h-12 bg-[#4BA6B9] shrink-0"></div>
                    <div className="flex flex-col">
-                      <span className="text-lg font-bold text-[#1A1A1A]">----</span>
+                      <span className="text-lg font-bold text-[#1A1A1A]">
+                        {stats.articles === null ? '...' : stats.articles}
+                      </span>
                       <span className="text-sm font-medium text-[#555555]">Articles</span>
                    </div>
                 </div>
@@ -100,15 +124,19 @@ export default function Home() {
                 <div className="flex items-start space-x-4">
                    <div className="w-[1.5px] h-12 bg-[#4BA6B9] shrink-0"></div>
                    <div className="flex flex-col">
-                      <span className="text-lg font-bold text-[#1A1A1A]">----</span>
-                      <span className="text-sm font-medium text-[#555555]">Article view</span>
+                      <span className="text-lg font-bold text-[#1A1A1A]">
+                        {stats.views === null ? '...' : stats.views.toLocaleString()}
+                      </span>
+                      <span className="text-sm font-medium text-[#555555]">Article views</span>
                    </div>
                 </div>
 
                 <div className="flex items-start space-x-4">
                    <div className="w-[1.5px] h-12 bg-[#4BA6B9] shrink-0"></div>
                    <div className="flex flex-col">
-                      <span className="text-lg font-bold text-[#1A1A1A]">{journals.length}</span>
+                      <span className="text-lg font-bold text-[#1A1A1A]">
+                        {stats.journals === null ? '...' : stats.journals}
+                      </span>
                       <span className="text-sm font-medium text-[#555555]">Journals</span>
                    </div>
                 </div>
@@ -260,6 +288,68 @@ export default function Home() {
                  ))}
               </div>
            </div>
+        </section>
+
+        {/* Latest Articles Section */}
+        <section id="latest-articles" className="bg-[#F8FAFC] py-10 lg:py-16">
+          <div className="max-w-[1240px] mx-auto px-6">
+            <div className="flex justify-between items-end mb-8">
+              <div>
+                <h2 className="text-3xl font-bold text-[#1A1A1A] tracking-tight">Latest Published Articles</h2>
+                <div className="w-16 h-0.5 bg-[#4BA6B9]/20 mt-3"></div>
+              </div>
+              <Link href="/articles" className="hidden md:flex items-center space-x-2 text-[#4BA6B9] font-bold hover:text-[#1D4ED8] transition-colors">
+                <span>View All Articles</span>
+                <ChevronRight size={16} />
+              </Link>
+            </div>
+            
+            <div className="space-y-4">
+              {latestArticles.length === 0 ? (
+                <div className="bg-white rounded-2xl p-8 text-center text-gray-500 font-medium shadow-sm border border-[#F1F1F1]">
+                  Loading latest articles...
+                </div>
+              ) : (
+                latestArticles.map((art) => {
+                  const journal = journals.find(j => j.id.toLowerCase() === art.journal_id.toLowerCase());
+                  const date = new Date(art.published_date);
+                  const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                  
+                  return (
+                    <div key={art.id} className="bg-white rounded-2xl p-6 lg:p-8 border border-[#F1F1F1] shadow-sm hover:shadow-md transition-shadow group">
+                      <div className="flex flex-col lg:flex-row justify-between lg:items-start gap-4">
+                        <div className="space-y-3 flex-grow">
+                          <Link href={`/articles/${art.id}`} className="block">
+                            <h3 className="text-lg font-bold text-[#1D4ED8] hover:underline leading-snug">
+                              {art.title}
+                            </h3>
+                          </Link>
+                          <p className="text-sm font-semibold text-[#555555]">
+                            {art.authors || 'Unknown Authors'}
+                          </p>
+                          <div className="flex flex-wrap items-center gap-3 text-[12px]">
+                            <span className="font-bold text-[#4BA6B9]">{journal ? journal.title : art.journal_id}</span>
+                            <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+                            <span className="text-gray-500 font-medium">Published: {formattedDate}</span>
+                          </div>
+                        </div>
+                        <Link href={`/articles/${art.id}`} className="shrink-0 w-10 h-10 rounded-full bg-[#F4F6F9] text-[#1D4ED8] flex items-center justify-center group-hover:bg-[#4BA6B9] group-hover:text-white transition-colors">
+                          <ArrowRight size={16} />
+                        </Link>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            <div className="mt-8 flex justify-center md:hidden">
+              <Link href="/articles" className="flex items-center justify-center space-x-2 text-white bg-[#1A1A1A] hover:bg-[#4BA6B9] w-full py-4 rounded-xl font-bold transition-colors shadow-lg">
+                <span>View All Articles</span>
+                <ChevronRight size={16} />
+              </Link>
+            </div>
+          </div>
         </section>
 
         {/* Leadership Team Section */}

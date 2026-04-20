@@ -215,7 +215,7 @@ export default function SubmitPage() {
 
       {/* Breadcrumb Info line */}
       <div style={{ fontSize: '12px', color: '#666', marginBottom: '16px' }}>
-        73 / Salunke / {form.title}
+        {currentJournalId === 'jeiml' ? 'Journal of Eye-Innovation in Machine Learning' : 'Journal of Eye Innovation in Security Analysis'}{form.title ? ` / ${form.title}` : ''}
       </div>
 
       {/* Main Title Area */}
@@ -259,7 +259,7 @@ export default function SubmitPage() {
               <div style={{ marginBottom: '32px', borderBottom: '1px solid #f1f5f9', paddingBottom: '24px' }}>
                 <h2 style={{ fontSize: '18px', fontWeight: '700', color: '#333', marginTop: 0, marginBottom: '16px' }}>Before you begin</h2>
                 <div style={{ fontSize: '14px', color: '#475569', lineHeight: '1.7' }}>
-                  <p style={{ marginBottom: '16px' }}>Thank you for submitting to the {currentJournalId === 'jeiml' ? 'Journal of Eye-Innovation in Machine Learning' : 'Journal of Eye Innovation in Security Analysis'}. You will be asked to upload files, identify co-authors, and provide information such as the title and abstract.</p>
+                  <p style={{ marginBottom: '16px' }}>Thank you for submitting to the <strong>{currentJournalId === 'jeiml' ? 'Journal of Eye-Innovation in Machine Learning (JEIML)' : 'Journal of Eye Innovation in Security Analysis (JEISA)'}</strong>. You will be asked to upload files, identify co-authors, and provide information such as the title and abstract.</p>
                   <p style={{ marginBottom: '16px' }}>Please read our <Link href="#" style={{ color: '#005f96', textDecoration: 'underline' }}>Submission Guidelines</Link> if you have not done so already. When filling out the forms, provide as many details as possible in order to help our editors evaluate your work.</p>
                   <p>Once you begin, you can save your submission and come back to it later. You will be able to review and correct any information before you submit.</p>
                 </div>
