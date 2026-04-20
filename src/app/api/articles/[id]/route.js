@@ -8,8 +8,7 @@ export async function GET(req, { params }) {
     const [rows] = await pool.query(`
       SELECT 
         s.id, s.title, s.journal_id, s.created_at as published_date,
-        s.views, s.abstract, s.keywords, s.references_list,
-        s.doi, s.volume, s.issue, s.start_page, s.end_page,
+        s.views, s.abstract,
         (SELECT sf.path FROM submission_files sf WHERE sf.submission_id = s.id LIMIT 1) as file_path,
         GROUP_CONCAT(sc.name ORDER BY sc.id SEPARATOR ', ') as authors
       FROM submissions s

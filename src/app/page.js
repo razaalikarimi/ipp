@@ -31,16 +31,7 @@ export default function Home() {
   const banners = ['/baner0001.jpg', '/baner0002.jpg', '/baner0003.jpg', '/baner0004.jpg'];
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [stats, setStats] = useState({ 
-    articles: 0, 
-    views: 0, 
-    journals: 0, 
-    authors: 0, 
-    acceptanceRate: 'N/A', 
-    citationsScopus: 'N/A', 
-    citationsGoogle: 'N/A',
-    distribution: 'International'
-  });
+  const [stats, setStats] = useState({ articles: null, views: null, journals: null });
   const [latestArticles, setLatestArticles] = useState([]);
 
   useEffect(() => {
@@ -48,16 +39,7 @@ export default function Home() {
       .then(r => r.json())
       .then(data => {
         if (data.success) {
-          setStats({ 
-            articles: data.articles, 
-            views: data.views, 
-            journals: data.journals,
-            authors: data.authors,
-            acceptanceRate: data.acceptanceRate,
-            citationsScopus: data.citationsScopus,
-            citationsGoogle: data.citationsGoogle,
-            distribution: data.distribution
-          });
+          setStats({ articles: data.articles, views: data.views, journals: data.journals });
         }
       })
       .catch(() => {});
@@ -427,52 +409,6 @@ export default function Home() {
                  </table>
               </div>
            </div>
-        </section>
-
-        {/* Journal Statistics Section */}
-        <section id="statistics" className="bg-white py-10 lg:py-20 border-t border-gray-50">
-          <div className="max-w-[1240px] mx-auto px-6">
-            <h2 className="text-2xl font-sans font-black text-[#1A1A1A] mb-8 tracking-tight">Journal Statistics</h2>
-            
-            <div className="bg-[#f8fafc]/50 rounded-[2rem] border border-[#e2e8f0]/80 p-10 md:p-16 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#4BA6B9]/5 rounded-full -mr-48 -mt-48 blur-3xl pointer-events-none" />
-              <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-blue-500/5 rounded-full -ml-32 -mb-32 blur-3xl pointer-events-none" />
-
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-y-12 gap-x-8 relative z-10">
-                {/* Row 1 */}
-                <div className="text-center space-y-1">
-                  <p className="text-3xl font-bold text-[#1A1A1A] tracking-tight">{stats.citationsScopus}</p>
-                  <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-widest">Citations (Scopus)</p>
-                </div>
-                <div className="text-center space-y-1">
-                  <p className="text-3xl font-bold text-[#1A1A1A] tracking-tight">{stats.citationsGoogle}</p>
-                  <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-widest">Citations (Google)</p>
-                </div>
-                <div className="text-center space-y-1">
-                  <p className="text-3xl font-bold text-[#1A1A1A] tracking-tight">{stats.articles}</p>
-                  <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-widest">Total Articles</p>
-                </div>
-                <div className="text-center space-y-1">
-                  <p className="text-3xl font-bold text-[#1A1A1A] tracking-tight">{stats.views.toLocaleString()}</p>
-                  <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-widest">Total Views</p>
-                </div>
-
-                {/* Row 2 */}
-                <div className="text-center space-y-1">
-                  <p className="text-3xl font-bold text-[#1A1A1A] tracking-tight">{stats.authors}</p>
-                  <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-widest">Authors</p>
-                </div>
-                <div className="text-center space-y-1">
-                  <p className="text-3xl font-bold text-[#1A1A1A] tracking-tight">{stats.distribution}</p>
-                  <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-widest">Distribution</p>
-                </div>
-                <div className="text-center space-y-1">
-                  <p className="text-3xl font-bold text-[#1A1A1A] tracking-tight">{stats.acceptanceRate}</p>
-                  <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-widest">Acceptance Rate</p>
-                </div>
-              </div>
-            </div>
-          </div>
         </section>
 
         {/* Contact Form Section */}
